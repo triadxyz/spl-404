@@ -16,6 +16,8 @@
 
 - **Flexible Use Cases**: This new standard opens up various possibilities. For example, in a game, an SPL-404 NFT might be an in-game item with a token value, making it easier to trade or sell when you no longer need it.
 
+- **Deflationary Mechanism**: With Token22, it is possible to implement auto-burn fees, making the collection deflationary. 
+
 The SPL-404 standard makes NFTs more versatile and accessible, combining the best aspects of decentralized finance (DeFi) and non-fungible tokens (NFTs).
 
 ## Main Concept
