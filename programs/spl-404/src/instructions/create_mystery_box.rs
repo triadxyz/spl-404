@@ -1,8 +1,6 @@
-use std::vec;
-
 use crate::state::{CreateMysteryBoxArgs, MysteryBox};
-
 use anchor_lang::prelude::*;
+use std::vec;
 
 #[derive(Accounts)]
 #[instruction(args: CreateMysteryBoxArgs)]

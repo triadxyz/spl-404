@@ -1,22 +1,20 @@
-use crate::state::{CreateMysteryBoxArgs, MysteryBox};
-
+use crate::state::{MysteryBox, SwapArgs};
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
 
 #[derive(Accounts)]
-#[instruction(args: CreateMysteryBoxArgs)]
+#[instruction(args: SwapArgs)]
 pub struct Swap<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(init, payer = signer, space = MysteryBox::SPACE, seeds = [MysteryBox::PREFIX_SEED.as_ref(), args.name.as_ref()], bump)]
+    #[account(mut)]
     pub mystery_box: Account<'info, MysteryBox>,
 
     pub system_program: Program<'info, System>,
 }
 
-pub fn swap(ctx: Context<CreateTicker>, args: CreateMysteryBoxArgs) -> Result<()> {
-    msg!("Swap Tokens", mistery_box.name);
+pub fn swap(_ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
+    msg!("Swap Tokens {:?}", args.in_token_amount);
 
     Ok(())
 }

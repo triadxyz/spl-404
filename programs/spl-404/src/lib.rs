@@ -18,6 +18,10 @@ pub mod spl_404 {
     ) -> Result<()> {
         instructions::create_mystery_box(ctx, args)
     }
+
+    pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
+        instructions::swap(ctx, args)
+    }
 }
 
 #[derive(Accounts)]
