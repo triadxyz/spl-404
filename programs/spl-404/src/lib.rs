@@ -22,6 +22,10 @@ pub mod spl_404 {
     pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
         instructions::swap(ctx, args)
     }
+
+    pub fn burn(ctx: Context<Burn>, args: BurnArgs) -> Result<()> {
+        instructions::burn(ctx, args)
+    }
 }
 
 #[derive(Accounts)]

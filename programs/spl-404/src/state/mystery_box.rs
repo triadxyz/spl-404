@@ -32,13 +32,6 @@ pub struct CreateMysteryBoxArgs {
     pub royalty: u16,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct SwapArgs {
-    pub in_token: Pubkey,
-    pub out_token: Pubkey,
-    pub in_token_amount: u64,
-}
-
 impl MysteryBox {
     /// static prefix seed string used to derive the PDAs
     pub const PREFIX_SEED: &'static [u8] = b"mystery_box";
