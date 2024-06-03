@@ -6,7 +6,7 @@ use state::*;
 mod instructions;
 mod state;
 
-declare_id!("H74m4U3uNH9odM9Mn7UkdbMbfszLzShuqtgwqn8DRh77");
+declare_id!("M3Bw24wkaP3NzihBE8adrDk9UPfuLmWEEEbhiUXnfYS");
 
 #[program]
 pub mod spl_404 {

@@ -3,13 +3,13 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-spl_404 = "H74m4U3uNH9odM9Mn7UkdbMbfszLzShuqtgwqn8DRh77"
+spl_404 = "M3Bw24wkaP3NzihBE8adrDk9UPfuLmWEEEbhiUXnfYS"
 
 [registry]
-url = "https://api.apr.dev"
+url = "https://api.devnet.solana.com"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "/Users/dannpl/.config/solana/id.json"
 
 [scripts]
