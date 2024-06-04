@@ -2,14 +2,14 @@
 seeds = false
 skip-lint = false
 
-[programs.localnet]
-spl_404 = "M3Bw24wkaP3NzihBE8adrDk9UPfuLmWEEEbhiUXnfYS"
+[programs.devnet]
+spl_404 = "t4o4cdvxFDEoZZzvDMnhQSJuRv97J1aFR7Sr6GxB3a1"
 
 [registry]
-url = "https://api.devnet.solana.com"
+url = "https://devnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75"
 
 [provider]
-cluster = "devnet"
+cluster = "https://devnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75"
 wallet = "/Users/dannpl/.config/solana/id.json"
 
 [scripts]

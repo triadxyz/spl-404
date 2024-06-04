@@ -6,7 +6,7 @@ use state::*;
 mod instructions;
 mod state;
 
-declare_id!("M3Bw24wkaP3NzihBE8adrDk9UPfuLmWEEEbhiUXnfYS");
+declare_id!("t4o4cdvxFDEoZZzvDMnhQSJuRv97J1aFR7Sr6GxB3a1");
 
 #[program]
 pub mod spl_404 {
@@ -17,6 +17,10 @@ pub mod spl_404 {
         args: CreateMysteryBoxArgs,
     ) -> Result<()> {
         instructions::create_mystery_box(ctx, args)
+    }
+
+    pub fn mint(ctx: Context<Mint>) -> Result<()> {
+        instructions::mint(ctx)
     }
 
     pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {

@@ -11,3 +11,6 @@ pub struct SwapArgs {
 pub struct BurnArgs {
     pub amount: u64,
 }
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct MintArgs {}
