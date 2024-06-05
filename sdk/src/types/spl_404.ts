@@ -75,7 +75,7 @@ export type Spl404 = {
       name: 'swap'
       accounts: [
         {
-          name: 'signer'
+          name: 'user'
           isMut: true
           isSigner: true
         },
@@ -85,7 +85,42 @@ export type Spl404 = {
           isSigner: false
         },
         {
+          name: 'userTokenAccount'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'mysteryBoxNftAccount'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'userNftAccount'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'tokenMint'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'nftMint'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'tokenProgram'
+          isMut: false
+          isSigner: false
+        },
+        {
           name: 'systemProgram'
+          isMut: false
+          isSigner: false
+        },
+        {
+          name: 'rent'
           isMut: false
           isSigner: false
         }
@@ -108,12 +143,17 @@ export type Spl404 = {
           isSigner: true
         },
         {
-          name: 'mysteryBox'
+          name: 'mint'
           isMut: true
           isSigner: false
         },
         {
-          name: 'systemProgram'
+          name: 'tokenAccount'
+          isMut: true
+          isSigner: false
+        },
+        {
+          name: 'tokenProgram'
           isMut: false
           isSigner: false
         }
@@ -122,7 +162,7 @@ export type Spl404 = {
         {
           name: 'args'
           type: {
-            defined: 'BurnArgs'
+            defined: 'BurnTokenArgs'
           }
         }
       ]
@@ -260,6 +300,14 @@ export type Spl404 = {
           {
             name: 'decimals'
             type: 'u8'
+          },
+          {
+            name: 'nftUri'
+            type: 'string'
+          },
+          {
+            name: 'tokenUri'
+            type: 'string'
           }
         ]
       }
@@ -285,7 +333,7 @@ export type Spl404 = {
       }
     },
     {
-      name: 'BurnArgs'
+      name: 'BurnTokenArgs'
       type: {
         kind: 'struct'
         fields: [
@@ -415,7 +463,7 @@ export const IDL: Spl404 = {
       name: 'swap',
       accounts: [
         {
-          name: 'signer',
+          name: 'user',
           isMut: true,
           isSigner: true
         },
@@ -425,7 +473,42 @@ export const IDL: Spl404 = {
           isSigner: false
         },
         {
+          name: 'userTokenAccount',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'mysteryBoxNftAccount',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'userNftAccount',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'tokenMint',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'nftMint',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false
+        },
+        {
           name: 'systemProgram',
+          isMut: false,
+          isSigner: false
+        },
+        {
+          name: 'rent',
           isMut: false,
           isSigner: false
         }
@@ -448,12 +531,17 @@ export const IDL: Spl404 = {
           isSigner: true
         },
         {
-          name: 'mysteryBox',
+          name: 'mint',
           isMut: true,
           isSigner: false
         },
         {
-          name: 'systemProgram',
+          name: 'tokenAccount',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'tokenProgram',
           isMut: false,
           isSigner: false
         }
@@ -462,7 +550,7 @@ export const IDL: Spl404 = {
         {
           name: 'args',
           type: {
-            defined: 'BurnArgs'
+            defined: 'BurnTokenArgs'
           }
         }
       ]
@@ -600,6 +688,14 @@ export const IDL: Spl404 = {
           {
             name: 'decimals',
             type: 'u8'
+          },
+          {
+            name: 'nftUri',
+            type: 'string'
+          },
+          {
+            name: 'tokenUri',
+            type: 'string'
           }
         ]
       }
@@ -625,7 +721,7 @@ export const IDL: Spl404 = {
       }
     },
     {
-      name: 'BurnArgs',
+      name: 'BurnTokenArgs',
       type: {
         kind: 'struct',
         fields: [
