@@ -31,7 +31,7 @@
   "author": "Triad Labs",
   "license": "ISC",
   "dependencies": {
-    "@coral-xyz/anchor": "0.30.0",
+    "@coral-xyz/anchor": "0.28.0",
     "@solana/spl-token": "0.4.6",
     "@solana/web3.js": "1.89.1",
     "bs58": "^5.0.0"

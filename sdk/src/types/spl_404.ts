@@ -1,4 +1,4 @@
-export type Spl404 = {
+export type Spl404Protocol = {
   version: '0.1.0'
   name: 'spl_404'
   instructions: [
@@ -386,7 +386,7 @@ export type Spl404 = {
   ]
 }
 
-export const IDL: Spl404 = {
+export const IDL: Spl404Protocol = {
   version: '0.1.0',
   name: 'spl_404',
   instructions: [
