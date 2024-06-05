@@ -7,7 +7,7 @@ mod errors;
 mod instructions;
 mod state;
 
-declare_id!("C8C3ZfRcwKPNv54kqi3SxsP2t2Mki88XDsRyatNvqRVe");
+declare_id!("7x6Jq7Yev6bxbRXcFPhagWReg472hD8B27hWRn4UKLYV");
 
 #[program]
 pub mod spl_404 {
@@ -18,6 +18,10 @@ pub mod spl_404 {
         args: CreateMysteryBoxArgs,
     ) -> Result<()> {
         instructions::create_mystery_box(ctx, args)
+    }
+
+    pub fn mint_nft(ctx: Context<MintNFT>, args: CreateMysteryBoxArgs) -> Result<()> {
+        instructions::mint_nft(ctx, args)
     }
 
     pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {

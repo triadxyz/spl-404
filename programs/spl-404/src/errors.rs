@@ -19,4 +19,7 @@ pub enum Spl404Error {
 
     #[msg("Failed to initialize transfer fee config")]
     TransferFeeInitFailed,
+
+    #[msg("Failed unuathorized action")]
+    Unauthorized,
 }

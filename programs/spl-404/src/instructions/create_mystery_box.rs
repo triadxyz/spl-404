@@ -32,25 +32,24 @@ pub struct CreateMysteryBox<'info> {
         mint::decimals = args.decimals,
         mint::authority = mystery_box,
         extensions::metadata_pointer::authority = signer,
-        extensions::metadata_pointer::metadata_address = mint_account,
+        extensions::metadata_pointer::metadata_address = token_mint,
         seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref(), args.token_symbol.as_ref()],
         bump
     )]
-    pub mint: InterfaceAccount<'info, Mint>,
+    pub token_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         init,
         payer = signer,
-        token::mint = mint,
+        token::mint = token_mint,
         token::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref() as &[u8], mint.key().as_ref(), args.token_symbol.as_ref()],
+        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref() as &[u8], token_mint.key().as_ref(), args.token_symbol.as_ref()],
         bump
     )]
-    pub mint_account: InterfaceAccount<'info, TokenAccount>,
+    pub token_mint_account: InterfaceAccount<'info, TokenAccount>,
 
     pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
 }
 
 pub fn create_mystery_box(
@@ -58,17 +57,16 @@ pub fn create_mystery_box(
     args: CreateMysteryBoxArgs,
 ) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
-    mystery_box.authority = *ctx.accounts.signer.key;
-
     let cpi_program = ctx.accounts.token_program.to_account_info();
 
-    let transfer_fee_accounts = TransferFeeInitialize {
-        token_program_id: ctx.accounts.token_program.to_account_info(),
-        mint: ctx.accounts.mint.to_account_info(),
-    };
-    let transfer_fee_ctx = CpiContext::new(cpi_program.clone(), transfer_fee_accounts);
     transfer_fee_initialize(
-        transfer_fee_ctx,
+        CpiContext::new(
+            cpi_program.clone(),
+            TransferFeeInitialize {
+                token_program_id: ctx.accounts.token_program.to_account_info(),
+                mint: ctx.accounts.token_mint.to_account_info(),
+            },
+        ),
         Some(&mystery_box.key()),
         Some(&mystery_box.key()),
         args.token_fee,
@@ -79,26 +77,21 @@ pub fn create_mystery_box(
         name: args.name.clone(),
         symbol: args.token_symbol.clone(),
         uri: args.token_uri.clone(),
+        mint: *ctx.accounts.token_mint.to_account_info().key,
         ..Default::default()
     };
 
-    // Add 4 extra bytes for size of MetadataExtension (2 bytes for type, 2 bytes for length)
-    let data_len = 4 + token_metadata.get_packed_len()?;
+    let token_data_len = 4 + token_metadata.get_packed_len()?;
 
-    // Calculate lamports required for the additional metadata
-    let lamports =
-        data_len as u64 * DEFAULT_LAMPORTS_PER_BYTE_YEAR * DEFAULT_EXEMPTION_THRESHOLD as u64;
-
-    // Transfer additional lamports to mint account
     transfer(
         CpiContext::new(
             ctx.accounts.system_program.to_account_info(),
             Transfer {
                 from: ctx.accounts.signer.to_account_info(),
-                to: ctx.accounts.mint.to_account_info(),
+                to: ctx.accounts.token_mint.to_account_info(),
             },
         ),
-        lamports,
+        token_data_len as u64 * DEFAULT_LAMPORTS_PER_BYTE_YEAR * DEFAULT_EXEMPTION_THRESHOLD as u64,
     )?;
 
     token_metadata_initialize(
@@ -106,10 +99,10 @@ pub fn create_mystery_box(
             ctx.accounts.token_program.to_account_info(),
             TokenMetadataInitialize {
                 token_program_id: ctx.accounts.token_program.to_account_info(),
-                mint: ctx.accounts.mint.to_account_info(),
-                metadata: ctx.accounts.mint.to_account_info(),
-                mint_authority: ctx.accounts.signer.to_account_info(),
-                update_authority: ctx.accounts.signer.to_account_info(),
+                mint: ctx.accounts.token_mint.to_account_info(),
+                metadata: ctx.accounts.token_mint.to_account_info(),
+                mint_authority: mystery_box.to_account_info(),
+                update_authority: mystery_box.to_account_info(),
             },
         ),
         args.name.clone(),
@@ -117,31 +110,32 @@ pub fn create_mystery_box(
         args.token_uri.clone(),
     )?;
 
-    let mint_accounts = InitializeMint2 {
-        mint: ctx.accounts.mint.to_account_info(),
-    };
-    let mint_ctx = CpiContext::new(cpi_program.clone(), mint_accounts);
-    initialize_mint2(mint_ctx, args.decimals, &mystery_box.key(), None)?;
+    let token_mint_ctx = CpiContext::new(
+        cpi_program.clone(),
+        InitializeMint2 {
+            mint: ctx.accounts.token_mint.to_account_info(),
+        },
+    );
+    initialize_mint2(token_mint_ctx, args.decimals, &mystery_box.key(), None)?;
 
     let token_supply = args.nft_supply as u64 * args.token_per_nft;
     mint_to(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             MintTo {
-                mint: ctx.accounts.mint.to_account_info(),
-                to: ctx.accounts.mint_account.to_account_info(),
+                mint: ctx.accounts.token_mint.to_account_info(),
+                to: ctx.accounts.token_mint_account.to_account_info(),
                 authority: mystery_box.to_account_info(),
             },
         ),
         token_supply,
     )?;
-
     set_authority(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             SetAuthority {
                 current_authority: mystery_box.to_account_info(),
-                account_or_mint: ctx.accounts.mint.to_account_info(),
+                account_or_mint: ctx.accounts.token_mint.to_account_info(),
             },
         ),
         AuthorityType::MintTokens,
@@ -153,8 +147,8 @@ pub fn create_mystery_box(
     mystery_box.nft_minteds = 0;
     mystery_box.nft_supply = args.nft_supply;
     mystery_box.nft_symbol = args.nft_symbol;
-    mystery_box.token_mint = *ctx.accounts.mint.to_account_info().key;
-    mystery_box.token_account = *ctx.accounts.mint_account.to_account_info().key;
+    mystery_box.token_mint = *ctx.accounts.token_mint.to_account_info().key;
+    mystery_box.token_account = *ctx.accounts.token_mint_account.to_account_info().key;
     mystery_box.token_symbol = args.token_symbol;
     mystery_box.token_supply = token_supply;
     mystery_box.token_per_nft = args.token_per_nft;
