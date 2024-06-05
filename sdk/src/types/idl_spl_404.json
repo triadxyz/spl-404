@@ -83,47 +83,6 @@
       ]
     },
     {
-      "name": "mint_nft",
-      "discriminator": [211, 57, 6, 167, 15, 219, 35, 251],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mystery_box",
-          "writable": true
-        },
-        {
-          "name": "mint",
-          "writable": true
-        },
-        {
-          "name": "mint_account",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "CreateMysteryBoxArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "swap",
       "discriminator": [248, 198, 158, 145, 225, 117, 135, 200],
       "accounts": [
@@ -382,11 +341,9 @@
             "type": "pubkey"
           },
           {
-            "name": "guards",
+            "name": "guard_allocation",
             "docs": ["guards of the mystery box"],
-            "type": {
-              "vec": "pubkey"
-            }
+            "type": "pubkey"
           }
         ]
       }

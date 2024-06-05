@@ -20,10 +20,6 @@ pub mod spl_404 {
         instructions::create_mystery_box(ctx, args)
     }
 
-    pub fn mint_nft(ctx: Context<MintNFT>, args: CreateMysteryBoxArgs) -> Result<()> {
-        instructions::mint_nft(ctx, args)
-    }
-
     pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
         instructions::swap(ctx, args)
     }
