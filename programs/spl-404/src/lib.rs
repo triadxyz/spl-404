@@ -7,7 +7,7 @@ mod errors;
 mod instructions;
 mod state;
 
-declare_id!("t4o4cdvxFDEoZZzvDMnhQSJuRv97J1aFR7Sr6GxB3a1");
+declare_id!("3KEs2uxNjZZQmz6WVeEwtfzXi3VaEcwMuN6gitaCQA9X");
 
 #[program]
 pub mod spl_404 {

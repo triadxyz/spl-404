@@ -3,7 +3,7 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
-spl_404 = "t4o4cdvxFDEoZZzvDMnhQSJuRv97J1aFR7Sr6GxB3a1"
+spl_404 = "3KEs2uxNjZZQmz6WVeEwtfzXi3VaEcwMuN6gitaCQA9X"
 
 [registry]
 url = "devnet"
