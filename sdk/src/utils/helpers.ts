@@ -20,7 +20,7 @@ export const getMintAddressMysteryBoxSync = (
 ) => {
   const [MintAddressMysteryBox] = PublicKey.findProgramAddressSync(
     [
-      Buffer.from(anchor.utils.bytes.utf8.encode('mint')),
+      Buffer.from(anchor.utils.bytes.utf8.encode('token_mint')),
       mysteryBox.toBuffer()
     ],
     programId
@@ -35,7 +35,7 @@ export const getMintAccountAddressMysteryBoxSync = (
 ) => {
   const [MintAccountMysteryBox] = PublicKey.findProgramAddressSync(
     [
-      Buffer.from(anchor.utils.bytes.utf8.encode('mint_account')),
+      Buffer.from(anchor.utils.bytes.utf8.encode('token_mint_account')),
       mysteryBox.toBuffer()
     ],
     programId
@@ -87,6 +87,36 @@ export const getNftMintSync = (
   )
 
   return NftMint
+}
+
+export const getUserNftAccountSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  const [UserNftAccount] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(anchor.utils.bytes.utf8.encode('user_nft_account')),
+      mysteryBox.toBuffer()
+    ],
+    programId
+  )
+
+  return UserNftAccount
+}
+
+export const getUserTokenAccountSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  const [UserNftAccount] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(anchor.utils.bytes.utf8.encode('user_token_account')),
+      mysteryBox.toBuffer()
+    ],
+    programId
+  )
+
+  return UserNftAccount
 }
 
 export const encodeString = (value: string): number[] => {
