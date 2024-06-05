@@ -89,47 +89,6 @@ export type Spl404 = {
             ];
         },
         {
-            name: 'mintNft';
-            discriminator: [211, 57, 6, 167, 15, 219, 35, 251];
-            accounts: [
-                {
-                    name: 'signer';
-                    writable: true;
-                    signer: true;
-                },
-                {
-                    name: 'mysteryBox';
-                    writable: true;
-                },
-                {
-                    name: 'mint';
-                    writable: true;
-                },
-                {
-                    name: 'mintAccount';
-                    writable: true;
-                },
-                {
-                    name: 'tokenProgram';
-                    address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
-                },
-                {
-                    name: 'systemProgram';
-                    address: '11111111111111111111111111111111';
-                }
-            ];
-            args: [
-                {
-                    name: 'args';
-                    type: {
-                        defined: {
-                            name: 'createMysteryBoxArgs';
-                        };
-                    };
-                }
-            ];
-        },
-        {
             name: 'swap';
             discriminator: [248, 198, 158, 145, 225, 117, 135, 200];
             accounts: [
@@ -386,11 +345,9 @@ export type Spl404 = {
                         type: 'pubkey';
                     },
                     {
-                        name: 'guards';
+                        name: 'guardAllocation';
                         docs: ['guards of the mystery box'];
-                        type: {
-                            vec: 'pubkey';
-                        };
+                        type: 'pubkey';
                     }
                 ];
             };

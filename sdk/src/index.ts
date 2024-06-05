@@ -1,15 +1,14 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
+import IDL from './types/idl_spl_404.json'
 import { CreateMysteryBoxType } from './utils/types'
 import {
-  getMintAccountAddressMysteryBoxSync,
-  getMintAddressMysteryBoxSync,
-  getMysteryBoxNftAccountSync,
   getMysteryBoxSync,
-  getNftMintSync,
+  getTokenMintAddressync,
   getTokenAccountAddressSync,
-  getUserNftAccountSync
+  getNftMintSync,
+  getNftMintAccountSync
 } from './utils/helpers'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
 
@@ -24,25 +23,30 @@ export default class Spl404Client {
       AnchorProvider.defaultOptions()
     )
 
-    // this.program = new Program<Spl404>(
-    //   Spl404,
-    //   this.provider
-    // )
+    this.program = new Program<Spl404>(IDL as any, this.provider)
   }
 
   createMysteryBox = async (mysteryBoxData: CreateMysteryBoxType) => {
+    console.log('a')
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       mysteryBoxData.name
     )
-    const TokenMintMysteryBox = getMintAddressMysteryBoxSync(
+    const TokenMintMysteryBox = getTokenMintAddressync(
       this.program.programId,
       MysteryBox
     )
-    const TokenMintAccountMysteryBox = getMintAccountAddressMysteryBoxSync(
+    const TokenMintAccountMysteryBox = getTokenAccountAddressSync(
       this.program.programId,
       MysteryBox
     )
+
+    console.log({
+      MysteryBox,
+      TokenMintMysteryBox,
+      TokenMintAccountMysteryBox,
+      mysteryBoxData
+    })
 
     return this.program.methods
       .createMysteryBox({
@@ -64,7 +68,9 @@ export default class Spl404Client {
         tokenMint: TokenMintMysteryBox,
         tokenMintAccount: TokenMintAccountMysteryBox
       })
-      .rpc()
+      .rpc({
+        skipPreflight: true
+      })
   }
 
   burn = async ({
@@ -75,7 +81,7 @@ export default class Spl404Client {
     amount: number
   }) => {
     const MysteryBox = getMysteryBoxSync(this.program.programId, mysteryBoxName)
-    const MintMysteryBox = getMintAddressMysteryBoxSync(
+    const MintMysteryBox = getTokenMintAddressync(
       this.program.programId,
       MysteryBox
     )
@@ -107,16 +113,16 @@ export default class Spl404Client {
     mysteryBoxName: string
   }) => {
     const MysteryBox = getMysteryBoxSync(this.program.programId, mysteryBoxName)
-    const MysteryBoxNftAccount = getMysteryBoxNftAccountSync(
+    const MysteryBoxNftAccount = getNftMintAccountSync(
       this.program.programId,
       MysteryBox
     )
     const NftMint = getNftMintSync(this.program.programId, MysteryBox)
-    const TokenMintMysteryBox = getMintAddressMysteryBoxSync(
+    const TokenMintMysteryBox = getTokenMintAddressync(
       this.program.programId,
       MysteryBox
     )
-    const UserNftAccount = getUserNftAccountSync(
+    const UserNftAccount = getNftMintAccountSync(
       this.program.programId,
       MysteryBox
     )
@@ -136,6 +142,7 @@ export default class Spl404Client {
         userNftAccount: UserNftAccount,
         userTokenAccount: UserNftAccount
       })
+      .rpc()
   }
 
   // mint = async ({}) => {
@@ -156,19 +163,22 @@ spl4040Client
   .createMysteryBox({
     name: 'firstTest',
     decimals: 9,
-    image: 'https://avatars.githubusercontent.com/u/161488293?s=400&u=a733ec516cfba63ca91fb7276bb2a2bdf2776c64&v=4',
+    image: '',
     maxFee: 15000,
     nftSupply: 3963,
     nftSymbol: 'TRIAD',
-    nftUri: 'https://ltygknor7ux6hkhp3hfit5v5s6f4bkgq2dskiz4snyljqmeww5hq.arweave.net/XPBlNdH9L-Oo79nKifa9l4vAqNDQ5KRnkm4WmDCWt08',
-    supply: 39630000,
+    nftUri: '',
+    supply: 3963,
     tokenFee: 2,
     tokenPerNft: 10000,
     tokenSymbol: 'tTRIAD',
-    tokenUri: 'https://shdw-drive.genesysgo.net/7yA73NdvxJFk5UKymes2tZEzQYeYhfHU2K6BWVwJ7oDY/mallToken.json',
+    tokenUri: '',
     tresuaryAccount: ''
   })
   .then((a) => {
     console.log('Ticker created')
     console.log(a)
+  })
+  .catch((e) => {
+    console.log(e)
   })
