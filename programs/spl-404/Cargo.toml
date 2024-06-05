@@ -18,3 +18,5 @@ default = []
 [dependencies]
 anchor-lang = "0.30.0"
 anchor-spl = "0.30.0"
+spl-token-metadata-interface = "0.3.3"
+spl-type-length-value = "0.4.3"

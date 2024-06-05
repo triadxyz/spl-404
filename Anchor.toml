@@ -6,10 +6,10 @@ skip-lint = false
 spl_404 = "t4o4cdvxFDEoZZzvDMnhQSJuRv97J1aFR7Sr6GxB3a1"
 
 [registry]
-url = "https://devnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75"
+url = "devnet"
 
 [provider]
-cluster = "https://devnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75"
+cluster = "devnet"
 wallet = "/Users/dannpl/.config/solana/id.json"
 
 [scripts]

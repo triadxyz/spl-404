@@ -14,8 +14,12 @@ pub struct MysteryBox {
     pub token_symbol: String,
     /// supply of the token
     pub token_supply: u64,
+    /// decimals of the token
+    pub decimals: u8,
     /// token fee of the mystery box
-    pub token_fee: u64,
+    pub token_fee: i32,
+    /// max fee of the mystery box
+    pub max_fee: u64,
     /// fee account of the token
     pub fee_account: Pubkey,
     /// mint of the token
@@ -39,7 +43,11 @@ pub struct CreateMysteryBoxArgs {
     pub supply: u32,
     pub token_per_nft: u64,
     pub token_fee: u16,
+    pub max_fee: u64,
     pub fee_account: Pubkey,
+    pub decimals: u8,
+    pub nft_uri: String,
+    pub token_uri: String,
 }
 
 impl MysteryBox {

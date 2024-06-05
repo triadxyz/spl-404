@@ -8,9 +8,17 @@ pub struct SwapArgs {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct BurnArgs {
+pub struct BurnTokenArgs {
     pub amount: u64,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct MintArgs {}
+
+pub struct TriadToken {}
+
+impl TriadToken {
+    pub const PREFIX_TOKEN_MINT_SEED: &'static [u8] = b"token_mint";
+
+    pub const PREFIX_TOKEN_ACCOUNT_SEED: &'static [u8] = b"token_account";
+}

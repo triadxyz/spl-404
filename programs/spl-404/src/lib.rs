@@ -3,6 +3,7 @@ use anchor_lang::prelude::*;
 use instructions::*;
 use state::*;
 
+mod errors;
 mod instructions;
 mod state;
 
@@ -27,10 +28,7 @@ pub mod spl_404 {
         instructions::swap(ctx, args)
     }
 
-    pub fn burn(ctx: Context<Burn>, args: BurnArgs) -> Result<()> {
-        instructions::burn(ctx, args)
+    pub fn burn(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
+        instructions::burn_token(ctx, args)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
