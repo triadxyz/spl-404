@@ -30,9 +30,7 @@ pub struct CreateMysteryBox<'info> {
         init,
         payer = signer,
         mint::decimals = args.decimals,
-        mint::authority = mystery_box.to_account_info(),
-        extensions::metadata_pointer::authority = signer,
-        extensions::metadata_pointer::metadata_address = mint,
+        mint::authority = mystery_box,
         seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref(), mystery_box.key().as_ref(), args.token_symbol.as_ref()],
         bump
     )]
@@ -42,7 +40,7 @@ pub struct CreateMysteryBox<'info> {
         init,
         payer = signer,
         token::mint = mint,
-        token::authority = mystery_box.to_account_info(),
+        token::authority = mystery_box,
         seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref(), mint.key().as_ref(), args.token_symbol.as_ref()],
         bump
     )]
