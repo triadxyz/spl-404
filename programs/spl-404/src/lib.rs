@@ -7,7 +7,7 @@ mod errors;
 mod instructions;
 mod state;
 
-declare_id!("3KEs2uxNjZZQmz6WVeEwtfzXi3VaEcwMuN6gitaCQA9X");
+declare_id!("C8C3ZfRcwKPNv54kqi3SxsP2t2Mki88XDsRyatNvqRVe");
 
 #[program]
 pub mod spl_404 {
@@ -18,10 +18,6 @@ pub mod spl_404 {
         args: CreateMysteryBoxArgs,
     ) -> Result<()> {
         instructions::create_mystery_box(ctx, args)
-    }
-
-    pub fn mint(ctx: Context<Mint>) -> Result<()> {
-        instructions::mint(ctx)
     }
 
     pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {

@@ -23,7 +23,7 @@ pub struct CreateMysteryBox<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(init, payer = signer, space = MysteryBox::SPACE, seeds = [MysteryBox::PREFIX_SEED.as_ref(), args.name.as_ref()], bump)]
+    #[account(init, payer = signer, space = MysteryBox::SPACE, seeds = [MysteryBox::PREFIX_SEED.as_ref() as &[u8], args.name.as_ref()], bump)]
     pub mystery_box: Account<'info, MysteryBox>,
 
     #[account(
@@ -31,7 +31,9 @@ pub struct CreateMysteryBox<'info> {
         payer = signer,
         mint::decimals = args.decimals,
         mint::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref(), mystery_box.key().as_ref(), args.token_symbol.as_ref()],
+        extensions::metadata_pointer::authority = signer,
+        extensions::metadata_pointer::metadata_address = mint_account,
+        seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref(), args.token_symbol.as_ref()],
         bump
     )]
     pub mint: InterfaceAccount<'info, Mint>,
@@ -41,7 +43,7 @@ pub struct CreateMysteryBox<'info> {
         payer = signer,
         token::mint = mint,
         token::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref(), mint.key().as_ref(), args.token_symbol.as_ref()],
+        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref() as &[u8], mint.key().as_ref(), args.token_symbol.as_ref()],
         bump
     )]
     pub mint_account: InterfaceAccount<'info, TokenAccount>,
