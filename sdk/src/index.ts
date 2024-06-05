@@ -1,11 +1,13 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Spl404Protocol } from './types/spl_404'
-import { CreateMisteryBoxType } from './utils/types'
+import { CreateMysteryBoxType } from './utils/types'
 import {
   getMintAccountAddressMysteryBoxSync,
   getMintAddressMysteryBoxSync,
+  getMysteryBoxNftAccountSync,
   getMysteryBoxSync,
+  getNftMintSync,
   getTokenAccountAddressSync
 } from './utils/helpers'
 
@@ -21,39 +23,39 @@ export default class Spl404 {
     )
   }
 
-  createMisteryBox = async (misteryBoxData: CreateMisteryBoxType) => {
+  createMysteryBox = async (mysteryBoxData: CreateMysteryBoxType) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
-      misteryBoxData.name
+      mysteryBoxData.name
     )
-    const MintMisteryBox = getMintAddressMysteryBoxSync(
+    const MintMysteryBox = getMintAddressMysteryBoxSync(
       this.program.programId,
       MysteryBox
     )
-    const MintAccountMisteryBox = getMintAccountAddressMysteryBoxSync(
+    const MintAccountMysteryBox = getMintAccountAddressMysteryBoxSync(
       this.program.programId,
       MysteryBox
     )
 
     return this.program.methods
       .createMysteryBox({
-        decimals: misteryBoxData.decimals,
-        feeAccount: new PublicKey(misteryBoxData.feeAccount),
-        image: misteryBoxData.image,
-        maxFee: new BN(misteryBoxData.maxFee),
-        name: misteryBoxData.name,
-        nftSymbol: misteryBoxData.nftSymbol,
-        nftUri: misteryBoxData.nftUri,
-        supply: misteryBoxData.supply,
-        tokenFee: misteryBoxData.tokenFee,
-        tokenPerNft: new BN(misteryBoxData.tokenPerNft),
-        tokenSymbol: misteryBoxData.tokenSymbol,
-        tokenUri: misteryBoxData.tokenUri
+        decimals: mysteryBoxData.decimals,
+        feeAccount: new PublicKey(mysteryBoxData.feeAccount),
+        image: mysteryBoxData.image,
+        maxFee: new BN(mysteryBoxData.maxFee),
+        name: mysteryBoxData.name,
+        nftSymbol: mysteryBoxData.nftSymbol,
+        nftUri: mysteryBoxData.nftUri,
+        supply: mysteryBoxData.supply,
+        tokenFee: mysteryBoxData.tokenFee,
+        tokenPerNft: new BN(mysteryBoxData.tokenPerNft),
+        tokenSymbol: mysteryBoxData.tokenSymbol,
+        tokenUri: mysteryBoxData.tokenUri
       })
       .accounts({
         signer: this.provider.wallet.publicKey,
-        mint: MintMisteryBox,
-        mintAccount: MintAccountMisteryBox,
+        mint: MintMysteryBox,
+        mintAccount: MintAccountMysteryBox,
         mysteryBox: MysteryBox
       })
       .rpc()
@@ -86,5 +88,40 @@ export default class Spl404 {
         tokenAccount: TokenAccount
       })
       .rpc()
+  }
+
+  swap = async ({
+    inToken,
+    inTokenAmount,
+    outToken,
+    mysteryBoxName
+  }: {
+    inToken: PublicKey
+    inTokenAmount: number
+    outToken: PublicKey
+    mysteryBoxName: string
+  }) => {
+    const MysteryBox = getMysteryBoxSync(this.program.programId, mysteryBoxName)
+    const MysteryBoxNftAccount = getMysteryBoxNftAccountSync(
+      this.program.programId,
+      MysteryBox
+    )
+    const NftMint = getNftMintSync(this.program.programId, MysteryBox)
+
+    return this.program.methods
+      .swap({
+        inToken,
+        inTokenAmount: new BN(inTokenAmount),
+        outToken
+      })
+      // .accounts({
+      //   mysteryBox: MysteryBox,
+      //   mysteryBoxNftAccount: MysteryBoxNftAccount,
+      //   nftMint: NftMint,
+      //   tokenMint: ,
+      //   user,
+      //   userNftAccount,
+      //   userTokenAccount
+      // })
   }
 }

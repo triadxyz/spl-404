@@ -1,4 +1,4 @@
-export type CreateMisteryBoxType = {
+export type CreateMysteryBoxType = {
   name: string
   image: string
   decimals: number

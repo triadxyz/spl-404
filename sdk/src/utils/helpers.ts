@@ -59,6 +59,36 @@ export const getTokenAccountAddressSync = (
   return TokenAccount
 }
 
+export const getMysteryBoxNftAccountSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  const [MysteryBoxNftAccount] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(anchor.utils.bytes.utf8.encode('mystery_box_nft_account')),
+      mysteryBox.toBuffer()
+    ],
+    programId
+  )
+
+  return MysteryBoxNftAccount
+}
+
+export const getNftMintSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  const [NftMint] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(anchor.utils.bytes.utf8.encode('nft_mint')),
+      mysteryBox.toBuffer()
+    ],
+    programId
+  )
+
+  return NftMint
+}
+
 export const encodeString = (value: string): number[] => {
   const buffer = Buffer.alloc(32)
   buffer.fill(value)
