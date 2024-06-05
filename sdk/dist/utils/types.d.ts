@@ -1,8 +1,7 @@
-export type CreateMisteryBoxType = {
+export type CreateMysteryBoxType = {
     name: string;
     image: string;
     decimals: number;
-    feeAccount: string;
     nftSymbol: string;
     nftUri: string;
     supply: number;
@@ -11,4 +10,6 @@ export type CreateMisteryBoxType = {
     tokenSymbol: string;
     tokenUri: string;
     maxFee: number;
+    nftSupply: number;
+    tresuaryAccount: string;
 };

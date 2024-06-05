@@ -4,6 +4,10 @@ export declare const getMysteryBoxSync: (programId: PublicKey, mysteryBoxName: s
 export declare const getMintAddressMysteryBoxSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
 export declare const getMintAccountAddressMysteryBoxSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
 export declare const getTokenAccountAddressSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
+export declare const getMysteryBoxNftAccountSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
+export declare const getNftMintSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
+export declare const getUserNftAccountSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
+export declare const getUserTokenAccountSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
 export declare const encodeString: (value: string) => number[];
 export declare const decodeString: (bytes: number[]) => string;
 export declare const formatNumber: (number: bigint | BN, decimals?: number) => number;
