@@ -34,7 +34,7 @@ pub struct MysteryBox {
     pub token_fee: u16,
     /// max fee of the mystery box
     pub max_fee: u64,
-    /// fee account of the mistery box to receive the minted fees
+    /// fee account of the mystery box to receive the minted fees
     pub tresuary_account: Pubkey,
     /// guards of the mystery box
     pub guards: Vec<Pubkey>,

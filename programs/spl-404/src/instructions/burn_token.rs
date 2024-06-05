@@ -1,3 +1,4 @@
+use crate::errors::Spl404Error;
 use crate::BurnTokenArgs;
 use anchor_lang::prelude::*;
 use anchor_spl::token_2022::{burn, Burn};
@@ -15,7 +16,7 @@ pub struct BurnToken<'info> {
     #[account(
         mut,
         has_one = mint,
-        constraint = token_account.amount == args.amount,
+        constraint = token_account.amount > args.amount,
     )]
     pub token_account: InterfaceAccount<'info, TokenAccount>,
 
@@ -23,6 +24,10 @@ pub struct BurnToken<'info> {
 }
 
 pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
+    if ctx.accounts.signer.key != &ctx.accounts.token_account.owner {
+        return Err(Spl404Error::Unauthorized.into());
+    }
+
     burn(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
