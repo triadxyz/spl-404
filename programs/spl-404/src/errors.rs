@@ -22,4 +22,7 @@ pub enum Spl404Error {
 
     #[msg("Failed unuathorized action")]
     Unauthorized,
+
+    #[msg("Failed to transfer tokens")]
+    TransferFailed,
 }

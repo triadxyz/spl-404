@@ -1,3 +1,4 @@
+use crate::errors::Spl404Error;
 use crate::state::{CreateMysteryBoxArgs, MysteryBox, TriadToken};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::rent::{
@@ -59,7 +60,7 @@ pub fn create_mystery_box(
     let mystery_box = &mut ctx.accounts.mystery_box;
     let cpi_program = ctx.accounts.token_program.to_account_info();
 
-    transfer_fee_initialize(
+    let transfer_fee = transfer_fee_initialize(
         CpiContext::new(
             cpi_program.clone(),
             TransferFeeInitialize {
@@ -71,7 +72,11 @@ pub fn create_mystery_box(
         Some(&mystery_box.key()),
         args.token_fee,
         args.max_fee,
-    )?;
+    );
+
+    if transfer_fee.is_err() {
+        return Err(Spl404Error::TransferFeeInitFailed.into());
+    }
 
     let token_metadata = TokenMetadata {
         name: args.name.clone(),
@@ -82,8 +87,12 @@ pub fn create_mystery_box(
     };
 
     let token_data_len = 4 + token_metadata.get_packed_len()?;
+    let lamports =
+        token_data_len as u64 * DEFAULT_LAMPORTS_PER_BYTE_YEAR * DEFAULT_EXEMPTION_THRESHOLD as u64;
 
-    transfer(
+    msg!("lamports: {}", lamports);
+
+    let transfer = transfer(
         CpiContext::new(
             ctx.accounts.system_program.to_account_info(),
             Transfer {
@@ -91,8 +100,12 @@ pub fn create_mystery_box(
                 to: ctx.accounts.token_mint.to_account_info(),
             },
         ),
-        token_data_len as u64 * DEFAULT_LAMPORTS_PER_BYTE_YEAR * DEFAULT_EXEMPTION_THRESHOLD as u64,
-    )?;
+        lamports,
+    );
+
+    if transfer.is_err() {
+        return Err(Spl404Error::TransferFailed.into());
+    }
 
     token_metadata_initialize(
         CpiContext::new(
