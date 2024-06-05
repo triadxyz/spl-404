@@ -30,7 +30,7 @@ pub struct MintNFT<'info> {
         mint::authority = mystery_box,
         extensions::metadata_pointer::authority = mystery_box,
         extensions::metadata_pointer::metadata_address = mint,
-        seeds = [TriadToken::PREFIX_NFT_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref(), args.nft_symbol.as_ref()],
+        seeds = [TriadToken::PREFIX_NFT_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref()],
         bump
     )]
     pub mint: InterfaceAccount<'info, Mint>,
@@ -40,7 +40,7 @@ pub struct MintNFT<'info> {
         payer = signer,
         token::mint = mint,
         token::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_NFT_ACCOUNT_SEED.as_ref() as &[u8], mint.key().as_ref(), args.nft_symbol.as_ref()],
+        seeds = [TriadToken::PREFIX_NFT_ACCOUNT_SEED.as_ref() as &[u8], mint.key().as_ref()],
         bump
     )]
     pub mint_account: InterfaceAccount<'info, TokenAccount>,

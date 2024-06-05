@@ -33,7 +33,7 @@ pub struct CreateMysteryBox<'info> {
         mint::authority = mystery_box,
         extensions::metadata_pointer::authority = signer,
         extensions::metadata_pointer::metadata_address = token_mint,
-        seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref(), args.token_symbol.as_ref()],
+        seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref()],
         bump
     )]
     pub token_mint: InterfaceAccount<'info, Mint>,
@@ -43,7 +43,7 @@ pub struct CreateMysteryBox<'info> {
         payer = signer,
         token::mint = token_mint,
         token::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref() as &[u8], token_mint.key().as_ref(), args.token_symbol.as_ref()],
+        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref() as &[u8], token_mint.key().as_ref()],
         bump
     )]
     pub token_mint_account: InterfaceAccount<'info, TokenAccount>,
@@ -155,7 +155,6 @@ pub fn create_mystery_box(
     mystery_box.decimals = args.decimals;
     mystery_box.token_fee = args.token_fee;
     mystery_box.tresuary_account = args.tresuary_account;
-    mystery_box.guards = vec![];
     mystery_box.max_fee = args.max_fee;
     mystery_box.token_uri = args.token_uri;
     mystery_box.nft_uri = args.nft_uri;

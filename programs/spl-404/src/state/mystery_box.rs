@@ -37,7 +37,7 @@ pub struct MysteryBox {
     /// fee account of the mystery box to receive the minted fees
     pub tresuary_account: Pubkey,
     /// guards of the mystery box
-    pub guards: Vec<Pubkey>,
+    pub guard_allocation: Pubkey,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
