@@ -8,17 +8,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const anchor_1 = require("@coral-xyz/anchor");
 const web3_js_1 = require("@solana/web3.js");
+const idl_spl_404_json_1 = __importDefault(require("./types/idl_spl_404.json"));
 const helpers_1 = require("./utils/helpers");
 const convertSecretKeyToKeypair_1 = require("./utils/convertSecretKeyToKeypair");
 class Spl404Client {
     constructor(connection, wallet) {
         this.createMysteryBox = (mysteryBoxData) => __awaiter(this, void 0, void 0, function* () {
+            console.log('a');
             const MysteryBox = (0, helpers_1.getMysteryBoxSync)(this.program.programId, mysteryBoxData.name);
-            const TokenMintMysteryBox = (0, helpers_1.getMintAddressMysteryBoxSync)(this.program.programId, MysteryBox);
-            const TokenMintAccountMysteryBox = (0, helpers_1.getMintAccountAddressMysteryBoxSync)(this.program.programId, MysteryBox);
+            const TokenMintMysteryBox = (0, helpers_1.getTokenMintAddressync)(this.program.programId, MysteryBox);
+            const TokenMintAccountMysteryBox = (0, helpers_1.getTokenAccountAddressSync)(this.program.programId, MysteryBox);
+            console.log({
+                MysteryBox,
+                TokenMintMysteryBox,
+                TokenMintAccountMysteryBox,
+                mysteryBoxData
+            });
             return this.program.methods
                 .createMysteryBox({
                 decimals: mysteryBoxData.decimals,
@@ -39,11 +50,13 @@ class Spl404Client {
                 tokenMint: TokenMintMysteryBox,
                 tokenMintAccount: TokenMintAccountMysteryBox
             })
-                .rpc();
+                .rpc({
+                skipPreflight: true
+            });
         });
         this.burn = ({ mysteryBoxName, amount }) => __awaiter(this, void 0, void 0, function* () {
             const MysteryBox = (0, helpers_1.getMysteryBoxSync)(this.program.programId, mysteryBoxName);
-            const MintMysteryBox = (0, helpers_1.getMintAddressMysteryBoxSync)(this.program.programId, MysteryBox);
+            const MintMysteryBox = (0, helpers_1.getTokenMintAddressync)(this.program.programId, MysteryBox);
             const TokenAccount = (0, helpers_1.getTokenAccountAddressSync)(this.program.programId, MysteryBox);
             return this.program.methods
                 .burn({
@@ -57,10 +70,10 @@ class Spl404Client {
         });
         this.swap = ({ inToken, inTokenAmount, outToken, mysteryBoxName }) => __awaiter(this, void 0, void 0, function* () {
             const MysteryBox = (0, helpers_1.getMysteryBoxSync)(this.program.programId, mysteryBoxName);
-            const MysteryBoxNftAccount = (0, helpers_1.getMysteryBoxNftAccountSync)(this.program.programId, MysteryBox);
+            const MysteryBoxNftAccount = (0, helpers_1.getNftMintAccountSync)(this.program.programId, MysteryBox);
             const NftMint = (0, helpers_1.getNftMintSync)(this.program.programId, MysteryBox);
-            const TokenMintMysteryBox = (0, helpers_1.getMintAddressMysteryBoxSync)(this.program.programId, MysteryBox);
-            const UserNftAccount = (0, helpers_1.getUserNftAccountSync)(this.program.programId, MysteryBox);
+            const TokenMintMysteryBox = (0, helpers_1.getTokenMintAddressync)(this.program.programId, MysteryBox);
+            const UserNftAccount = (0, helpers_1.getNftMintAccountSync)(this.program.programId, MysteryBox);
             return this.program.methods
                 .swap({
                 inToken,
@@ -75,9 +88,11 @@ class Spl404Client {
                 user: this.provider.wallet.publicKey,
                 userNftAccount: UserNftAccount,
                 userTokenAccount: UserNftAccount
-            });
+            })
+                .rpc();
         });
         this.provider = new anchor_1.AnchorProvider(connection, wallet, anchor_1.AnchorProvider.defaultOptions());
+        this.program = new anchor_1.Program(idl_spl_404_json_1.default, this.provider);
     }
 }
 exports.default = Spl404Client;
@@ -89,19 +104,22 @@ spl4040Client
     .createMysteryBox({
     name: 'firstTest',
     decimals: 9,
-    image: 'https://avatars.githubusercontent.com/u/161488293?s=400&u=a733ec516cfba63ca91fb7276bb2a2bdf2776c64&v=4',
+    image: '',
     maxFee: 15000,
     nftSupply: 3963,
     nftSymbol: 'TRIAD',
-    nftUri: 'https://ltygknor7ux6hkhp3hfit5v5s6f4bkgq2dskiz4snyljqmeww5hq.arweave.net/XPBlNdH9L-Oo79nKifa9l4vAqNDQ5KRnkm4WmDCWt08',
+    nftUri: '',
     supply: 39630000,
     tokenFee: 2,
     tokenPerNft: 10000,
     tokenSymbol: 'tTRIAD',
-    tokenUri: 'https://shdw-drive.genesysgo.net/7yA73NdvxJFk5UKymes2tZEzQYeYhfHU2K6BWVwJ7oDY/mallToken.json',
+    tokenUri: '',
     tresuaryAccount: '3umHQwkz2r8E6K6xWJuSDziDoWgkWwRckDPGEYzD8TPf'
 })
     .then((a) => {
     console.log('Ticker created');
     console.log(a);
+})
+    .catch((e) => {
+    console.log(e);
 });
