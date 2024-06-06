@@ -23,4 +23,20 @@ pub mod spl_404 {
     pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
         instructions::mint_nft(ctx, args)
     }
+
+    pub fn initialize_guard(ctx: Context<InitializeGuard>, args: GuardArgs) -> Result<()> {
+        instructions::initialize_guard(ctx, args)
+    }
+
+    pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
+        instructions::swap(ctx, args)
+    }
+
+    pub fn burn(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
+        instructions::burn_token(ctx, args)
+    }
+
+    pub fn mint_mystery_box_token(ctx: Context<MintMysteryBoxToken>) -> Result<()> {
+        instructions::mint_mystery_box_token(ctx)
+    }
 }

@@ -1,7 +1,7 @@
-// mod guard_allocation;
+mod guard;
 mod mystery_box;
 mod token;
 
-// pub use guard_allocation::*;
+pub use guard::*;
 pub use mystery_box::*;
 pub use token::*;
