@@ -14,17 +14,17 @@ pub struct MintMysteryBoxToken<'info> {
     pub mystery_box: Account<'info, MysteryBox>,
 
     #[account(mut)]
-    pub token_mint: InterfaceAccount<'info, Mint>,
+    pub mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         init,
+        token::mint = mint,
         payer = signer,
-        token::mint = token_mint,
-        token::authority = mystery_box,
-        seeds = [b"mystery_box_token", mystery_box.name.as_bytes()],
-        bump
+        token::authority = signer,
+        seeds = [b"token_account", mint.to_account_info().key.as_ref()],
+        bump,
     )]
-    pub token_mint_account: InterfaceAccount<'info, TokenAccount>,
+    pub token_account: InterfaceAccount<'info, TokenAccount>,
 
     pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
@@ -33,36 +33,34 @@ pub struct MintMysteryBoxToken<'info> {
 pub fn mint_mystery_box_token(ctx: Context<MintMysteryBoxToken>) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
 
-    if ctx.accounts.signer.key != &ctx.accounts.token_mint_account.owner {
+    if ctx.accounts.signer.key != &mystery_box.authority {
         return Err(Spl404Error::Unauthorized.into());
     }
 
-    let token_supply = mystery_box.nft_supply as u64 * mystery_box.token_per_nft;
     mint_to(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             MintTo {
-                mint: ctx.accounts.token_mint.to_account_info(),
-                to: ctx.accounts.token_mint_account.to_account_info(),
+                mint: ctx.accounts.mint.to_account_info(),
+                to: ctx.accounts.token_account.to_account_info(),
                 authority: mystery_box.to_account_info(),
             },
         ),
-        token_supply,
+        mystery_box.token_supply,
     )?;
     set_authority(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             SetAuthority {
                 current_authority: mystery_box.to_account_info(),
-                account_or_mint: ctx.accounts.token_mint.to_account_info(),
+                account_or_mint: ctx.accounts.mint.to_account_info(),
             },
         ),
         AuthorityType::MintTokens,
         None,
     )?;
 
-    mystery_box.token_account = *ctx.accounts.token_mint_account.to_account_info().key;
-    mystery_box.token_supply = token_supply;
+    mystery_box.token_account = *ctx.accounts.token_account.to_account_info().key;
 
     Ok(())
 }

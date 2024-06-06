@@ -113,25 +113,23 @@
           "writable": true
         },
         {
-          "name": "token_mint",
+          "name": "mint",
           "writable": true
         },
         {
-          "name": "token_mint_account",
+          "name": "token_account",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120, 95, 116,
-                  111, 107, 101, 110
+                  116, 111, 107, 101, 110, 95, 97, 99, 99, 111, 117, 110, 116
                 ]
               },
               {
                 "kind": "account",
-                "path": "mystery_box.name",
-                "account": "MysteryBox"
+                "path": "mint"
               }
             ]
           }
@@ -203,12 +201,6 @@
           }
         }
       ]
-    }
-  ],
-  "accounts": [
-    {
-      "name": "MysteryBox",
-      "discriminator": [84, 58, 85, 105, 241, 51, 143, 79]
     }
   ],
   "errors": [
@@ -314,106 +306,6 @@
           {
             "name": "token_uri",
             "type": "string"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MysteryBox",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "init_ts",
-            "docs": ["timestamp of the creation of the mystery box"],
-            "type": "i64"
-          },
-          {
-            "name": "name",
-            "docs": ["collection name of the mystery box"],
-            "type": "string"
-          },
-          {
-            "name": "authority",
-            "docs": ["authority of the mystery box"],
-            "type": "pubkey"
-          },
-          {
-            "name": "nft_symbol",
-            "docs": ["symbol of the mystery box"],
-            "type": "string"
-          },
-          {
-            "name": "nft_supply",
-            "docs": ["supply of the mystery box"],
-            "type": "u32"
-          },
-          {
-            "name": "nft_minteds",
-            "docs": ["minteds of the mystery box"],
-            "type": "u32"
-          },
-          {
-            "name": "nft_uri",
-            "docs": ["uri of the mystery box"],
-            "type": "string"
-          },
-          {
-            "name": "token_mint",
-            "docs": ["mint of the token"],
-            "type": "pubkey"
-          },
-          {
-            "name": "token_account",
-            "docs": ["Token account of token mint"],
-            "type": "pubkey"
-          },
-          {
-            "name": "token_symbol",
-            "docs": ["symbol of the token"],
-            "type": "string"
-          },
-          {
-            "name": "token_supply",
-            "docs": ["supply of the token"],
-            "type": "u64"
-          },
-          {
-            "name": "token_per_nft",
-            "docs": ["amount to bind to one NFT"],
-            "type": "u64"
-          },
-          {
-            "name": "token_uri",
-            "docs": ["uri of the token"],
-            "type": "string"
-          },
-          {
-            "name": "decimals",
-            "docs": ["decimals of the token"],
-            "type": "u8"
-          },
-          {
-            "name": "token_fee",
-            "docs": ["token fee of the mystery box"],
-            "type": "u16"
-          },
-          {
-            "name": "max_fee",
-            "docs": ["max fee of the mystery box"],
-            "type": "u64"
-          },
-          {
-            "name": "tresuary_account",
-            "docs": [
-              "fee account of the mystery box to receive the minted fees"
-            ],
-            "type": "pubkey"
-          },
-          {
-            "name": "guard_allocation",
-            "docs": ["guards of the mystery box"],
-            "type": "pubkey"
           }
         ]
       }

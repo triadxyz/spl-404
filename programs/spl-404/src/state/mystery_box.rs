@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use std::collections::HashMap;
 
 #[account]
 pub struct MysteryBox {
@@ -38,6 +39,14 @@ pub struct MysteryBox {
     pub tresuary_account: Pubkey,
     /// guards of the mystery box
     pub guard_allocation: Pubkey,
+    /// All Nfts
+    pub nfts: Vec<(u16, Nft)>,
+}
+
+#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
+pub struct Nft {
+    pub uri: String,
+    pub id: u16,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -58,6 +67,14 @@ pub struct CreateMysteryBoxArgs {
 impl MysteryBox {
     /// total on-chain space needed to allocate the account
     pub const SPACE: usize =
-        // anchor descriminator + all static variables
+        // anchor descriminator + all static variables + estimated size for nfts
         8 + std::mem::size_of::<Self>();
+
+    pub fn from_hashmap(nfts: HashMap<u16, Nft>) -> Vec<(u16, Nft)> {
+        nfts.into_iter().collect()
+    }
+
+    pub fn to_hashmap(vec: Vec<(u16, Nft)>) -> HashMap<u16, Nft> {
+        vec.into_iter().collect()
+    }
 }

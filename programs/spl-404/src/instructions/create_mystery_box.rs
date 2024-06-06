@@ -43,9 +43,6 @@ pub fn create_mystery_box(
         Err(_) => return err!(Spl404Error::TokenMintInitFailed),
     };
 
-    // This is the space required for the metadata account.
-    // We put the meta data into the mint account at the end so we
-    // don't need to create and additional account.
     let meta_data_space = 250;
 
     let lamports_required = (Rent::get()?).minimum_balance(space + meta_data_space);
@@ -141,7 +138,7 @@ pub fn create_mystery_box(
         ),
         9,
         &mystery_box.key(),
-        Some(&mystery_box.key()),
+        None,
     )
     .unwrap();
 

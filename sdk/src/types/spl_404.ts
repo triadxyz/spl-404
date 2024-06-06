@@ -119,40 +119,35 @@ export type Spl404 = {
           writable: true
         },
         {
-          name: 'tokenMint'
+          name: 'mint'
           writable: true
         },
         {
-          name: 'tokenMintAccount'
+          name: 'tokenAccount'
           writable: true
           pda: {
             seeds: [
               {
                 kind: 'const'
                 value: [
-                  109,
-                  121,
-                  115,
-                  116,
-                  101,
-                  114,
-                  121,
-                  95,
-                  98,
-                  111,
-                  120,
-                  95,
                   116,
                   111,
                   107,
                   101,
-                  110
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
                 ]
               },
               {
                 kind: 'account'
-                path: 'mystery_box.name'
-                account: 'mysteryBox'
+                path: 'mint'
               }
             ]
           }
@@ -224,12 +219,6 @@ export type Spl404 = {
           }
         }
       ]
-    }
-  ]
-  accounts: [
-    {
-      name: 'mysteryBox'
-      discriminator: [84, 58, 85, 105, 241, 51, 143, 79]
     }
   ]
   errors: [
@@ -335,104 +324,6 @@ export type Spl404 = {
           {
             name: 'tokenUri'
             type: 'string'
-          }
-        ]
-      }
-    },
-    {
-      name: 'mysteryBox'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'initTs'
-            docs: ['timestamp of the creation of the mystery box']
-            type: 'i64'
-          },
-          {
-            name: 'name'
-            docs: ['collection name of the mystery box']
-            type: 'string'
-          },
-          {
-            name: 'authority'
-            docs: ['authority of the mystery box']
-            type: 'pubkey'
-          },
-          {
-            name: 'nftSymbol'
-            docs: ['symbol of the mystery box']
-            type: 'string'
-          },
-          {
-            name: 'nftSupply'
-            docs: ['supply of the mystery box']
-            type: 'u32'
-          },
-          {
-            name: 'nftMinteds'
-            docs: ['minteds of the mystery box']
-            type: 'u32'
-          },
-          {
-            name: 'nftUri'
-            docs: ['uri of the mystery box']
-            type: 'string'
-          },
-          {
-            name: 'tokenMint'
-            docs: ['mint of the token']
-            type: 'pubkey'
-          },
-          {
-            name: 'tokenAccount'
-            docs: ['Token account of token mint']
-            type: 'pubkey'
-          },
-          {
-            name: 'tokenSymbol'
-            docs: ['symbol of the token']
-            type: 'string'
-          },
-          {
-            name: 'tokenSupply'
-            docs: ['supply of the token']
-            type: 'u64'
-          },
-          {
-            name: 'tokenPerNft'
-            docs: ['amount to bind to one NFT']
-            type: 'u64'
-          },
-          {
-            name: 'tokenUri'
-            docs: ['uri of the token']
-            type: 'string'
-          },
-          {
-            name: 'decimals'
-            docs: ['decimals of the token']
-            type: 'u8'
-          },
-          {
-            name: 'tokenFee'
-            docs: ['token fee of the mystery box']
-            type: 'u16'
-          },
-          {
-            name: 'maxFee'
-            docs: ['max fee of the mystery box']
-            type: 'u64'
-          },
-          {
-            name: 'tresuaryAccount'
-            docs: ['fee account of the mystery box to receive the minted fees']
-            type: 'pubkey'
-          },
-          {
-            name: 'guardAllocation'
-            docs: ['guards of the mystery box']
-            type: 'pubkey'
           }
         ]
       }

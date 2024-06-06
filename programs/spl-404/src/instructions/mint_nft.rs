@@ -23,30 +23,13 @@ pub struct MintNFT<'info> {
     #[account(mut, seeds = [MysteryBox::PREFIX_SEED.as_ref() as &[u8], args.name.as_ref()], bump)]
     pub mystery_box: Account<'info, MysteryBox>,
 
-    #[account(
-        init,
-        payer = signer,
-        mint::decimals = 0,
-        mint::authority = mystery_box,
-        extensions::metadata_pointer::authority = mystery_box,
-        extensions::metadata_pointer::metadata_address = mint,
-        seeds = [TriadToken::PREFIX_NFT_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref()],
-        bump
-    )]
-    pub mint: InterfaceAccount<'info, Mint>,
-
-    #[account(
-        init,
-        payer = signer,
-        token::mint = mint,
-        token::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_NFT_ACCOUNT_SEED.as_ref() as &[u8], mint.key().as_ref()],
-        bump
-    )]
-    pub mint_account: InterfaceAccount<'info, TokenAccount>,
+    #[account(mut)]
+    pub mint: Signer<'info>,
 
     pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 pub fn mint_nft(ctx: Context<MintNFT>, args: CreateMysteryBoxArgs) -> Result<()> {

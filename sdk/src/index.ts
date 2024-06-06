@@ -152,29 +152,50 @@ export default class Spl404Client {
   // }
 }
 
-const connection = new Connection('')
-const keypair = convertSecretKeyToKeypair('')
+const connection = new Connection(
+  'https://devnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75'
+)
+const keypair = convertSecretKeyToKeypair(
+  '27SmqQGTjAKKXQ4FyFuE59WXdGCruYHXQubnugALASsN9PNeD8gaMceHsAvARpyHd3PrUbB4jYsLXYa9gPvCMTNw'
+)
 const wallet = new Wallet(keypair)
 const spl4040Client = new Spl404Client(connection, wallet)
 
-// spl4040Client
-//   .createMysteryBox({
-//     name: 'Jo',
-//     decimals: 9,
-//     image: '',
-//     maxFee: 10000,
-//     nftSupply: 3963,
-//     nftSymbol: 'TRIAD',
-//     nftUri: '',
-//     supply: 3963,
-//     tokenFee: 200,
-//     tokenPerNft: 10000,
-//     tokenSymbol: 'tTRIAD',
-//     tokenUri: '',
-//     tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
+spl4040Client
+  .createMysteryBox({
+    name: 'GG',
+    decimals: 9,
+    image: '',
+    maxFee: 10000,
+    nftSupply: 3963,
+    nftSymbol: 'TRIAD',
+    nftUri: '',
+    supply: 3963,
+    tokenFee: 200,
+    tokenPerNft: 10000,
+    tokenSymbol: 'tTRIAD',
+    tokenUri: '',
+    tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
+  })
+  .then((a) => {
+    console.log('Ticker created')
+    console.log(a)
+  })
+  .catch((e) => {
+    console.log(e)
+  })
+
+// const MysteryBox = getMysteryBoxSync(spl4040Client.program.programId, 'OMG')
+
+// spl4040Client.program.methods
+//   .mintMysteryBoxToken()
+//   .accounts({
+//     signer: spl4040Client.provider.wallet.publicKey,
+//     mysteryBox: MysteryBox
 //   })
+//   .rpc()
 //   .then((a) => {
-//     console.log('Ticker created')
+//     console.log('Minted')
 //     console.log(a)
 //   })
 //   .catch((e) => {

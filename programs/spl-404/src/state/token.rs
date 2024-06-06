@@ -14,8 +14,5 @@ pub struct BurnTokenArgs {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct MintArgs {
-    pub name: String,
-    pub nft_symbol: String,
-    pub nft_supply: u32,
-    pub nft_uri: String,
+    pub amount: u64,
 }
