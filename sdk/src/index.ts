@@ -1,5 +1,12 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import { Connection, PublicKey } from '@solana/web3.js'
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction
+} from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
 import { CreateMysteryBoxType } from './utils/types'
@@ -11,6 +18,12 @@ import {
   getNftMintAccountSync
 } from './utils/helpers'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
+import {
+  ExtensionType,
+  TOKEN_2022_PROGRAM_ID,
+  createInitializeTransferFeeConfigInstruction,
+  getMintLen
+} from '@solana/spl-token'
 
 export default class Spl404Client {
   provider: AnchorProvider
@@ -24,31 +37,23 @@ export default class Spl404Client {
     )
 
     this.program = new Program<Spl404>(IDL as any, this.provider)
+
+    console.log('Program ID:', this.program.programId.toBase58())
   }
 
   createMysteryBox = async (mysteryBoxData: CreateMysteryBoxType) => {
-    console.log('a')
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       mysteryBoxData.name
     )
-    const TokenMintMysteryBox = getTokenMintAddressync(
-      this.program.programId,
-      MysteryBox
-    )
-    const TokenMintAccountMysteryBox = getTokenAccountAddressSync(
-      this.program.programId,
-      MysteryBox
-    )
 
     console.log({
       MysteryBox,
-      TokenMintMysteryBox,
-      TokenMintAccountMysteryBox,
       mysteryBoxData
     })
 
-    return this.program.methods
+    const mint = new Keypair()
+    await this.program.methods
       .createMysteryBox({
         decimals: mysteryBoxData.decimals,
         maxFee: new BN(mysteryBoxData.maxFee),
@@ -64,13 +69,10 @@ export default class Spl404Client {
       })
       .accounts({
         signer: this.provider.wallet.publicKey,
-        mysteryBox: MysteryBox,
-        tokenMint: TokenMintMysteryBox,
-        tokenMintAccount: TokenMintAccountMysteryBox
+        mint: mint.publicKey
       })
-      .rpc({
-        skipPreflight: true
-      })
+      .signers([mint])
+      .rpc({ skipPreflight: true })
   }
 
   burn = async ({
@@ -150,35 +152,31 @@ export default class Spl404Client {
   // }
 }
 
-const connection = new Connection(
-  ''
-)
-const keypair = convertSecretKeyToKeypair(
-  ''
-)
+const connection = new Connection('')
+const keypair = convertSecretKeyToKeypair('')
 const wallet = new Wallet(keypair)
 const spl4040Client = new Spl404Client(connection, wallet)
 
-spl4040Client
-  .createMysteryBox({
-    name: 'firstTest',
-    decimals: 9,
-    image: '',
-    maxFee: 15000,
-    nftSupply: 3963,
-    nftSymbol: 'TRIAD',
-    nftUri: '',
-    supply: 3963,
-    tokenFee: 2,
-    tokenPerNft: 10000,
-    tokenSymbol: 'tTRIAD',
-    tokenUri: '',
-    tresuaryAccount: ''
-  })
-  .then((a) => {
-    console.log('Ticker created')
-    console.log(a)
-  })
-  .catch((e) => {
-    console.log(e)
-  })
+// spl4040Client
+//   .createMysteryBox({
+//     name: 'Jo',
+//     decimals: 9,
+//     image: '',
+//     maxFee: 10000,
+//     nftSupply: 3963,
+//     nftSymbol: 'TRIAD',
+//     nftUri: '',
+//     supply: 3963,
+//     tokenFee: 200,
+//     tokenPerNft: 10000,
+//     tokenSymbol: 'tTRIAD',
+//     tokenUri: '',
+//     tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
+//   })
+//   .then((a) => {
+//     console.log('Ticker created')
+//     console.log(a)
+//   })
+//   .catch((e) => {
+//     console.log(e)
+//   })

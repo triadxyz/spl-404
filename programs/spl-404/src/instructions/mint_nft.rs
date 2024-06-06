@@ -1,4 +1,4 @@
-use crate::state::{CreateMysteryBoxArgs, MintArgs, MysteryBox, TriadToken};
+use crate::state::{CreateMysteryBoxArgs, MintNftArgs, MysteryBox, TriadToken};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::rent::{
     DEFAULT_EXEMPTION_THRESHOLD, DEFAULT_LAMPORTS_PER_BYTE_YEAR,
@@ -15,7 +15,7 @@ use spl_token_metadata_interface::state::TokenMetadata;
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
 #[derive(Accounts)]
-#[instruction(args: MintArgs)]
+#[instruction(args: MintNftArgs)]
 pub struct MintNFT<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,

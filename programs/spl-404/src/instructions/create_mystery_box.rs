@@ -1,22 +1,14 @@
 use crate::errors::Spl404Error;
-use crate::state::{CreateMysteryBoxArgs, MysteryBox, TriadToken};
+use crate::state::{CreateMysteryBoxArgs, MysteryBox};
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program::rent::{
-    DEFAULT_EXEMPTION_THRESHOLD, DEFAULT_LAMPORTS_PER_BYTE_YEAR,
-};
-use anchor_lang::system_program::{transfer, Transfer};
-use anchor_spl::token_2022::spl_token_2022::instruction::AuthorityType;
-use anchor_spl::token_2022::{
-    initialize_mint2, mint_to, set_authority, InitializeMint2, MintTo, SetAuthority,
-};
-use anchor_spl::token_2022_extensions::transfer_fee::{
-    transfer_fee_initialize, TransferFeeInitialize,
-};
-use anchor_spl::token_interface::{
-    token_metadata_initialize, Mint, Token2022, TokenAccount, TokenMetadataInitialize,
-};
-use spl_token_metadata_interface::state::TokenMetadata;
-use spl_type_length_value::variable_len_pack::VariableLenPack;
+use anchor_lang::solana_program::program::{invoke, invoke_signed};
+use anchor_lang::system_program::{assign, create_account, Assign, CreateAccount};
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token_2022::spl_token_2022::extension::metadata_pointer::instruction::initialize;
+use anchor_spl::token_2022::spl_token_2022::extension::transfer_fee::instruction::initialize_transfer_fee_config;
+use anchor_spl::token_2022::spl_token_2022::extension::ExtensionType;
+use anchor_spl::token_2022::spl_token_2022::state::Mint;
+use anchor_spl::token_2022::{self, initialize_mint2, InitializeMint2, Token2022};
 
 #[derive(Accounts)]
 #[instruction(args: CreateMysteryBoxArgs)]
@@ -24,33 +16,16 @@ pub struct CreateMysteryBox<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(init, payer = signer, space = MysteryBox::SPACE, seeds = [MysteryBox::PREFIX_SEED.as_ref() as &[u8], args.name.as_ref()], bump)]
+    #[account(init, payer = signer, space = MysteryBox::SPACE, seeds = [b"mystery_box", args.name.as_bytes()], bump)]
     pub mystery_box: Account<'info, MysteryBox>,
 
-    #[account(
-        init,
-        payer = signer,
-        mint::decimals = args.decimals,
-        mint::authority = mystery_box,
-        extensions::metadata_pointer::authority = mystery_box,
-        extensions::metadata_pointer::metadata_address = token_mint,
-        seeds = [TriadToken::PREFIX_TOKEN_MINT_SEED.as_ref() as &[u8], mystery_box.key().as_ref()],
-        bump
-    )]
-    pub token_mint: InterfaceAccount<'info, Mint>,
-
-    #[account(
-        init,
-        payer = signer,
-        token::mint = token_mint,
-        token::authority = mystery_box,
-        seeds = [TriadToken::PREFIX_TOKEN_ACCOUNT_SEED.as_ref() as &[u8], token_mint.key().as_ref()],
-        bump
-    )]
-    pub token_mint_account: InterfaceAccount<'info, TokenAccount>,
+    #[account(mut)]
+    pub mint: Signer<'info>,
 
     pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 pub fn create_mystery_box(
@@ -58,110 +33,148 @@ pub fn create_mystery_box(
     args: CreateMysteryBoxArgs,
 ) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
-    let cpi_program = ctx.accounts.token_program.to_account_info();
+    msg!("Mint nft with meta data extension and additional meta data");
 
-    let transfer_fee = transfer_fee_initialize(
+    let space = match ExtensionType::try_calculate_account_len::<Mint>(&[
+        ExtensionType::MetadataPointer,
+        ExtensionType::TransferFeeConfig,
+    ]) {
+        Ok(space) => space,
+        Err(_) => return err!(Spl404Error::TokenMintInitFailed),
+    };
+
+    // This is the space required for the metadata account.
+    // We put the meta data into the mint account at the end so we
+    // don't need to create and additional account.
+    let meta_data_space = 250;
+
+    let lamports_required = (Rent::get()?).minimum_balance(space + meta_data_space);
+
+    msg!(
+        "Create Mint and metadata account size and cost: {} lamports: {}",
+        space as u64,
+        lamports_required
+    );
+
+    create_account(
         CpiContext::new(
-            cpi_program.clone(),
-            TransferFeeInitialize {
-                token_program_id: ctx.accounts.token_program.to_account_info(),
-                mint: ctx.accounts.token_mint.to_account_info(),
+            ctx.accounts.system_program.to_account_info(),
+            CreateAccount {
+                from: ctx.accounts.signer.to_account_info(),
+                to: ctx.accounts.mint.to_account_info(),
             },
         ),
+        lamports_required,
+        space as u64,
+        &ctx.accounts.token_program.key(),
+    )?;
+
+    assign(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            Assign {
+                account_to_assign: ctx.accounts.mint.to_account_info(),
+            },
+        ),
+        &token_2022::ID,
+    )?;
+
+    let signer: &[&[&[u8]]] = &[&[
+        b"mystery_box",
+        args.name.as_bytes(),
+        &[ctx.bumps.mystery_box],
+    ]];
+
+    let init_transfer_fee_config = match initialize_transfer_fee_config(
+        &Token2022::id(),
+        &ctx.accounts.mint.to_account_info().key(),
         Some(&mystery_box.key()),
         Some(&mystery_box.key()),
         args.token_fee,
         args.max_fee,
-    );
+    ) {
+        Ok(ix) => ix,
+        Err(e) => {
+            msg!("Error: {:?}", e);
 
-    if transfer_fee.is_err() {
-        return Err(Spl404Error::TransferFeeInitFailed.into());
-    }
-
-    let token_metadata = TokenMetadata {
-        name: args.name.clone(),
-        symbol: args.token_symbol.clone(),
-        uri: args.token_uri.clone(),
-        mint: *ctx.accounts.token_mint.to_account_info().key,
-        ..Default::default()
+            return err!(Spl404Error::TokenMintInitFailed);
+        }
     };
 
-    let token_data_len = 4 + token_metadata.get_packed_len()?;
-    let lamports =
-        token_data_len as u64 * DEFAULT_LAMPORTS_PER_BYTE_YEAR * DEFAULT_EXEMPTION_THRESHOLD as u64;
+    invoke_signed(
+        &init_transfer_fee_config,
+        &[
+            ctx.accounts.mint.to_account_info(),
+            mystery_box.to_account_info(),
+        ],
+        signer,
+    )?;
 
-    msg!("lamports: {}", lamports);
+    let init_meta_data_pointer_ix = match initialize(
+        &Token2022::id(),
+        &ctx.accounts.mint.key(),
+        Some(mystery_box.key()),
+        Some(ctx.accounts.mint.key()),
+    ) {
+        Ok(ix) => ix,
+        Err(e) => {
+            msg!("Error: {:?}", e);
 
-    let transfer = transfer(
-        CpiContext::new(
-            ctx.accounts.system_program.to_account_info(),
-            Transfer {
-                from: ctx.accounts.signer.to_account_info(),
-                to: ctx.accounts.token_mint.to_account_info(),
-            },
-        ),
-        lamports,
-    );
+            return err!(Spl404Error::TokenMintInitFailed);
+        }
+    };
 
-    if transfer.is_err() {
-        return Err(Spl404Error::TransferFailed.into());
-    }
+    invoke(
+        &init_meta_data_pointer_ix,
+        &[
+            ctx.accounts.mint.to_account_info(),
+            mystery_box.to_account_info(),
+        ],
+    )?;
 
-    token_metadata_initialize(
+    initialize_mint2(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
-            TokenMetadataInitialize {
-                token_program_id: ctx.accounts.token_program.to_account_info(),
-                mint: ctx.accounts.token_mint.to_account_info(),
-                metadata: ctx.accounts.token_mint.to_account_info(),
-                mint_authority: mystery_box.to_account_info(),
-                update_authority: mystery_box.to_account_info(),
+            InitializeMint2 {
+                mint: ctx.accounts.mint.to_account_info(),
             },
         ),
+        9,
+        &mystery_box.key(),
+        Some(&mystery_box.key()),
+    )
+    .unwrap();
+
+    msg!("Mint created");
+
+    let init_token_meta_data_ix = &spl_token_metadata_interface::instruction::initialize(
+        &Token2022::id(),
+        ctx.accounts.mint.key,
+        mystery_box.to_account_info().key,
+        ctx.accounts.mint.key,
+        mystery_box.to_account_info().key,
         args.name.clone(),
         args.token_symbol.clone(),
         args.token_uri.clone(),
-    )?;
-
-    let token_mint_ctx = CpiContext::new(
-        cpi_program.clone(),
-        InitializeMint2 {
-            mint: ctx.accounts.token_mint.to_account_info(),
-        },
     );
-    initialize_mint2(token_mint_ctx, args.decimals, &mystery_box.key(), None)?;
+
+    invoke_signed(
+        init_token_meta_data_ix,
+        &[
+            ctx.accounts.mint.to_account_info().clone(),
+            mystery_box.to_account_info().clone(),
+        ],
+        signer,
+    )?;
 
     let token_supply = args.nft_supply as u64 * args.token_per_nft;
-    mint_to(
-        CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            MintTo {
-                mint: ctx.accounts.token_mint.to_account_info(),
-                to: ctx.accounts.token_mint_account.to_account_info(),
-                authority: mystery_box.to_account_info(),
-            },
-        ),
-        token_supply,
-    )?;
-    set_authority(
-        CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            SetAuthority {
-                current_authority: mystery_box.to_account_info(),
-                account_or_mint: ctx.accounts.token_mint.to_account_info(),
-            },
-        ),
-        AuthorityType::MintTokens,
-        None,
-    )?;
 
     mystery_box.authority = *ctx.accounts.signer.key;
     mystery_box.name = args.name;
     mystery_box.nft_minteds = 0;
     mystery_box.nft_supply = args.nft_supply;
     mystery_box.nft_symbol = args.nft_symbol;
-    mystery_box.token_mint = *ctx.accounts.token_mint.to_account_info().key;
-    mystery_box.token_account = *ctx.accounts.token_mint_account.to_account_info().key;
+    mystery_box.token_mint = *ctx.accounts.mint.to_account_info().key;
     mystery_box.token_symbol = args.token_symbol;
     mystery_box.token_supply = token_supply;
     mystery_box.token_per_nft = args.token_per_nft;

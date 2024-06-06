@@ -3,7 +3,8 @@
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
     "update-types": "cp target/types/spl_404.ts sdk/src/types/spl_404.ts && prettier --write sdk/src/types/spl_404.ts && cp target/idl/spl_404.json sdk/src/types/idl_spl_404.json && prettier --write sdk/src/types/idl_spl_404.json",
-    "build": "anchor build && yarn update-types"
+    "build": "anchor build && yarn update-types",
+    "deploy": "yarn build && anchor deploy"
   },
   "dependencies": {
     "@coral-xyz/anchor": "0.30.0"

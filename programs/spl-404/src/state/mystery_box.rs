@@ -56,9 +56,6 @@ pub struct CreateMysteryBoxArgs {
 }
 
 impl MysteryBox {
-    /// static prefix seed string used to derive the PDAs
-    pub const PREFIX_SEED: &'static [u8] = b"mystery_box";
-
     /// total on-chain space needed to allocate the account
     pub const SPACE: usize =
         // anchor descriminator + all static variables

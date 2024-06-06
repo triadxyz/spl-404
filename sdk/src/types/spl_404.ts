@@ -59,14 +59,23 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'arg'
+                path: 'args.name'
+              }
+            ]
+          }
         },
         {
-          name: 'tokenMint'
+          name: 'mint'
           writable: true
-        },
-        {
-          name: 'tokenMintAccount'
-          writable: true
+          signer: true
         },
         {
           name: 'tokenProgram'
@@ -75,6 +84,14 @@ export type Spl404 = {
         {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
+        },
+        {
+          name: 'rent'
+          address: 'SysvarRent111111111111111111111111111111111'
+        },
+        {
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
         }
       ]
       args: [
@@ -87,6 +104,69 @@ export type Spl404 = {
           }
         }
       ]
+    },
+    {
+      name: 'mintMysteryBoxToken'
+      discriminator: [203, 130, 227, 236, 136, 237, 141, 171]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'tokenMint'
+          writable: true
+        },
+        {
+          name: 'tokenMintAccount'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  109,
+                  121,
+                  115,
+                  116,
+                  101,
+                  114,
+                  121,
+                  95,
+                  98,
+                  111,
+                  120,
+                  95,
+                  116,
+                  111,
+                  107,
+                  101,
+                  110
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mystery_box.name'
+                account: 'mysteryBox'
+              }
+            ]
+          }
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: []
     },
     {
       name: 'swap'
@@ -187,6 +267,11 @@ export type Spl404 = {
       code: 6006
       name: 'unauthorized'
       msg: 'Failed unuathorized action'
+    },
+    {
+      code: 6007
+      name: 'transferFailed'
+      msg: 'Failed to transfer tokens'
     }
   ]
   types: [

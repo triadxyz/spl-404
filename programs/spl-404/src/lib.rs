@@ -20,6 +20,10 @@ pub mod spl_404 {
         instructions::create_mystery_box(ctx, args)
     }
 
+    pub fn mint_mystery_box_token(ctx: Context<MintMysteryBoxToken>) -> Result<()> {
+        instructions::mint_mystery_box_token(ctx)
+    }
+
     pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
         instructions::swap(ctx, args)
     }

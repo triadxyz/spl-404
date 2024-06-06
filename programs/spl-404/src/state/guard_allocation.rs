@@ -19,6 +19,8 @@ pub struct GuardAllocation {
     pub minted: u64,
     /// Amount of the guard allocation burned
     pub wallets: Vec<Pubkey>,
+    /// Price of the NFT
+    pub price: u64,
 }
 
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]

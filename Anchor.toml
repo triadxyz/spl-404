@@ -1,6 +1,7 @@
 [features]
-seeds = false
+seeds = true
 skip-lint = false
+resolution = true
 
 [programs.devnet]
 spl_404 = "7x6Jq7Yev6bxbRXcFPhagWReg472hD8B27hWRn4UKLYV"
