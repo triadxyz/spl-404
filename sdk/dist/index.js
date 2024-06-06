@@ -53,53 +53,29 @@ class Spl404Client {
     }
 }
 exports.default = Spl404Client;
-const connection = new web3_js_1.Connection('https://devnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75');
+const connection = new web3_js_1.Connection('http://127.0.0.1:8899', 'processed');
 const keypair = (0, convertSecretKeyToKeypair_1.convertSecretKeyToKeypair)('27SmqQGTjAKKXQ4FyFuE59WXdGCruYHXQubnugALASsN9PNeD8gaMceHsAvARpyHd3PrUbB4jYsLXYa9gPvCMTNw');
 const wallet = new anchor_1.Wallet(keypair);
 const spl4040Client = new Spl404Client(connection, wallet);
-// spl4040Client
-//   .createMysteryBox({
-//     name: 'OL',
-//     decimals: 9,
-//     image: '',
-//     maxFee: 10000,
-//     nftSupply: 3963,
-//     nftSymbol: 'TRIAD',
-//     nftUri: '',
-//     supply: 3963,
-//     tokenFee: 200,
-//     tokenPerNft: 10000,
-//     tokenSymbol: 'tTRIAD',
-//     tokenUri: '',
-//     tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
-//   })
-//   .then((a) => {
-//     console.log('Ticker created')
-//     console.log(a)
-//   })
-//   .catch((e) => {
-//     console.log(e)
-//   })
-const MysteryBox = (0, helpers_1.getMysteryBoxSync)(spl4040Client.program.programId, 'OL');
-const MintAddressSync = (0, helpers_1.getMintAddressSync)(spl4040Client.program.programId, MysteryBox);
-spl4040Client.program.methods
-    .mintNft({
-    name: 'Triad #1',
-    nftUri: 'https://arweave.net/5daxlcPCY0FgxR9SEMe8XuBzzW-NArkx7BZn83_xXzM',
-    groupId: 1
-})
-    .accounts({
-    signer: spl4040Client.provider.wallet.publicKey,
-    treasuryAccount: new web3_js_1.PublicKey('DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'),
-    mysteryBox: MysteryBox,
-})
-    .rpc({
-    skipPreflight: true
+spl4040Client
+    .createMysteryBox({
+    name: 'Triad',
+    decimals: 6,
+    image: 'https://6ur2hw5rrmu4yljraaqrkrikec6alcexzlrhoghw2peghvp624ka.arweave.net/9SOj27GLKcwtMQAhFUUKILwFiJfK4ncY9tPIY9X-1xQ?ext=png',
+    maxFee: 10000,
+    nftSupply: 3963,
+    nftSymbol: 'TRIAD',
+    nftUri: 'https://n2vsncrbgg2c2ygzdqnjcu6veplok6qvtrvx64tjr4dbkgy4pq4q.arweave.net/bqsmiiExtC1g2RwakVPVI9blehWca39yaY8GFRscfDk',
+    supply: 3963,
+    tokenFee: 200,
+    tokenPerNft: 10000,
+    tokenSymbol: 'tTRIAD',
+    tokenUri: 'https://n2vsncrbgg2c2ygzdqnjcu6veplok6qvtrvx64tjr4dbkgy4pq4q.arweave.net/bqsmiiExtC1g2RwakVPVI9blehWca39yaY8GFRscfDk',
+    tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
 })
     .then((a) => {
-    console.log('Minted');
-    console.log(a);
+    console.log('Ticker created');
 })
     .catch((e) => {
-    console.log(e);
+    console.error(e);
 });

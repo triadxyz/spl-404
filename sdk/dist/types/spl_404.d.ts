@@ -14,6 +14,44 @@ export type Spl404 = {
     };
     instructions: [
         {
+            name: 'burn';
+            discriminator: [116, 110, 29, 56, 107, 219, 42, 93];
+            accounts: [
+                {
+                    name: 'signer';
+                    writable: true;
+                    signer: true;
+                },
+                {
+                    name: 'mysteryBox';
+                    writable: true;
+                },
+                {
+                    name: 'mint';
+                    writable: true;
+                    relations: ['tokenAccount'];
+                },
+                {
+                    name: 'tokenAccount';
+                    writable: true;
+                },
+                {
+                    name: 'tokenProgram';
+                    address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
+                }
+            ];
+            args: [
+                {
+                    name: 'args';
+                    type: {
+                        defined: {
+                            name: 'burnTokenArgs';
+                        };
+                    };
+                }
+            ];
+        },
+        {
             name: 'createMysteryBox';
             discriminator: [79, 39, 108, 94, 236, 142, 106, 158];
             accounts: [
@@ -72,6 +110,64 @@ export type Spl404 = {
             ];
         },
         {
+            name: 'mintMysteryBoxToken';
+            discriminator: [203, 130, 227, 236, 136, 237, 141, 171];
+            accounts: [
+                {
+                    name: 'signer';
+                    writable: true;
+                    signer: true;
+                },
+                {
+                    name: 'mysteryBox';
+                    writable: true;
+                },
+                {
+                    name: 'mint';
+                    writable: true;
+                },
+                {
+                    name: 'tokenAccount';
+                    writable: true;
+                    pda: {
+                        seeds: [
+                            {
+                                kind: 'const';
+                                value: [
+                                    116,
+                                    111,
+                                    107,
+                                    101,
+                                    110,
+                                    95,
+                                    97,
+                                    99,
+                                    99,
+                                    111,
+                                    117,
+                                    110,
+                                    116
+                                ];
+                            },
+                            {
+                                kind: 'account';
+                                path: 'mint';
+                            }
+                        ];
+                    };
+                },
+                {
+                    name: 'tokenProgram';
+                    address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
+                },
+                {
+                    name: 'systemProgram';
+                    address: '11111111111111111111111111111111';
+                }
+            ];
+            args: [];
+        },
+        {
             name: 'mintNft';
             discriminator: [211, 57, 6, 167, 15, 219, 35, 251];
             accounts: [
@@ -92,7 +188,32 @@ export type Spl404 = {
                 {
                     name: 'tokenAccount';
                     writable: true;
-                    signer: true;
+                    pda: {
+                        seeds: [
+                            {
+                                kind: 'const';
+                                value: [
+                                    116,
+                                    111,
+                                    107,
+                                    101,
+                                    110,
+                                    95,
+                                    97,
+                                    99,
+                                    99,
+                                    111,
+                                    117,
+                                    110,
+                                    116
+                                ];
+                            },
+                            {
+                                kind: 'account';
+                                path: 'mysteryBox';
+                            }
+                        ];
+                    };
                 },
                 {
                     name: 'treasuryAccount';
@@ -105,10 +226,6 @@ export type Spl404 = {
                 {
                     name: 'systemProgram';
                     address: '11111111111111111111111111111111';
-                },
-                {
-                    name: 'associatedTokenProgram';
-                    address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
                 }
             ];
             args: [
@@ -117,6 +234,63 @@ export type Spl404 = {
                     type: {
                         defined: {
                             name: 'mintNftArgs';
+                        };
+                    };
+                }
+            ];
+        },
+        {
+            name: 'swap';
+            discriminator: [248, 198, 158, 145, 225, 117, 135, 200];
+            accounts: [
+                {
+                    name: 'user';
+                    writable: true;
+                    signer: true;
+                },
+                {
+                    name: 'mysteryBox';
+                    writable: true;
+                },
+                {
+                    name: 'userTokenAccount';
+                    writable: true;
+                },
+                {
+                    name: 'mysteryBoxNftAccount';
+                    writable: true;
+                },
+                {
+                    name: 'userNftAccount';
+                    writable: true;
+                },
+                {
+                    name: 'tokenMint';
+                    writable: true;
+                },
+                {
+                    name: 'nftMint';
+                    writable: true;
+                },
+                {
+                    name: 'tokenProgram';
+                    address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
+                },
+                {
+                    name: 'systemProgram';
+                    address: '11111111111111111111111111111111';
+                },
+                {
+                    name: 'rent';
+                    address: 'SysvarRent111111111111111111111111111111111';
+                }
+            ];
+            args: [
+                {
+                    name: 'args';
+                    type: {
+                        defined: {
+                            name: 'swapArgs';
                         };
                     };
                 }
@@ -166,6 +340,18 @@ export type Spl404 = {
         }
     ];
     types: [
+        {
+            name: 'burnTokenArgs';
+            type: {
+                kind: 'struct';
+                fields: [
+                    {
+                        name: 'amount';
+                        type: 'u64';
+                    }
+                ];
+            };
+        },
         {
             name: 'createMysteryBoxArgs';
             type: {
@@ -234,6 +420,26 @@ export type Spl404 = {
                     {
                         name: 'groupId';
                         type: 'u16';
+                    }
+                ];
+            };
+        },
+        {
+            name: 'swapArgs';
+            type: {
+                kind: 'struct';
+                fields: [
+                    {
+                        name: 'inToken';
+                        type: 'pubkey';
+                    },
+                    {
+                        name: 'outToken';
+                        type: 'pubkey';
+                    },
+                    {
+                        name: 'inTokenAmount';
+                        type: 'u64';
                     }
                 ];
             };

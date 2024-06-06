@@ -13,3 +13,12 @@ export type CreateMysteryBoxType = {
   nftSupply: number
   tresuaryAccount: string
 }
+
+export type CreateGuardType = {
+  name: string
+  id: number
+  supply: number
+  price: number
+  initTs: number
+  endTs: number
+}

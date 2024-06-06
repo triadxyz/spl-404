@@ -14,6 +14,44 @@ export type Spl404 = {
   }
   instructions: [
     {
+      name: 'burn'
+      discriminator: [116, 110, 29, 56, 107, 219, 42, 93]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'mint'
+          writable: true
+          relations: ['tokenAccount']
+        },
+        {
+          name: 'tokenAccount'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'burnTokenArgs'
+            }
+          }
+        }
+      ]
+    },
+    {
       name: 'createMysteryBox'
       discriminator: [79, 39, 108, 94, 236, 142, 106, 158]
       accounts: [
@@ -72,8 +110,49 @@ export type Spl404 = {
       ]
     },
     {
-      name: 'mintNft'
-      discriminator: [211, 57, 6, 167, 15, 219, 35, 251]
+      name: 'initializeGuard'
+      discriminator: [63, 189, 246, 157, 77, 125, 157, 142]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'guard'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [103, 117, 97, 114, 100]
+              },
+              {
+                kind: 'arg'
+                path: 'args.name'
+              }
+            ]
+          }
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'guardArgs'
+            }
+          }
+        }
+      ]
+    },
+    {
+      name: 'mintMysteryBoxToken'
+      discriminator: [203, 130, 227, 236, 136, 237, 141, 171]
       accounts: [
         {
           name: 'signer'
@@ -87,7 +166,99 @@ export type Spl404 = {
         {
           name: 'mint'
           writable: true
+        },
+        {
+          name: 'tokenAccount'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mint'
+              }
+            ]
+          }
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: []
+    },
+    {
+      name: 'mintNft'
+      discriminator: [211, 57, 6, 167, 15, 219, 35, 251]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
           signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'guard'
+          writable: true
+        },
+        {
+          name: 'mint'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'tokenAccount'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mysteryBox'
+              }
+            ]
+          }
         },
         {
           name: 'treasuryAccount'
@@ -100,10 +271,6 @@ export type Spl404 = {
         {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
         }
       ]
       args: [
@@ -116,6 +283,69 @@ export type Spl404 = {
           }
         }
       ]
+    },
+    {
+      name: 'swap'
+      discriminator: [248, 198, 158, 145, 225, 117, 135, 200]
+      accounts: [
+        {
+          name: 'user'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'userTokenAccount'
+          writable: true
+        },
+        {
+          name: 'mysteryBoxNftAccount'
+          writable: true
+        },
+        {
+          name: 'userNftAccount'
+          writable: true
+        },
+        {
+          name: 'tokenMint'
+          writable: true
+        },
+        {
+          name: 'nftMint'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        },
+        {
+          name: 'rent'
+          address: 'SysvarRent111111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'swapArgs'
+            }
+          }
+        }
+      ]
+    }
+  ]
+  accounts: [
+    {
+      name: 'guard'
+      discriminator: [54, 187, 84, 137, 192, 15, 74, 248]
     }
   ]
   errors: [
@@ -161,6 +391,18 @@ export type Spl404 = {
     }
   ]
   types: [
+    {
+      name: 'burnTokenArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'amount'
+            type: 'u64'
+          }
+        ]
+      }
+    },
     {
       name: 'createMysteryBoxArgs'
       type: {
@@ -214,6 +456,89 @@ export type Spl404 = {
       }
     },
     {
+      name: 'guard'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'initTs'
+            docs: ['timestamp of the initialization']
+            type: 'i64'
+          },
+          {
+            name: 'endTs'
+            docs: ['timestamp of the end of the guard']
+            type: 'i64'
+          },
+          {
+            name: 'name'
+            docs: ['Guard allocation Name']
+            type: 'string'
+          },
+          {
+            name: 'id'
+            docs: ['Guard allocation id']
+            type: 'u16'
+          },
+          {
+            name: 'supply'
+            docs: ['Supply of the guard allocation']
+            type: 'u64'
+          },
+          {
+            name: 'minted'
+            docs: [
+              'Amount of the guard allocation minted',
+              'This is used to track the amount of the guard allocation minted'
+            ]
+            type: 'u64'
+          },
+          {
+            name: 'price'
+            docs: ['Price of the NFT']
+            type: 'u64'
+          },
+          {
+            name: 'walletStorage'
+            docs: ['Wallets authorized to mint from the guard allocation']
+            type: 'pubkey'
+          }
+        ]
+      }
+    },
+    {
+      name: 'guardArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'initTs'
+            type: 'i64'
+          },
+          {
+            name: 'endTs'
+            type: 'i64'
+          },
+          {
+            name: 'name'
+            type: 'string'
+          },
+          {
+            name: 'id'
+            type: 'u16'
+          },
+          {
+            name: 'supply'
+            type: 'u64'
+          },
+          {
+            name: 'price'
+            type: 'u64'
+          }
+        ]
+      }
+    },
+    {
       name: 'mintNftArgs'
       type: {
         kind: 'struct'
@@ -229,6 +554,26 @@ export type Spl404 = {
           {
             name: 'groupId'
             type: 'u16'
+          }
+        ]
+      }
+    },
+    {
+      name: 'swapArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'inToken'
+            type: 'pubkey'
+          },
+          {
+            name: 'outToken'
+            type: 'pubkey'
+          },
+          {
+            name: 'inTokenAmount'
+            type: 'u64'
           }
         ]
       }
