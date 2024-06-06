@@ -12,6 +12,26 @@ export const getMysteryBoxSync = (
   )[0]
 }
 
+export const getMintAddressSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from('mint'), mysteryBox.toBuffer()],
+    programId
+  )[0]
+}
+
+export const getTokenAccountSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from('token_account'), mysteryBox.toBuffer()],
+    programId
+  )[0]
+}
+
 export const getTokenMintAddressync = (
   programId: PublicKey,
   mysteryBox: PublicKey

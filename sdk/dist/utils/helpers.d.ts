@@ -1,6 +1,8 @@
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 export declare const getMysteryBoxSync: (programId: PublicKey, mysteryBoxName: string) => PublicKey;
+export declare const getMintAddressSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
+export declare const getTokenAccountSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
 export declare const getTokenMintAddressync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
 export declare const getTokenAccountAddressSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;
 export declare const getNftMintAccountSync: (programId: PublicKey, mysteryBox: PublicKey) => PublicKey;

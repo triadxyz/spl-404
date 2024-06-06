@@ -1,12 +1,12 @@
+use crate::errors::Spl404Error;
 use crate::state::{MintNftArgs, MysteryBox};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::rent::{
     DEFAULT_EXEMPTION_THRESHOLD, DEFAULT_LAMPORTS_PER_BYTE_YEAR,
 };
+use anchor_lang::solana_program::system_instruction;
 use anchor_lang::system_program::{transfer, Transfer};
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_2022::spl_token_2022::instruction::AuthorityType;
-use anchor_spl::token_2022::{mint_to, set_authority, MintTo, SetAuthority};
 use anchor_spl::token_interface::{
     token_metadata_initialize, Mint, Token2022, TokenAccount, TokenMetadataInitialize,
 };
@@ -19,7 +19,7 @@ pub struct MintNft<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(mut, seeds = [b"mystery_box", args.name.as_bytes()], bump)]
+    #[account(mut)]
     pub mystery_box: Account<'info, MysteryBox>,
 
     #[account(
@@ -28,35 +28,60 @@ pub struct MintNft<'info> {
         mint::decimals = 0,
         mint::authority = mystery_box,
         extensions::metadata_pointer::authority = mystery_box,
-        extensions::metadata_pointer::metadata_address = mint_account,
+        extensions::metadata_pointer::metadata_address = mint,
     )]
-    pub mint_account: InterfaceAccount<'info, Mint>,
+    pub mint: InterfaceAccount<'info, Mint>,
 
     #[account(
         init,
-        token::mint = mint_account,
+        token::mint = mint,
         token::authority = signer,
         payer = signer,
-        seeds = [b"token_account", signer.key().as_ref(), mint_account.key().as_ref()],
-        bump,
     )]
     pub token_account: InterfaceAccount<'info, TokenAccount>,
+    #[account(mut)]
+    /// CHECK: This account should be the treasury account
+    pub treasury_account: AccountInfo<'info>,
 
     pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
 
-    // Define token metadata
+    if mystery_box.tresuary_account != *ctx.accounts.treasury_account.key {
+        return Err(Spl404Error::MintFailed.into());
+    }
+
+    if mystery_box.nft_minteds >= mystery_box.nft_supply {
+        return Err(Spl404Error::MintFailed.into());
+    }
+
+    let from_account = &ctx.accounts.signer;
+    let to_account = &ctx.accounts.treasury_account;
+
+    let amount = 0;
+
+    let transfer_instruction =
+        system_instruction::transfer(from_account.key, to_account.key, amount);
+
+    anchor_lang::solana_program::program::invoke_signed(
+        &transfer_instruction,
+        &[
+            from_account.to_account_info(),
+            to_account.clone(),
+            ctx.accounts.system_program.to_account_info(),
+        ],
+        &[],
+    )?;
+
     let token_metadata = TokenMetadata {
         name: args.name.clone(),
-        symbol: args.symbol.clone(),
+        symbol: mystery_box.nft_symbol.clone(),
         uri: args.nft_uri.clone(),
-        mint: *ctx.accounts.mint_account.to_account_info().key,
+        mint: *ctx.accounts.mint.to_account_info().key,
         ..Default::default()
     };
 
@@ -70,7 +95,7 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
             ctx.accounts.system_program.to_account_info(),
             Transfer {
                 from: ctx.accounts.signer.to_account_info(),
-                to: ctx.accounts.mint_account.to_account_info(),
+                to: ctx.accounts.mint.to_account_info(),
             },
         ),
         lamports,
@@ -81,42 +106,41 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
             ctx.accounts.token_program.to_account_info(),
             TokenMetadataInitialize {
                 token_program_id: ctx.accounts.token_program.to_account_info(),
-                mint: ctx.accounts.mint_account.to_account_info(),
-                metadata: ctx.accounts.mint_account.to_account_info(),
-                mint_authority: ctx.accounts.signer.to_account_info(),
-                update_authority: ctx.accounts.signer.to_account_info(),
+                mint: ctx.accounts.mint.to_account_info(),
+                metadata: ctx.accounts.mint.to_account_info(),
+                mint_authority: mystery_box.to_account_info(),
+                update_authority: mystery_box.to_account_info(),
             },
         ),
         args.name.clone(),
-        args.symbol.clone(),
+        mystery_box.nft_symbol.clone(),
         args.nft_uri.clone(),
     )?;
 
-    mint_to(
-        CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            MintTo {
-                mint: ctx.accounts.mint_account.to_account_info(),
-                to: ctx.accounts.mint_account.to_account_info(),
-                authority: mystery_box.to_account_info(),
-            },
-        ),
-        1,
-    )?;
+    // mint_to(
+    //     CpiContext::new(
+    //         ctx.accounts.token_program.to_account_info(),
+    //         MintTo {
+    //             mint: ctx.accounts.mint.to_account_info(),
+    //             to: ctx.accounts.token_account.to_account_info(),
+    //             authority: ctx.accounts.signer.to_account_info(),
+    //         },
+    //     ),
+    //     1,
+    // )?;
 
-    set_authority(
-        CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            SetAuthority {
-                current_authority: mystery_box.to_account_info(),
-                account_or_mint: ctx.accounts.mint_account.to_account_info(),
-            },
-        ),
-        AuthorityType::MintTokens,
-        None,
-    )?;
+    // set_authority(
+    //     CpiContext::new(
+    //         ctx.accounts.token_program.to_account_info(),
+    //         SetAuthority {
+    //             current_authority: mystery_box.to_account_info(),
+    //             account_or_mint: ctx.accounts.mint.to_account_info(),
+    //         },
+    //     ),
+    //     AuthorityType::MintTokens,
+    //     None,
+    // )?;
 
-    mystery_box.name = args.name;
     mystery_box.nft_minteds = mystery_box.nft_minteds + 1;
 
     Ok(())

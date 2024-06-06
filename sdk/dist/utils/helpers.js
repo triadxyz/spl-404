@@ -23,13 +23,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatNumber = exports.decodeString = exports.encodeString = exports.getNftMintSync = exports.getNftMintAccountSync = exports.getTokenAccountAddressSync = exports.getTokenMintAddressync = exports.getMysteryBoxSync = void 0;
+exports.formatNumber = exports.decodeString = exports.encodeString = exports.getNftMintSync = exports.getNftMintAccountSync = exports.getTokenAccountAddressSync = exports.getTokenMintAddressync = exports.getTokenAccountSync = exports.getMintAddressSync = exports.getMysteryBoxSync = void 0;
 const web3_js_1 = require("@solana/web3.js");
 const anchor = __importStar(require("@coral-xyz/anchor"));
 const getMysteryBoxSync = (programId, mysteryBoxName) => {
     return web3_js_1.PublicKey.findProgramAddressSync([Buffer.from('mystery_box'), Buffer.from(mysteryBoxName)], programId)[0];
 };
 exports.getMysteryBoxSync = getMysteryBoxSync;
+const getMintAddressSync = (programId, mysteryBox) => {
+    return web3_js_1.PublicKey.findProgramAddressSync([Buffer.from('mint'), mysteryBox.toBuffer()], programId)[0];
+};
+exports.getMintAddressSync = getMintAddressSync;
+const getTokenAccountSync = (programId, mysteryBox) => {
+    return web3_js_1.PublicKey.findProgramAddressSync([Buffer.from('token_account'), mysteryBox.toBuffer()], programId)[0];
+};
+exports.getTokenAccountSync = getTokenAccountSync;
 const getTokenMintAddressync = (programId, mysteryBox) => {
     return web3_js_1.PublicKey.findProgramAddressSync([
         Buffer.from(anchor.utils.bytes.utf8.encode('token_mint')),

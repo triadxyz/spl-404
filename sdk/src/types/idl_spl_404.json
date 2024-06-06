@@ -8,40 +8,6 @@
   },
   "instructions": [
     {
-      "name": "burn",
-      "discriminator": [116, 110, 29, 56, 107, 219, 42, 93],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint",
-          "writable": true,
-          "relations": ["token_account"]
-        },
-        {
-          "name": "token_account",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "BurnTokenArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "create_mystery_box",
       "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
       "accounts": [
@@ -100,8 +66,8 @@
       ]
     },
     {
-      "name": "mint_mystery_box_token",
-      "discriminator": [203, 130, 227, 236, 136, 237, 141, 171],
+      "name": "mint_nft",
+      "discriminator": [211, 57, 6, 167, 15, 219, 35, 251],
       "accounts": [
         {
           "name": "signer",
@@ -114,68 +80,11 @@
         },
         {
           "name": "mint",
-          "writable": true
-        },
-        {
-          "name": "token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116, 111, 107, 101, 110, 95, 97, 99, 99, 111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "swap",
-      "discriminator": [248, 198, 158, 145, 225, 117, 135, 200],
-      "accounts": [
-        {
-          "name": "user",
           "writable": true,
           "signer": true
         },
         {
-          "name": "mystery_box",
-          "writable": true
-        },
-        {
-          "name": "user_token_account",
-          "writable": true
-        },
-        {
-          "name": "mystery_box_nft_account",
-          "writable": true
-        },
-        {
-          "name": "user_nft_account",
-          "writable": true
-        },
-        {
-          "name": "token_mint",
-          "writable": true
-        },
-        {
-          "name": "nft_mint",
+          "name": "treasury_account",
           "writable": true
         },
         {
@@ -187,8 +96,8 @@
           "address": "11111111111111111111111111111111"
         },
         {
-          "name": "rent",
-          "address": "SysvarRent111111111111111111111111111111111"
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -196,7 +105,7 @@
           "name": "args",
           "type": {
             "defined": {
-              "name": "SwapArgs"
+              "name": "MintNftArgs"
             }
           }
         }
@@ -246,18 +155,6 @@
     }
   ],
   "types": [
-    {
-      "name": "BurnTokenArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
     {
       "name": "CreateMysteryBoxArgs",
       "type": {
@@ -311,21 +208,21 @@
       }
     },
     {
-      "name": "SwapArgs",
+      "name": "MintNftArgs",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "in_token",
-            "type": "pubkey"
+            "name": "name",
+            "type": "string"
           },
           {
-            "name": "out_token",
-            "type": "pubkey"
+            "name": "nft_uri",
+            "type": "string"
           },
           {
-            "name": "in_token_amount",
-            "type": "u64"
+            "name": "group_id",
+            "type": "u16"
           }
         ]
       }

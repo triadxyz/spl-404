@@ -26,7 +26,6 @@ class Spl404Client {
                 mysteryBoxData
             });
             const mint = new web3_js_1.Keypair();
-            const mintAccount = new web3_js_1.Keypair();
             yield this.program.methods
                 .createMysteryBox({
                 decimals: mysteryBoxData.decimals,
@@ -43,48 +42,10 @@ class Spl404Client {
             })
                 .accounts({
                 signer: this.provider.wallet.publicKey,
-                mint: mint.publicKey,
-                tokenAccount: mintAccount.publicKey
+                mint: mint.publicKey
             })
                 .signers([mint])
                 .rpc({ skipPreflight: true });
-        });
-        this.burn = ({ mysteryBoxName, amount }) => __awaiter(this, void 0, void 0, function* () {
-            const MysteryBox = (0, helpers_1.getMysteryBoxSync)(this.program.programId, mysteryBoxName);
-            const MintMysteryBox = (0, helpers_1.getTokenMintAddressync)(this.program.programId, MysteryBox);
-            const TokenAccount = (0, helpers_1.getTokenAccountAddressSync)(this.program.programId, MysteryBox);
-            return this.program.methods
-                .burn({
-                amount: new anchor_1.BN(amount)
-            })
-                .accounts({
-                signer: this.provider.wallet.publicKey,
-                tokenAccount: TokenAccount
-            })
-                .rpc();
-        });
-        this.swap = ({ inToken, inTokenAmount, outToken, mysteryBoxName }) => __awaiter(this, void 0, void 0, function* () {
-            const MysteryBox = (0, helpers_1.getMysteryBoxSync)(this.program.programId, mysteryBoxName);
-            const MysteryBoxNftAccount = (0, helpers_1.getNftMintAccountSync)(this.program.programId, MysteryBox);
-            const NftMint = (0, helpers_1.getNftMintSync)(this.program.programId, MysteryBox);
-            const TokenMintMysteryBox = (0, helpers_1.getTokenMintAddressync)(this.program.programId, MysteryBox);
-            const UserNftAccount = (0, helpers_1.getNftMintAccountSync)(this.program.programId, MysteryBox);
-            return this.program.methods
-                .swap({
-                inToken,
-                inTokenAmount: new anchor_1.BN(inTokenAmount),
-                outToken
-            })
-                .accounts({
-                mysteryBox: MysteryBox,
-                mysteryBoxNftAccount: MysteryBoxNftAccount,
-                nftMint: NftMint,
-                tokenMint: TokenMintMysteryBox,
-                user: this.provider.wallet.publicKey,
-                userNftAccount: UserNftAccount,
-                userTokenAccount: UserNftAccount
-            })
-                .rpc();
         });
         this.provider = new anchor_1.AnchorProvider(connection, wallet, anchor_1.AnchorProvider.defaultOptions());
         this.program = new anchor_1.Program(idl_spl_404_json_1.default, this.provider);
@@ -96,41 +57,49 @@ const connection = new web3_js_1.Connection('https://devnet.helius-rpc.com/?api-
 const keypair = (0, convertSecretKeyToKeypair_1.convertSecretKeyToKeypair)('27SmqQGTjAKKXQ4FyFuE59WXdGCruYHXQubnugALASsN9PNeD8gaMceHsAvARpyHd3PrUbB4jYsLXYa9gPvCMTNw');
 const wallet = new anchor_1.Wallet(keypair);
 const spl4040Client = new Spl404Client(connection, wallet);
-spl4040Client
-    .createMysteryBox({
-    name: 'GG',
-    decimals: 9,
-    image: '',
-    maxFee: 10000,
-    nftSupply: 3963,
-    nftSymbol: 'TRIAD',
-    nftUri: '',
-    supply: 3963,
-    tokenFee: 200,
-    tokenPerNft: 10000,
-    tokenSymbol: 'tTRIAD',
-    tokenUri: '',
-    tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
-})
-    .then((a) => {
-    console.log('Ticker created');
-    console.log(a);
-})
-    .catch((e) => {
-    console.log(e);
-});
-// const MysteryBox = getMysteryBoxSync(spl4040Client.program.programId, 'OMG')
-// spl4040Client.program.methods
-//   .mintMysteryBoxToken()
-//   .accounts({
-//     signer: spl4040Client.provider.wallet.publicKey,
-//     mysteryBox: MysteryBox
+// spl4040Client
+//   .createMysteryBox({
+//     name: 'OL',
+//     decimals: 9,
+//     image: '',
+//     maxFee: 10000,
+//     nftSupply: 3963,
+//     nftSymbol: 'TRIAD',
+//     nftUri: '',
+//     supply: 3963,
+//     tokenFee: 200,
+//     tokenPerNft: 10000,
+//     tokenSymbol: 'tTRIAD',
+//     tokenUri: '',
+//     tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
 //   })
-//   .rpc()
 //   .then((a) => {
-//     console.log('Minted')
+//     console.log('Ticker created')
 //     console.log(a)
 //   })
 //   .catch((e) => {
 //     console.log(e)
 //   })
+const MysteryBox = (0, helpers_1.getMysteryBoxSync)(spl4040Client.program.programId, 'OL');
+const MintAddressSync = (0, helpers_1.getMintAddressSync)(spl4040Client.program.programId, MysteryBox);
+spl4040Client.program.methods
+    .mintNft({
+    name: 'Triad #1',
+    nftUri: 'https://arweave.net/5daxlcPCY0FgxR9SEMe8XuBzzW-NArkx7BZn83_xXzM',
+    groupId: 1
+})
+    .accounts({
+    signer: spl4040Client.provider.wallet.publicKey,
+    treasuryAccount: new web3_js_1.PublicKey('DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'),
+    mysteryBox: MysteryBox,
+})
+    .rpc({
+    skipPreflight: true
+})
+    .then((a) => {
+    console.log('Minted');
+    console.log(a);
+})
+    .catch((e) => {
+    console.log(e);
+});
