@@ -56,36 +56,3 @@ export default class Spl404Client {
       .rpc()
   }
 }
-
-const connection = new Connection('http://127.0.0.1:8899', 'processed')
-const keypair = convertSecretKeyToKeypair(
-  '27SmqQGTjAKKXQ4FyFuE59WXdGCruYHXQubnugALASsN9PNeD8gaMceHsAvARpyHd3PrUbB4jYsLXYa9gPvCMTNw'
-)
-const wallet = new Wallet(keypair)
-const spl4040Client = new Spl404Client(connection, wallet)
-
-spl4040Client
-  .createMysteryBox({
-    name: 'Triad',
-    decimals: 6,
-    image:
-      'https://6ur2hw5rrmu4yljraaqrkrikec6alcexzlrhoghw2peghvp624ka.arweave.net/9SOj27GLKcwtMQAhFUUKILwFiJfK4ncY9tPIY9X-1xQ?ext=png',
-    maxFee: 10000,
-    nftSupply: 3963,
-    nftSymbol: 'TRIAD',
-    nftUri:
-      'https://n2vsncrbgg2c2ygzdqnjcu6veplok6qvtrvx64tjr4dbkgy4pq4q.arweave.net/bqsmiiExtC1g2RwakVPVI9blehWca39yaY8GFRscfDk',
-    supply: 3963,
-    tokenFee: 200,
-    tokenPerNft: 10000,
-    tokenSymbol: 'tTRIAD',
-    tokenUri:
-      'https://n2vsncrbgg2c2ygzdqnjcu6veplok6qvtrvx64tjr4dbkgy4pq4q.arweave.net/bqsmiiExtC1g2RwakVPVI9blehWca39yaY8GFRscfDk',
-    tresuaryAccount: 'DxHu687371Jm8W9EfpKpmD67wdwZuTwi47VGe4tipHwD'
-  })
-  .then((a) => {
-    console.log('Ticker created')
-  })
-  .catch((e) => {
-    console.error(e)
-  })
