@@ -1,3 +1,4 @@
+
 mod burn_token;
 mod create_mystery_box;
 mod mint_mystery_box_token;
