@@ -21,4 +21,12 @@ export type CreateGuardType = {
   price: number
   initTs: number
   endTs: number
+  mysteryBoxName: string
+}
+
+export type MintNftType = {
+  mysteryBoxName: string
+  guardName: string
+  name: string
+  nftUri: string
 }

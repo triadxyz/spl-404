@@ -2,8 +2,13 @@ import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
-import { CreateMysteryBoxType, CreateGuardType } from './utils/types'
+import {
+  CreateMysteryBoxType,
+  CreateGuardType,
+  MintNftType
+} from './utils/types'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
+import { getGuardSync, getMysteryBoxSync } from './utils/helpers'
 
 export default class Spl404Client {
   provider: AnchorProvider
@@ -16,10 +21,11 @@ export default class Spl404Client {
       AnchorProvider.defaultOptions()
     )
 
-    this.program = new Program<Spl404>(IDL as any, this.provider)
+    this.program = new Program<Spl404>(IDL as Spl404, this.provider)
   }
 
   createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
+    console.log('Creating mystery box')
     const mint = new Keypair()
     await this.program.methods
       .createMysteryBox({
@@ -40,10 +46,15 @@ export default class Spl404Client {
         mint: mint.publicKey
       })
       .signers([mint])
-      .rpc()
+      .rpc({ skipPreflight: true })
   }
 
   createGuard = async (guard: CreateGuardType) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      guard.mysteryBoxName
+    )
+
     this.program.methods
       .initializeGuard({
         name: guard.name,
@@ -53,6 +64,28 @@ export default class Spl404Client {
         initTs: new BN(guard.initTs),
         endTs: new BN(guard.endTs)
       })
+      .accounts({ mysteryBox: MysteryBox })
+      .rpc()
+  }
+
+  mintNft = async (nft: MintNftType) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      nft.mysteryBoxName
+    )
+
+    const Guard = getGuardSync(
+      this.program.programId,
+      nft.guardName,
+      MysteryBox
+    )
+
+    this.program.methods
+      .mintNft({
+        name: nft.name,
+        nftUri: nft.nftUri
+      })
+      .accounts({ mysteryBox: MysteryBox, guard: Guard })
       .rpc()
   }
 }

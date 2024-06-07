@@ -1,11 +1,12 @@
 {
   "name": "@triadxyz/spl-404",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "yarn build",
+    "build": "tsc",
     "start": "rimraf dist && tsc && node ./dist/index.js"
   },
   "publishConfig": {

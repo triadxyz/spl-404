@@ -2,6 +2,27 @@ import { PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import * as anchor from '@coral-xyz/anchor'
 
+export const getMysteryBoxSync = (
+  programId: PublicKey,
+  mysteryBoxName: string
+) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from('mystery_box'), Buffer.from(mysteryBoxName)],
+    programId
+  )[0]
+}
+
+export const getGuardSync = (
+  programId: PublicKey,
+  groupName: string,
+  mysteryBox: PublicKey
+) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from('mystery_box'), Buffer.from(groupName), mysteryBox.toBuffer()],
+    programId
+  )[0]
+}
+
 export const getMintAddressSync = (
   programId: PublicKey,
   mysteryBox: PublicKey

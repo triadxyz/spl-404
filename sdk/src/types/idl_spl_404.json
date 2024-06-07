@@ -1,5 +1,5 @@
 {
-  "address": "7x6Jq7Yev6bxbRXcFPhagWReg472hD8B27hWRn4UKLYV",
+  "address": "5RsW9yYJv6wZfkifCBmBoSJs8JkWyfSL4NtTpkNnN6yg",
   "metadata": {
     "name": "spl_404",
     "version": "0.1.0",
@@ -82,14 +82,6 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "rent",
-          "address": "SysvarRent111111111111111111111111111111111"
-        },
-        {
-          "name": "associated_token_program",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -113,6 +105,10 @@
           "signer": true
         },
         {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
           "name": "guard",
           "writable": true,
           "pda": {
@@ -124,6 +120,10 @@
               {
                 "kind": "arg",
                 "path": "args.name"
+              },
+              {
+                "kind": "account",
+                "path": "mystery_box"
               }
             ]
           }
@@ -143,52 +143,6 @@
           }
         }
       ]
-    },
-    {
-      "name": "mint_mystery_box_token",
-      "discriminator": [203, 130, 227, 236, 136, 237, 141, 171],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mystery_box",
-          "writable": true
-        },
-        {
-          "name": "mint",
-          "writable": true
-        },
-        {
-          "name": "token_account",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116, 111, 107, 101, 110, 95, 97, 99, 99, 111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mint"
-              }
-            ]
-          }
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": []
     },
     {
       "name": "mint_nft",
@@ -255,6 +209,52 @@
       ]
     },
     {
+      "name": "mint_token",
+      "discriminator": [172, 137, 183, 14, 207, 110, 234, 56],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116, 111, 107, 101, 110, 95, 97, 99, 99, 111, 117, 110, 116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "swap",
       "discriminator": [248, 198, 158, 145, 225, 117, 135, 200],
       "accounts": [
@@ -316,6 +316,10 @@
     {
       "name": "Guard",
       "discriminator": [54, 187, 84, 137, 192, 15, 74, 248]
+    },
+    {
+      "name": "MysteryBox",
+      "discriminator": [84, 58, 85, 105, 241, 51, 143, 79]
     }
   ],
   "errors": [
@@ -469,6 +473,11 @@
             "type": "u64"
           },
           {
+            "name": "mystery_box",
+            "docs": ["Mystery box account"],
+            "type": "pubkey"
+          },
+          {
             "name": "wallet_storage",
             "docs": ["Wallets authorized to mint from the guard allocation"],
             "type": "pubkey"
@@ -520,10 +529,91 @@
           {
             "name": "nft_uri",
             "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MysteryBox",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "init_ts",
+            "docs": ["timestamp of the creation of the mystery box"],
+            "type": "i64"
           },
           {
-            "name": "group_id",
+            "name": "name",
+            "docs": ["collection name of the mystery box"],
+            "type": "string"
+          },
+          {
+            "name": "authority",
+            "docs": ["authority of the mystery box"],
+            "type": "pubkey"
+          },
+          {
+            "name": "nft_symbol",
+            "docs": ["symbol of the mystery box"],
+            "type": "string"
+          },
+          {
+            "name": "nft_supply",
+            "docs": ["supply of the mystery box"],
+            "type": "u32"
+          },
+          {
+            "name": "nft_minteds",
+            "docs": ["minteds of the mystery box"],
+            "type": "u32"
+          },
+          {
+            "name": "token_mint",
+            "docs": ["mint of the token"],
+            "type": "pubkey"
+          },
+          {
+            "name": "token_account",
+            "docs": ["Token account of token mint"],
+            "type": "pubkey"
+          },
+          {
+            "name": "token_symbol",
+            "docs": ["symbol of the token"],
+            "type": "string"
+          },
+          {
+            "name": "token_supply",
+            "docs": ["supply of the token"],
+            "type": "u64"
+          },
+          {
+            "name": "token_per_nft",
+            "docs": ["amount to bind to one NFT"],
+            "type": "u64"
+          },
+          {
+            "name": "decimals",
+            "docs": ["decimals of the token"],
+            "type": "u8"
+          },
+          {
+            "name": "token_fee",
+            "docs": ["token fee of the mystery box"],
             "type": "u16"
+          },
+          {
+            "name": "max_fee",
+            "docs": ["max fee of the mystery box"],
+            "type": "u64"
+          },
+          {
+            "name": "tresuary_account",
+            "docs": [
+              "fee account of the mystery box to receive the minted fees"
+            ],
+            "type": "pubkey"
           }
         ]
       }

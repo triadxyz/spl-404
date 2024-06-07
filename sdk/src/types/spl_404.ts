@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/spl_404.json`.
  */
 export type Spl404 = {
-  address: '7x6Jq7Yev6bxbRXcFPhagWReg472hD8B27hWRn4UKLYV'
+  address: '5RsW9yYJv6wZfkifCBmBoSJs8JkWyfSL4NtTpkNnN6yg'
   metadata: {
     name: 'spl404'
     version: '0.1.0'
@@ -88,14 +88,6 @@ export type Spl404 = {
         {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
-        },
-        {
-          name: 'rent'
-          address: 'SysvarRent111111111111111111111111111111111'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
         }
       ]
       args: [
@@ -119,6 +111,10 @@ export type Spl404 = {
           signer: true
         },
         {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
           name: 'guard'
           writable: true
           pda: {
@@ -130,6 +126,10 @@ export type Spl404 = {
               {
                 kind: 'arg'
                 path: 'args.name'
+              },
+              {
+                kind: 'account'
+                path: 'mysteryBox'
               }
             ]
           }
@@ -149,64 +149,6 @@ export type Spl404 = {
           }
         }
       ]
-    },
-    {
-      name: 'mintMysteryBoxToken'
-      discriminator: [203, 130, 227, 236, 136, 237, 141, 171]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'mint'
-          writable: true
-        },
-        {
-          name: 'tokenAccount'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116
-                ]
-              },
-              {
-                kind: 'account'
-                path: 'mint'
-              }
-            ]
-          }
-        },
-        {
-          name: 'tokenProgram'
-          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: []
     },
     {
       name: 'mintNft'
@@ -285,6 +227,64 @@ export type Spl404 = {
       ]
     },
     {
+      name: 'mintToken'
+      discriminator: [172, 137, 183, 14, 207, 110, 234, 56]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'mint'
+          writable: true
+        },
+        {
+          name: 'tokenAccount'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [
+                  116,
+                  111,
+                  107,
+                  101,
+                  110,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mint'
+              }
+            ]
+          }
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: []
+    },
+    {
       name: 'swap'
       discriminator: [248, 198, 158, 145, 225, 117, 135, 200]
       accounts: [
@@ -346,6 +346,10 @@ export type Spl404 = {
     {
       name: 'guard'
       discriminator: [54, 187, 84, 137, 192, 15, 74, 248]
+    },
+    {
+      name: 'mysteryBox'
+      discriminator: [84, 58, 85, 105, 241, 51, 143, 79]
     }
   ]
   errors: [
@@ -499,6 +503,11 @@ export type Spl404 = {
             type: 'u64'
           },
           {
+            name: 'mysteryBox'
+            docs: ['Mystery box account']
+            type: 'pubkey'
+          },
+          {
             name: 'walletStorage'
             docs: ['Wallets authorized to mint from the guard allocation']
             type: 'pubkey'
@@ -550,10 +559,89 @@ export type Spl404 = {
           {
             name: 'nftUri'
             type: 'string'
+          }
+        ]
+      }
+    },
+    {
+      name: 'mysteryBox'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'initTs'
+            docs: ['timestamp of the creation of the mystery box']
+            type: 'i64'
           },
           {
-            name: 'groupId'
+            name: 'name'
+            docs: ['collection name of the mystery box']
+            type: 'string'
+          },
+          {
+            name: 'authority'
+            docs: ['authority of the mystery box']
+            type: 'pubkey'
+          },
+          {
+            name: 'nftSymbol'
+            docs: ['symbol of the mystery box']
+            type: 'string'
+          },
+          {
+            name: 'nftSupply'
+            docs: ['supply of the mystery box']
+            type: 'u32'
+          },
+          {
+            name: 'nftMinteds'
+            docs: ['minteds of the mystery box']
+            type: 'u32'
+          },
+          {
+            name: 'tokenMint'
+            docs: ['mint of the token']
+            type: 'pubkey'
+          },
+          {
+            name: 'tokenAccount'
+            docs: ['Token account of token mint']
+            type: 'pubkey'
+          },
+          {
+            name: 'tokenSymbol'
+            docs: ['symbol of the token']
+            type: 'string'
+          },
+          {
+            name: 'tokenSupply'
+            docs: ['supply of the token']
+            type: 'u64'
+          },
+          {
+            name: 'tokenPerNft'
+            docs: ['amount to bind to one NFT']
+            type: 'u64'
+          },
+          {
+            name: 'decimals'
+            docs: ['decimals of the token']
+            type: 'u8'
+          },
+          {
+            name: 'tokenFee'
+            docs: ['token fee of the mystery box']
             type: 'u16'
+          },
+          {
+            name: 'maxFee'
+            docs: ['max fee of the mystery box']
+            type: 'u64'
+          },
+          {
+            name: 'tresuaryAccount'
+            docs: ['fee account of the mystery box to receive the minted fees']
+            type: 'pubkey'
           }
         ]
       }
