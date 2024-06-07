@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use std::collections::HashMap;
 
 #[account]
 pub struct MysteryBox {
@@ -15,8 +14,6 @@ pub struct MysteryBox {
     pub nft_supply: u32,
     /// minteds of the mystery box
     pub nft_minteds: u32,
-    /// uri of the mystery box
-    pub nft_uri: String,
     /// mint of the token
     pub token_mint: Pubkey,
     /// Token account of token mint
@@ -27,8 +24,6 @@ pub struct MysteryBox {
     pub token_supply: u64,
     /// amount to bind to one NFT
     pub token_per_nft: u64,
-    /// uri of the token
-    pub token_uri: String,
     /// decimals of the token
     pub decimals: u8,
     /// token fee of the mystery box
@@ -37,16 +32,6 @@ pub struct MysteryBox {
     pub max_fee: u64,
     /// fee account of the mystery box to receive the minted fees
     pub tresuary_account: Pubkey,
-    /// guards of the mystery box
-    pub guard_allocation: Pubkey,
-    /// All Nfts
-    pub nfts: Vec<(u16, Nft)>,
-}
-
-#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
-pub struct Nft {
-    pub uri: String,
-    pub id: u16,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -69,12 +54,4 @@ impl MysteryBox {
     pub const SPACE: usize =
         // anchor descriminator + all static variables + estimated size for nfts
         8 + std::mem::size_of::<Self>();
-
-    pub fn from_hashmap(nfts: HashMap<u16, Nft>) -> Vec<(u16, Nft)> {
-        nfts.into_iter().collect()
-    }
-
-    pub fn to_hashmap(vec: Vec<(u16, Nft)>) -> HashMap<u16, Nft> {
-        vec.into_iter().collect()
-    }
 }

@@ -16,5 +16,4 @@ pub struct BurnTokenArgs {
 pub struct MintNftArgs {
     pub name: String,
     pub nft_uri: String,
-    pub group_id: u16,
 }

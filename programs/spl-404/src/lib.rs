@@ -7,7 +7,7 @@ mod errors;
 mod instructions;
 mod state;
 
-declare_id!("7x6Jq7Yev6bxbRXcFPhagWReg472hD8B27hWRn4UKLYV");
+declare_id!("6W5gygcxCcQoKfRb4nNi7Psbn62kGWcoUKqGorN7VTnS");
 
 #[program]
 pub mod spl_404 {
@@ -36,7 +36,7 @@ pub mod spl_404 {
         instructions::burn_token(ctx, args)
     }
 
-    pub fn mint_mystery_box_token(ctx: Context<MintMysteryBoxToken>) -> Result<()> {
-        instructions::mint_mystery_box_token(ctx)
+    pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
+        instructions::mint_token(ctx)
     }
 }

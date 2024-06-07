@@ -1,5 +1,5 @@
 {
-  "address": "5RsW9yYJv6wZfkifCBmBoSJs8JkWyfSL4NtTpkNnN6yg",
+  "address": "6W5gygcxCcQoKfRb4nNi7Psbn62kGWcoUKqGorN7VTnS",
   "metadata": {
     "name": "spl_404",
     "version": "0.1.0",
@@ -238,7 +238,7 @@
               },
               {
                 "kind": "account",
-                "path": "mint"
+                "path": "mystery_box"
               }
             ]
           }

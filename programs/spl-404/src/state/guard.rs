@@ -17,6 +17,8 @@ pub struct Guard {
     pub minted: u64,
     /// Price of the NFT
     pub price: u64,
+    /// Mystery box account
+    pub mystery_box: Pubkey,
     /// Wallets authorized to mint from the guard allocation
     pub wallet_storage: Pubkey,
 }
@@ -32,9 +34,6 @@ pub struct GuardArgs {
 }
 
 impl Guard {
-    /// static prefix seed string used to derive the PDAs
-    pub const PREFIX_SEED: &'static [u8] = b"guard";
-
     /// total on-chain space needed to allocate the account
     pub const SPACE: usize =
         // anchor descriminator + all static variables

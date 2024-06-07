@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/spl_404.json`.
  */
 export type Spl404 = {
-  address: '5RsW9yYJv6wZfkifCBmBoSJs8JkWyfSL4NtTpkNnN6yg'
+  address: '6W5gygcxCcQoKfRb4nNi7Psbn62kGWcoUKqGorN7VTnS'
   metadata: {
     name: 'spl404'
     version: '0.1.0'
@@ -268,7 +268,7 @@ export type Spl404 = {
               },
               {
                 kind: 'account'
-                path: 'mint'
+                path: 'mysteryBox'
               }
             ]
           }

@@ -5,7 +5,8 @@ import IDL from './types/idl_spl_404.json'
 import {
   CreateMysteryBoxType,
   CreateGuardType,
-  MintNftType
+  MintNftType,
+  MintTokenType
 } from './utils/types'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
 import { getGuardSync, getMysteryBoxSync } from './utils/helpers'
@@ -25,7 +26,6 @@ export default class Spl404Client {
   }
 
   createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
-    console.log('Creating mystery box')
     const mint = new Keypair()
     await this.program.methods
       .createMysteryBox({
@@ -87,5 +87,19 @@ export default class Spl404Client {
       })
       .accounts({ mysteryBox: MysteryBox, guard: Guard })
       .rpc()
+  }
+
+  mintToken = async (token: MintTokenType) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      token.mysteryBoxName
+    )
+
+    this.program.methods
+      .mintToken()
+      .accounts({ mysteryBox: MysteryBox, mint: token.mint })
+      .rpc({
+        skipPreflight: true
+      })
   }
 }

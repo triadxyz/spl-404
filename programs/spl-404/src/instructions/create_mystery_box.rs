@@ -3,7 +3,6 @@ use crate::state::{CreateMysteryBoxArgs, MysteryBox};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::{invoke, invoke_signed};
 use anchor_lang::system_program::{assign, create_account, Assign, CreateAccount};
-use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022::spl_token_2022::extension::metadata_pointer::instruction::initialize;
 use anchor_spl::token_2022::spl_token_2022::extension::transfer_fee::instruction::initialize_transfer_fee_config;
 use anchor_spl::token_2022::spl_token_2022::extension::ExtensionType;
@@ -24,8 +23,6 @@ pub struct CreateMysteryBox<'info> {
 
     pub token_program: Program<'info, Token2022>,
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 pub fn create_mystery_box(
@@ -179,8 +176,6 @@ pub fn create_mystery_box(
     mystery_box.token_fee = args.token_fee;
     mystery_box.tresuary_account = args.tresuary_account;
     mystery_box.max_fee = args.max_fee;
-    mystery_box.token_uri = args.token_uri;
-    mystery_box.nft_uri = args.nft_uri;
 
     Ok(())
 }

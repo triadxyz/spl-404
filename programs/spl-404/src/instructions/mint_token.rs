@@ -1,12 +1,13 @@
 use crate::errors::Spl404Error;
 use crate::state::MysteryBox;
 use anchor_lang::prelude::*;
+use anchor_lang::system_program::{assign, Assign};
 use anchor_spl::token_2022::spl_token_2022::instruction::AuthorityType;
-use anchor_spl::token_2022::{mint_to, set_authority, MintTo, SetAuthority};
+use anchor_spl::token_2022::{self, mint_to, set_authority, MintTo, SetAuthority};
 use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
 
 #[derive(Accounts)]
-pub struct MintMysteryBoxToken<'info> {
+pub struct MintToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
@@ -21,7 +22,7 @@ pub struct MintMysteryBoxToken<'info> {
         token::mint = mint,
         payer = signer,
         token::authority = mystery_box,
-        seeds = [b"token_account", mint.to_account_info().key.as_ref()],
+        seeds = [b"token_account", mystery_box.to_account_info().key.as_ref()],
         bump,
     )]
     pub token_account: InterfaceAccount<'info, TokenAccount>,
@@ -30,12 +31,22 @@ pub struct MintMysteryBoxToken<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn mint_mystery_box_token(ctx: Context<MintMysteryBoxToken>) -> Result<()> {
+pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
 
     if ctx.accounts.signer.key != &mystery_box.authority {
         return Err(Spl404Error::Unauthorized.into());
     }
+
+    assign(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            Assign {
+                account_to_assign: ctx.accounts.mint.to_account_info(),
+            },
+        ),
+        &token_2022::ID,
+    )?;
 
     mint_to(
         CpiContext::new(

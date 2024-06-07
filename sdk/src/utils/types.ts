@@ -1,3 +1,5 @@
+import { PublicKey } from '@solana/web3.js'
+
 export type CreateMysteryBoxType = {
   name: string
   image: string
@@ -29,4 +31,9 @@ export type MintNftType = {
   guardName: string
   name: string
   nftUri: string
+}
+
+export type MintTokenType = {
+  mysteryBoxName: string
+  mint: PublicKey
 }
