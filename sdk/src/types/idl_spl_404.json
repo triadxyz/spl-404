@@ -1,5 +1,5 @@
 {
-  "address": "6W5gygcxCcQoKfRb4nNi7Psbn62kGWcoUKqGorN7VTnS",
+  "address": "HsnK64fCU7CA5HK6uXgTCu9tPAv1aTP3qtGwepBvWMEX",
   "metadata": {
     "name": "spl_404",
     "version": "0.1.0",
@@ -72,8 +72,7 @@
         },
         {
           "name": "mint",
-          "writable": true,
-          "signer": true
+          "writable": true
         },
         {
           "name": "token_program",

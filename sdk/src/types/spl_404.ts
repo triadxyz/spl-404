@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/spl_404.json`.
  */
 export type Spl404 = {
-  address: '6W5gygcxCcQoKfRb4nNi7Psbn62kGWcoUKqGorN7VTnS'
+  address: 'HsnK64fCU7CA5HK6uXgTCu9tPAv1aTP3qtGwepBvWMEX'
   metadata: {
     name: 'spl404'
     version: '0.1.0'
@@ -79,7 +79,6 @@ export type Spl404 = {
         {
           name: 'mint'
           writable: true
-          signer: true
         },
         {
           name: 'tokenProgram'

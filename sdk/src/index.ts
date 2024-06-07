@@ -9,7 +9,11 @@ import {
   MintTokenType
 } from './utils/types'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
-import { getGuardSync, getMysteryBoxSync } from './utils/helpers'
+import {
+  getGuardSync,
+  getMysteryBoxSync,
+  getTokenMintSync
+} from './utils/helpers'
 
 export default class Spl404Client {
   provider: AnchorProvider
@@ -26,7 +30,12 @@ export default class Spl404Client {
   }
 
   createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
-    const mint = new Keypair()
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      mysteryBox.name
+    )
+    const Mint = getTokenMintSync(this.program.programId, MysteryBox)
+
     await this.program.methods
       .createMysteryBox({
         decimals: mysteryBox.decimals,
@@ -43,9 +52,8 @@ export default class Spl404Client {
       })
       .accounts({
         signer: this.provider.wallet.publicKey,
-        mint: mint.publicKey
+        mint: Mint
       })
-      .signers([mint])
       .rpc({ skipPreflight: true })
   }
 
@@ -80,13 +88,12 @@ export default class Spl404Client {
       MysteryBox
     )
 
-    this.program.methods
+    return this.program.methods
       .mintNft({
         name: nft.name,
         nftUri: nft.nftUri
       })
       .accounts({ mysteryBox: MysteryBox, guard: Guard })
-      .rpc()
   }
 
   mintToken = async (token: MintTokenType) => {

@@ -12,13 +12,23 @@ export const getMysteryBoxSync = (
   )[0]
 }
 
+export const getTokenMintSync = (
+  programId: PublicKey,
+  mysteryBox: PublicKey
+) => {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from('token_mint'), mysteryBox.toBuffer()],
+    programId
+  )[0]
+}
+
 export const getGuardSync = (
   programId: PublicKey,
   groupName: string,
   mysteryBox: PublicKey
 ) => {
   return PublicKey.findProgramAddressSync(
-    [Buffer.from('mystery_box'), Buffer.from(groupName), mysteryBox.toBuffer()],
+    [Buffer.from('guard'), Buffer.from(groupName), mysteryBox.toBuffer()],
     programId
   )[0]
 }
