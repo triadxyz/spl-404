@@ -30,6 +30,8 @@ pub struct MysteryBox {
     pub token_fee: u16,
     /// max fee of the mystery box
     pub max_fee: u64,
+    /// bump of the mystery box
+    pub bump: u8,
     /// fee account of the mystery box to receive the minted fees
     pub tresuary_account: Pubkey,
 }
@@ -50,8 +52,5 @@ pub struct CreateMysteryBoxArgs {
 }
 
 impl MysteryBox {
-    /// total on-chain space needed to allocate the account
-    pub const SPACE: usize =
-        // anchor descriminator + all static variables + estimated size for nfts
-        8 + std::mem::size_of::<Self>();
+    pub const SPACE: usize = 16 + std::mem::size_of::<Self>();
 }

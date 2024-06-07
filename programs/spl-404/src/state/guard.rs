@@ -34,8 +34,5 @@ pub struct GuardArgs {
 }
 
 impl Guard {
-    /// total on-chain space needed to allocate the account
-    pub const SPACE: usize =
-        // anchor descriminator + all static variables
-        8 + std::mem::size_of::<Self>();
+    pub const SPACE: usize = 16 + std::mem::size_of::<Self>();
 }

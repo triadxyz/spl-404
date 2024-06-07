@@ -7,7 +7,7 @@ mod errors;
 mod instructions;
 mod state;
 
-declare_id!("6W5gygcxCcQoKfRb4nNi7Psbn62kGWcoUKqGorN7VTnS");
+declare_id!("tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr");
 
 #[program]
 pub mod spl_404 {
@@ -26,14 +26,6 @@ pub mod spl_404 {
 
     pub fn initialize_guard(ctx: Context<InitializeGuard>, args: GuardArgs) -> Result<()> {
         instructions::initialize_guard(ctx, args)
-    }
-
-    pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
-        instructions::swap(ctx, args)
-    }
-
-    pub fn burn(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
-        instructions::burn_token(ctx, args)
     }
 
     pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {

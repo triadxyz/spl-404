@@ -1,5 +1,5 @@
 {
-  "address": "HsnK64fCU7CA5HK6uXgTCu9tPAv1aTP3qtGwepBvWMEX",
+  "address": "tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr",
   "metadata": {
     "name": "spl_404",
     "version": "0.1.0",
@@ -7,44 +7,6 @@
     "description": "Created with Anchor"
   },
   "instructions": [
-    {
-      "name": "burn",
-      "discriminator": [116, 110, 29, 56, 107, 219, 42, 93],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mystery_box",
-          "writable": true
-        },
-        {
-          "name": "mint",
-          "writable": true,
-          "relations": ["token_account"]
-        },
-        {
-          "name": "token_account",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "BurnTokenArgs"
-            }
-          }
-        }
-      ]
-    },
     {
       "name": "create_mystery_box",
       "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
@@ -71,16 +33,16 @@
           }
         },
         {
-          "name": "mint",
-          "writable": true
-        },
-        {
           "name": "token_program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -163,33 +125,37 @@
         {
           "name": "mint",
           "writable": true,
-          "signer": true
-        },
-        {
-          "name": "token_account",
-          "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  116, 111, 107, 101, 110, 95, 97, 99, 99, 111, 117, 110, 116
-                ]
+                "value": [109, 105, 110, 116]
               },
               {
-                "kind": "account",
-                "path": "mystery_box"
+                "kind": "arg",
+                "path": "args.name"
               }
             ]
           }
+        },
+        {
+          "name": "payer_ata",
+          "writable": true
         },
         {
           "name": "treasury_account",
           "writable": true
         },
         {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "system_program",
@@ -217,30 +183,17 @@
           "signer": true
         },
         {
-          "name": "mystery_box",
+          "name": "mint",
           "writable": true
         },
         {
-          "name": "mint",
+          "name": "mystery_box",
           "writable": true
         },
         {
           "name": "token_account",
           "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116, 111, 107, 101, 110, 95, 97, 99, 99, 111, 117, 110, 116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "mystery_box"
-              }
-            ]
-          }
+          "signer": true
         },
         {
           "name": "token_program",
@@ -252,63 +205,6 @@
         }
       ],
       "args": []
-    },
-    {
-      "name": "swap",
-      "discriminator": [248, 198, 158, 145, 225, 117, 135, 200],
-      "accounts": [
-        {
-          "name": "user",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mystery_box",
-          "writable": true
-        },
-        {
-          "name": "user_token_account",
-          "writable": true
-        },
-        {
-          "name": "mystery_box_nft_account",
-          "writable": true
-        },
-        {
-          "name": "user_nft_account",
-          "writable": true
-        },
-        {
-          "name": "token_mint",
-          "writable": true
-        },
-        {
-          "name": "nft_mint",
-          "writable": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "rent",
-          "address": "SysvarRent111111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "SwapArgs"
-            }
-          }
-        }
-      ]
     }
   ],
   "accounts": [
@@ -319,6 +215,12 @@
     {
       "name": "MysteryBox",
       "discriminator": [84, 58, 85, 105, 241, 51, 143, 79]
+    }
+  ],
+  "events": [
+    {
+      "name": "MintRecord",
+      "discriminator": [60, 1, 59, 92, 122, 181, 226, 91]
     }
   ],
   "errors": [
@@ -364,18 +266,6 @@
     }
   ],
   "types": [
-    {
-      "name": "BurnTokenArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "amount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
     {
       "name": "CreateMysteryBoxArgs",
       "type": {
@@ -533,6 +423,18 @@
       }
     },
     {
+      "name": "MintRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
       "name": "MysteryBox",
       "type": {
         "kind": "struct",
@@ -608,31 +510,16 @@
             "type": "u64"
           },
           {
+            "name": "bump",
+            "docs": ["bump of the mystery box"],
+            "type": "u8"
+          },
+          {
             "name": "tresuary_account",
             "docs": [
               "fee account of the mystery box to receive the minted fees"
             ],
             "type": "pubkey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "SwapArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "in_token",
-            "type": "pubkey"
-          },
-          {
-            "name": "out_token",
-            "type": "pubkey"
-          },
-          {
-            "name": "in_token_amount",
-            "type": "u64"
           }
         ]
       }

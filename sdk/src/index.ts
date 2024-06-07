@@ -1,5 +1,11 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import { Connection, Keypair, PublicKey } from '@solana/web3.js'
+import {
+  ComputeBudgetInstruction,
+  ComputeBudgetProgram,
+  Connection,
+  Keypair,
+  PublicKey
+} from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
 import {
@@ -11,9 +17,10 @@ import {
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
 import {
   getGuardSync,
-  getMysteryBoxSync,
-  getTokenMintSync
+  getMintAddressSync,
+  getMysteryBoxSync
 } from './utils/helpers'
+import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
 
 export default class Spl404Client {
   provider: AnchorProvider
@@ -30,12 +37,6 @@ export default class Spl404Client {
   }
 
   createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      mysteryBox.name
-    )
-    const Mint = getTokenMintSync(this.program.programId, MysteryBox)
-
     await this.program.methods
       .createMysteryBox({
         decimals: mysteryBox.decimals,
@@ -50,9 +51,13 @@ export default class Spl404Client {
         nftSupply: mysteryBox.nftSupply,
         tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount)
       })
+      .postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: 30000
+        })
+      ])
       .accounts({
-        signer: this.provider.wallet.publicKey,
-        mint: Mint
+        signer: this.provider.wallet.publicKey
       })
       .rpc({ skipPreflight: true })
   }
@@ -72,6 +77,11 @@ export default class Spl404Client {
         initTs: new BN(guard.initTs),
         endTs: new BN(guard.endTs)
       })
+      .postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: 30000
+        })
+      ])
       .accounts({ mysteryBox: MysteryBox })
       .rpc()
   }
@@ -88,12 +98,32 @@ export default class Spl404Client {
       MysteryBox
     )
 
+    const Mint = getMintAddressSync(this.program.programId, nft.name)
+    const wallet = new PublicKey(nft.userWallet)
+
+    const ATA_PROGRAM_ID = new PublicKey(
+      'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+    )
+    const [payerATA] = PublicKey.findProgramAddressSync(
+      [wallet.toBytes(), TOKEN_2022_PROGRAM_ID.toBytes(), Mint.toBytes()],
+      ATA_PROGRAM_ID
+    )
+
     return this.program.methods
       .mintNft({
         name: nft.name,
         nftUri: nft.nftUri
       })
-      .accounts({ mysteryBox: MysteryBox, guard: Guard })
+      .accounts({
+        signer: wallet,
+        mysteryBox: MysteryBox,
+        guard: Guard,
+        payerAta: payerATA,
+        treasuryAccount: new PublicKey(
+          'Q1Du6NaLyDQHF8HLPiEjSyWMqUXUjphd3bcMhFvTgwx'
+        ),
+        tokenProgram: TOKEN_2022_PROGRAM_ID
+      })
   }
 
   mintToken = async (token: MintTokenType) => {

@@ -33,12 +33,9 @@ export const getGuardSync = (
   )[0]
 }
 
-export const getMintAddressSync = (
-  programId: PublicKey,
-  mysteryBox: PublicKey
-) => {
+export const getMintAddressSync = (programId: PublicKey, nft: string) => {
   return PublicKey.findProgramAddressSync(
-    [Buffer.from('mint'), mysteryBox.toBuffer()],
+    [Buffer.from('mint'), Buffer.from(nft)],
     programId
   )[0]
 }

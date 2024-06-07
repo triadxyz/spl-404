@@ -6,7 +6,6 @@ export type CreateMysteryBoxType = {
   decimals: number
   nftSymbol: string
   nftUri: string
-  supply: number
   tokenFee: number
   tokenPerNft: number
   tokenSymbol: string
@@ -31,6 +30,8 @@ export type MintNftType = {
   guardName: string
   name: string
   nftUri: string
+  userWallet: string
+  tresuaryAccount: string
 }
 
 export type MintTokenType = {
