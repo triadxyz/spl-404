@@ -14,13 +14,13 @@ import {
   MintNftType,
   MintTokenType
 } from './utils/types'
-import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
 import {
   getGuardSync,
   getMintAddressSync,
   getMysteryBoxSync
 } from './utils/helpers'
-import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { TOKEN_2022_PROGRAM_ID, getAccount } from '@solana/spl-token'
+import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
 
 export default class Spl404Client {
   provider: AnchorProvider
@@ -79,7 +79,48 @@ export default class Spl404Client {
       })
       .postInstructions([
         ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 30000
+          microLamports: 60000
+        })
+      ])
+      .accounts({ mysteryBox: MysteryBox })
+      .rpc()
+  }
+
+  updateGuard = async (guard: CreateGuardType) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      guard.mysteryBoxName
+    )
+
+    this.program.methods
+      .initializeGuard({
+        name: guard.name,
+        id: guard.id,
+        supply: new BN(guard.supply),
+        price: new BN(guard.price),
+        initTs: new BN(guard.initTs),
+        endTs: new BN(guard.endTs)
+      })
+      .postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: 60000
+        })
+      ])
+      .accounts({ mysteryBox: MysteryBox })
+      .rpc()
+  }
+
+  burnGuard = async (guard: CreateGuardType) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      guard.mysteryBoxName
+    )
+
+    this.program.methods
+      .burnGuard(guard.name)
+      .postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: 60000
         })
       ])
       .accounts({ mysteryBox: MysteryBox })

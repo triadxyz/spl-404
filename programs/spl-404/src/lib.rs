@@ -11,6 +11,7 @@ declare_id!("tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr");
 
 #[program]
 pub mod spl_404 {
+
     use super::*;
 
     pub fn create_mystery_box(
@@ -30,5 +31,12 @@ pub mod spl_404 {
 
     pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
         instructions::mint_token(ctx)
+    }
+
+    pub fn update_guard(ctx: Context<UpdateGuard>, args: GuardArgs) -> Result<()> {
+        instructions::update_guard(ctx, args)
+    }
+    pub fn burn_guard(ctx: Context<BurnGuard>, _name: String) -> Result<()> {
+        instructions::burn_guard(ctx)
     }
 }

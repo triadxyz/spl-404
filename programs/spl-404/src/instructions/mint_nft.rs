@@ -62,8 +62,9 @@ pub struct MintNft<'info> {
 
 pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
+    let guard = &mut ctx.accounts.guard;
 
-    if ctx.accounts.guard.minted >= ctx.accounts.guard.supply {
+    if guard.minted >= guard.supply {
         return Err(Spl404Error::MintFailed.into());
     }
 
@@ -75,7 +76,15 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
         return Err(Spl404Error::MintFailed.into());
     }
 
-    if ctx.accounts.guard.mystery_box != mystery_box.key() {
+    if guard.mystery_box != mystery_box.key() {
+        return Err(Spl404Error::MintFailed.into());
+    }
+
+    let current_date = Clock::get()?.unix_timestamp;
+    let init_ts = guard.init_ts;
+    let end_ts = guard.end_ts;
+
+    if current_date < init_ts || current_date > end_ts {
         return Err(Spl404Error::MintFailed.into());
     }
 
@@ -83,7 +92,7 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let to_account = &ctx.accounts.treasury_account;
 
     let transfer_instruction =
-        system_instruction::transfer(&from_account.key, &to_account.key, ctx.accounts.guard.price);
+        system_instruction::transfer(&from_account.key, &to_account.key, guard.price);
 
     anchor_lang::solana_program::program::invoke(
         &transfer_instruction,
@@ -181,6 +190,7 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     )?;
 
     mystery_box.nft_minteds = mystery_box.nft_minteds + 1;
+    guard.minted = guard.minted + 1;
 
     emit!(MintRecord { name: args.name });
 

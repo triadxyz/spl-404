@@ -14,6 +14,51 @@ export type Spl404 = {
   }
   instructions: [
     {
+      name: 'burnGuard'
+      discriminator: [22, 231, 242, 214, 54, 90, 40, 217]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'guard'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [103, 117, 97, 114, 100]
+              },
+              {
+                kind: 'arg'
+                path: 'name'
+              },
+              {
+                kind: 'account'
+                path: 'mysteryBox'
+              }
+            ]
+          }
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'name'
+          type: 'string'
+        }
+      ]
+    },
+    {
       name: 'createMysteryBox'
       discriminator: [79, 39, 108, 94, 236, 142, 106, 158]
       accounts: [
@@ -211,6 +256,55 @@ export type Spl404 = {
         }
       ]
       args: []
+    },
+    {
+      name: 'updateGuard'
+      discriminator: [51, 38, 175, 180, 25, 249, 39, 24]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'guard'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [103, 117, 97, 114, 100]
+              },
+              {
+                kind: 'arg'
+                path: 'args.name'
+              },
+              {
+                kind: 'account'
+                path: 'mysteryBox'
+              }
+            ]
+          }
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'guardArgs'
+            }
+          }
+        }
+      ]
     }
   ]
   accounts: [
