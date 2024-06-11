@@ -1,0 +1,622 @@
+{
+  "address": "tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr",
+  "metadata": {
+    "name": "spl_404",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "burn_guard",
+      "discriminator": [22, 231, 242, 214, 54, 90, 40, 217],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "guard",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [103, 117, 97, 114, 100]
+              },
+              {
+                "kind": "arg",
+                "path": "name"
+              },
+              {
+                "kind": "account",
+                "path": "mystery_box"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "create_mystery_box",
+      "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "arg",
+                "path": "args.name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "CreateMysteryBoxArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "initialize_guard",
+      "discriminator": [63, 189, 246, 157, 77, 125, 157, 142],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "guard",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [103, 117, 97, 114, 100]
+              },
+              {
+                "kind": "arg",
+                "path": "args.name"
+              },
+              {
+                "kind": "account",
+                "path": "mystery_box"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "GuardArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "mint_nft",
+      "discriminator": [211, 57, 6, 167, 15, 219, 35, 251],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "guard",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 105, 110, 116]
+              },
+              {
+                "kind": "arg",
+                "path": "args.name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer_ata",
+          "writable": true
+        },
+        {
+          "name": "treasury_account",
+          "writable": true
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "MintNftArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "mint_token",
+      "discriminator": [172, 137, 183, 14, 207, 110, 234, 56],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "token_account",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_guard",
+      "discriminator": [51, 38, 175, 180, 25, 249, 39, 24],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "guard",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [103, 117, 97, 114, 100]
+              },
+              {
+                "kind": "arg",
+                "path": "args.name"
+              },
+              {
+                "kind": "account",
+                "path": "mystery_box"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "GuardArgs"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Guard",
+      "discriminator": [54, 187, 84, 137, 192, 15, 74, 248]
+    },
+    {
+      "name": "MysteryBox",
+      "discriminator": [84, 58, 85, 105, 241, 51, 143, 79]
+    }
+  ],
+  "events": [
+    {
+      "name": "MintRecord",
+      "discriminator": [60, 1, 59, 92, 122, 181, 226, 91]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "MysteryBoxInitFailed",
+      "msg": "The mystery box has already been created"
+    },
+    {
+      "code": 6001,
+      "name": "TokenMintInitFailed",
+      "msg": "The token mint has already been initialized"
+    },
+    {
+      "code": 6002,
+      "name": "TokenAccountInitFailed",
+      "msg": "The token account has already been created"
+    },
+    {
+      "code": 6003,
+      "name": "Mint2InitFailed",
+      "msg": "Failed to initialize mint2"
+    },
+    {
+      "code": 6004,
+      "name": "MintFailed",
+      "msg": "Failed to mint tokens"
+    },
+    {
+      "code": 6005,
+      "name": "TransferFeeInitFailed",
+      "msg": "Failed to initialize transfer fee config"
+    },
+    {
+      "code": 6006,
+      "name": "Unauthorized",
+      "msg": "Failed unuathorized action"
+    },
+    {
+      "code": 6007,
+      "name": "TransferFailed",
+      "msg": "Failed to transfer tokens"
+    }
+  ],
+  "types": [
+    {
+      "name": "CreateMysteryBoxArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nft_symbol",
+            "type": "string"
+          },
+          {
+            "name": "token_symbol",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "nft_supply",
+            "type": "u32"
+          },
+          {
+            "name": "token_per_nft",
+            "type": "u64"
+          },
+          {
+            "name": "token_fee",
+            "type": "u16"
+          },
+          {
+            "name": "max_fee",
+            "type": "u64"
+          },
+          {
+            "name": "tresuary_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "decimals",
+            "type": "u8"
+          },
+          {
+            "name": "nft_uri",
+            "type": "string"
+          },
+          {
+            "name": "token_uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Guard",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "init_ts",
+            "docs": ["timestamp of the initialization"],
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "docs": ["timestamp of the end of the guard"],
+            "type": "i64"
+          },
+          {
+            "name": "name",
+            "docs": ["Guard allocation Name"],
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "docs": ["Guard allocation id"],
+            "type": "u16"
+          },
+          {
+            "name": "supply",
+            "docs": ["Supply of the guard allocation"],
+            "type": "u64"
+          },
+          {
+            "name": "minted",
+            "docs": [
+              "Amount of the guard allocation minted",
+              "This is used to track the amount of the guard allocation minted"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "docs": ["Price of the NFT"],
+            "type": "u64"
+          },
+          {
+            "name": "mystery_box",
+            "docs": ["Mystery box account"],
+            "type": "pubkey"
+          },
+          {
+            "name": "wallet_storage",
+            "docs": ["Wallets authorized to mint from the guard allocation"],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "GuardArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "init_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "type": "i64"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "supply",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintNftArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "nft_uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MysteryBox",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "init_ts",
+            "docs": ["timestamp of the creation of the mystery box"],
+            "type": "i64"
+          },
+          {
+            "name": "name",
+            "docs": ["collection name of the mystery box"],
+            "type": "string"
+          },
+          {
+            "name": "authority",
+            "docs": ["authority of the mystery box"],
+            "type": "pubkey"
+          },
+          {
+            "name": "nft_symbol",
+            "docs": ["symbol of the mystery box"],
+            "type": "string"
+          },
+          {
+            "name": "nft_supply",
+            "docs": ["supply of the mystery box"],
+            "type": "u32"
+          },
+          {
+            "name": "nft_minteds",
+            "docs": ["minteds of the mystery box"],
+            "type": "u32"
+          },
+          {
+            "name": "token_mint",
+            "docs": ["mint of the token"],
+            "type": "pubkey"
+          },
+          {
+            "name": "token_account",
+            "docs": ["Token account of token mint"],
+            "type": "pubkey"
+          },
+          {
+            "name": "token_symbol",
+            "docs": ["symbol of the token"],
+            "type": "string"
+          },
+          {
+            "name": "token_supply",
+            "docs": ["supply of the token"],
+            "type": "u64"
+          },
+          {
+            "name": "token_per_nft",
+            "docs": ["amount to bind to one NFT"],
+            "type": "u64"
+          },
+          {
+            "name": "decimals",
+            "docs": ["decimals of the token"],
+            "type": "u8"
+          },
+          {
+            "name": "token_fee",
+            "docs": ["token fee of the mystery box"],
+            "type": "u16"
+          },
+          {
+            "name": "max_fee",
+            "docs": ["max fee of the mystery box"],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "docs": ["bump of the mystery box"],
+            "type": "u8"
+          },
+          {
+            "name": "tresuary_account",
+            "docs": [
+              "fee account of the mystery box to receive the minted fees"
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}

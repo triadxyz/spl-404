@@ -1,15 +1,13 @@
 [features]
-seeds = false
+seeds = true
 skip-lint = false
+resolution = true
 
-[programs.localnet]
-spl_404 = "H74m4U3uNH9odM9Mn7UkdbMbfszLzShuqtgwqn8DRh77"
-
-[registry]
-url = "https://api.apr.dev"
+[programs.mainnet]
+spl_404 = "tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr"
 
 [provider]
-cluster = "Localnet"
+cluster = "https://mainnet.helius-rpc.com/?api-key=f250da45-6c3b-491c-a1de-3e98c16b4b75"
 wallet = "/Users/dannpl/.config/solana/id.json"
 
 [scripts]
