@@ -2,8 +2,6 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct MysteryBox {
-    /// timestamp of the creation of the mystery box
-    pub init_ts: i64,
     /// collection name of the mystery box
     pub name: String,
     /// authority of the mystery box
@@ -18,20 +16,10 @@ pub struct MysteryBox {
     pub token_mint: Pubkey,
     /// Token account of token mint
     pub token_account: Pubkey,
-    /// symbol of the token
-    pub token_symbol: String,
-    /// supply of the token
-    pub token_supply: u64,
     /// amount to bind to one NFT
     pub token_per_nft: u64,
-    /// decimals of the token
-    pub decimals: u8,
     /// token fee of the mystery box
     pub token_fee: u16,
-    /// max fee of the mystery box
-    pub max_fee: u64,
-    /// bump of the mystery box
-    pub bump: u8,
     /// fee account of the mystery box to receive the minted fees
     pub tresuary_account: Pubkey,
 }
@@ -47,10 +35,8 @@ pub struct CreateMysteryBoxArgs {
     pub max_fee: u64,
     pub tresuary_account: Pubkey,
     pub decimals: u8,
-    pub nft_uri: String,
-    pub token_uri: String,
 }
 
 impl MysteryBox {
-    pub const SPACE: usize = 16 + std::mem::size_of::<Self>();
+    pub const SPACE: usize = 264;
 }

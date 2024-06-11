@@ -53,6 +53,44 @@
       ]
     },
     {
+      "name": "burn_token",
+      "discriminator": [185, 165, 216, 246, 144, 31, 70, 74],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "writable": true,
+          "relations": ["token_account"]
+        },
+        {
+          "name": "token_account",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "BurnTokenArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "create_mystery_box",
       "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
       "accounts": [
@@ -78,16 +116,8 @@
           }
         },
         {
-          "name": "token_program",
-          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "associated_token_program",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -161,7 +191,20 @@
         },
         {
           "name": "mystery_box",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "account",
+                "path": "mystery_box.name",
+                "account": "MysteryBox"
+              }
+            ]
+          }
         },
         {
           "name": "guard",
@@ -233,23 +276,48 @@
         },
         {
           "name": "mystery_box",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "account",
+                "path": "mystery_box.name",
+                "account": "MysteryBox"
+              }
+            ]
+          }
         },
         {
           "name": "token_account",
-          "writable": true,
-          "signer": true
+          "writable": true
         },
         {
           "name": "token_program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "MintTokenArgs"
+            }
+          }
+        }
+      ]
     },
     {
       "name": "update_guard",
@@ -311,12 +379,6 @@
       "discriminator": [84, 58, 85, 105, 241, 51, 143, 79]
     }
   ],
-  "events": [
-    {
-      "name": "MintRecord",
-      "discriminator": [60, 1, 59, 92, 122, 181, 226, 91]
-    }
-  ],
   "errors": [
     {
       "code": 6000,
@@ -361,6 +423,18 @@
   ],
   "types": [
     {
+      "name": "BurnTokenArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
       "name": "CreateMysteryBoxArgs",
       "type": {
         "kind": "struct",
@@ -400,14 +474,6 @@
           {
             "name": "decimals",
             "type": "u8"
-          },
-          {
-            "name": "nft_uri",
-            "type": "string"
-          },
-          {
-            "name": "token_uri",
-            "type": "string"
           }
         ]
       }
@@ -517,13 +583,25 @@
       }
     },
     {
-      "name": "MintRecord",
+      "name": "MintTokenArgs",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "name",
+            "name": "symbol",
             "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "name": "decimals",
+            "type": "u8"
+          },
+          {
+            "name": "max_fee",
+            "type": "u64"
           }
         ]
       }
@@ -533,11 +611,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "init_ts",
-            "docs": ["timestamp of the creation of the mystery box"],
-            "type": "i64"
-          },
           {
             "name": "name",
             "docs": ["collection name of the mystery box"],
@@ -574,39 +647,14 @@
             "type": "pubkey"
           },
           {
-            "name": "token_symbol",
-            "docs": ["symbol of the token"],
-            "type": "string"
-          },
-          {
-            "name": "token_supply",
-            "docs": ["supply of the token"],
-            "type": "u64"
-          },
-          {
             "name": "token_per_nft",
             "docs": ["amount to bind to one NFT"],
             "type": "u64"
           },
           {
-            "name": "decimals",
-            "docs": ["decimals of the token"],
-            "type": "u8"
-          },
-          {
             "name": "token_fee",
             "docs": ["token fee of the mystery box"],
             "type": "u16"
-          },
-          {
-            "name": "max_fee",
-            "docs": ["max fee of the mystery box"],
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "docs": ["bump of the mystery box"],
-            "type": "u8"
           },
           {
             "name": "tresuary_account",

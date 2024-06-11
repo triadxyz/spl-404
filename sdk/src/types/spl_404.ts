@@ -59,6 +59,44 @@ export type Spl404 = {
       ]
     },
     {
+      name: 'burnToken'
+      discriminator: [185, 165, 216, 246, 144, 31, 70, 74]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'mint'
+          writable: true
+          relations: ['tokenAccount']
+        },
+        {
+          name: 'tokenAccount'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'burnTokenArgs'
+            }
+          }
+        }
+      ]
+    },
+    {
       name: 'createMysteryBox'
       discriminator: [79, 39, 108, 94, 236, 142, 106, 158]
       accounts: [
@@ -84,16 +122,8 @@ export type Spl404 = {
           }
         },
         {
-          name: 'tokenProgram'
-          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
         }
       ]
       args: [
@@ -168,6 +198,19 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'account'
+                path: 'mystery_box.name'
+                account: 'mysteryBox'
+              }
+            ]
+          }
         },
         {
           name: 'guard'
@@ -240,22 +283,47 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'account'
+                path: 'mystery_box.name'
+                account: 'mysteryBox'
+              }
+            ]
+          }
         },
         {
           name: 'tokenAccount'
           writable: true
-          signer: true
         },
         {
           name: 'tokenProgram'
           address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
         {
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+        },
+        {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
         }
       ]
-      args: []
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'mintTokenArgs'
+            }
+          }
+        }
+      ]
     },
     {
       name: 'updateGuard'
@@ -317,12 +385,6 @@ export type Spl404 = {
       discriminator: [84, 58, 85, 105, 241, 51, 143, 79]
     }
   ]
-  events: [
-    {
-      name: 'mintRecord'
-      discriminator: [60, 1, 59, 92, 122, 181, 226, 91]
-    }
-  ]
   errors: [
     {
       code: 6000
@@ -367,6 +429,18 @@ export type Spl404 = {
   ]
   types: [
     {
+      name: 'burnTokenArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'amount'
+            type: 'u64'
+          }
+        ]
+      }
+    },
+    {
       name: 'createMysteryBoxArgs'
       type: {
         kind: 'struct'
@@ -406,14 +480,6 @@ export type Spl404 = {
           {
             name: 'decimals'
             type: 'u8'
-          },
-          {
-            name: 'nftUri'
-            type: 'string'
-          },
-          {
-            name: 'tokenUri'
-            type: 'string'
           }
         ]
       }
@@ -523,13 +589,25 @@ export type Spl404 = {
       }
     },
     {
-      name: 'mintRecord'
+      name: 'mintTokenArgs'
       type: {
         kind: 'struct'
         fields: [
           {
-            name: 'name'
+            name: 'symbol'
             type: 'string'
+          },
+          {
+            name: 'uri'
+            type: 'string'
+          },
+          {
+            name: 'decimals'
+            type: 'u8'
+          },
+          {
+            name: 'maxFee'
+            type: 'u64'
           }
         ]
       }
@@ -539,11 +617,6 @@ export type Spl404 = {
       type: {
         kind: 'struct'
         fields: [
-          {
-            name: 'initTs'
-            docs: ['timestamp of the creation of the mystery box']
-            type: 'i64'
-          },
           {
             name: 'name'
             docs: ['collection name of the mystery box']
@@ -580,39 +653,14 @@ export type Spl404 = {
             type: 'pubkey'
           },
           {
-            name: 'tokenSymbol'
-            docs: ['symbol of the token']
-            type: 'string'
-          },
-          {
-            name: 'tokenSupply'
-            docs: ['supply of the token']
-            type: 'u64'
-          },
-          {
             name: 'tokenPerNft'
             docs: ['amount to bind to one NFT']
             type: 'u64'
           },
           {
-            name: 'decimals'
-            docs: ['decimals of the token']
-            type: 'u8'
-          },
-          {
             name: 'tokenFee'
             docs: ['token fee of the mystery box']
             type: 'u16'
-          },
-          {
-            name: 'maxFee'
-            docs: ['max fee of the mystery box']
-            type: 'u64'
-          },
-          {
-            name: 'bump'
-            docs: ['bump of the mystery box']
-            type: 'u8'
           },
           {
             name: 'tresuaryAccount'

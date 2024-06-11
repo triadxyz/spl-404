@@ -43,11 +43,9 @@ export default class Spl404Client {
         maxFee: new BN(mysteryBox.maxFee),
         name: mysteryBox.name,
         nftSymbol: mysteryBox.nftSymbol,
-        nftUri: mysteryBox.nftUri,
         tokenFee: mysteryBox.tokenFee,
         tokenPerNft: new BN(mysteryBox.tokenPerNft),
         tokenSymbol: mysteryBox.tokenSymbol,
-        tokenUri: mysteryBox.tokenUri,
         nftSupply: mysteryBox.nftSupply,
         tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount)
       })
@@ -127,57 +125,57 @@ export default class Spl404Client {
       .rpc()
   }
 
-  mintNft = async (nft: MintNftType) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      nft.mysteryBoxName
-    )
+  // mintNft = async (nft: MintNftType) => {
+  //   const MysteryBox = getMysteryBoxSync(
+  //     this.program.programId,
+  //     nft.mysteryBoxName
+  //   )
 
-    const Guard = getGuardSync(
-      this.program.programId,
-      nft.guardName,
-      MysteryBox
-    )
+  //   const Guard = getGuardSync(
+  //     this.program.programId,
+  //     nft.guardName,
+  //     MysteryBox
+  //   )
 
-    const Mint = getMintAddressSync(this.program.programId, nft.name)
-    const wallet = new PublicKey(nft.userWallet)
+  //   const Mint = getMintAddressSync(this.program.programId, nft.name)
+  //   const wallet = new PublicKey(nft.userWallet)
 
-    const ATA_PROGRAM_ID = new PublicKey(
-      'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-    )
-    const [payerATA] = PublicKey.findProgramAddressSync(
-      [wallet.toBytes(), TOKEN_2022_PROGRAM_ID.toBytes(), Mint.toBytes()],
-      ATA_PROGRAM_ID
-    )
+  //   const ATA_PROGRAM_ID = new PublicKey(
+  //     'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+  //   )
+  //   const [payerATA] = PublicKey.findProgramAddressSync(
+  //     [wallet.toBytes(), TOKEN_2022_PROGRAM_ID.toBytes(), Mint.toBytes()],
+  //     ATA_PROGRAM_ID
+  //   )
 
-    return this.program.methods
-      .mintNft({
-        name: nft.name,
-        nftUri: nft.nftUri
-      })
-      .accounts({
-        signer: wallet,
-        mysteryBox: MysteryBox,
-        guard: Guard,
-        payerAta: payerATA,
-        treasuryAccount: new PublicKey(
-          'Q1Du6NaLyDQHF8HLPiEjSyWMqUXUjphd3bcMhFvTgwx'
-        ),
-        tokenProgram: TOKEN_2022_PROGRAM_ID
-      })
-  }
+  //   return this.program.methods
+  //     .mintNft({
+  //       name: nft.name,
+  //       nftUri: nft.nftUri
+  //     })
+  //     .accounts({
+  //       signer: wallet,
+  //       mysteryBox: MysteryBox,
+  //       guard: Guard,
+  //       payerAta: payerATA,
+  //       treasuryAccount: new PublicKey(
+  //         'Q1Du6NaLyDQHF8HLPiEjSyWMqUXUjphd3bcMhFvTgwx'
+  //       ),
+  //       tokenProgram: TOKEN_2022_PROGRAM_ID
+  //     })
+  // }
 
-  mintToken = async (token: MintTokenType) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      token.mysteryBoxName
-    )
+  // mintToken = async (token: MintTokenType) => {
+  //   const MysteryBox = getMysteryBoxSync(
+  //     this.program.programId,
+  //     token.mysteryBoxName
+  //   )
 
-    this.program.methods
-      .mintToken()
-      .accounts({ mysteryBox: MysteryBox, mint: token.mint })
-      .rpc({
-        skipPreflight: true
-      })
-  }
+  //   this.program.methods
+  //     .mintToken()
+  //     .accounts({ mysteryBox: MysteryBox, mint: token.mint })
+  //     .rpc({
+  //       skipPreflight: true
+  //     })
+  // }
 }

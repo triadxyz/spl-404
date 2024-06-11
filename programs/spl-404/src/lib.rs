@@ -29,13 +29,18 @@ pub mod spl_404 {
         instructions::initialize_guard(ctx, args)
     }
 
-    pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
-        instructions::mint_token(ctx)
+    pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
+        instructions::mint_token(ctx, args)
+    }
+
+    pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
+        instructions::burn_token(ctx, args)
     }
 
     pub fn update_guard(ctx: Context<UpdateGuard>, args: GuardArgs) -> Result<()> {
         instructions::update_guard(ctx, args)
     }
+
     pub fn burn_guard(ctx: Context<BurnGuard>, _name: String) -> Result<()> {
         instructions::burn_guard(ctx)
     }
