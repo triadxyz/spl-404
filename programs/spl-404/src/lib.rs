@@ -37,10 +37,6 @@ pub mod spl_404 {
         instructions::burn_token(ctx, args)
     }
 
-    pub fn update_guard(ctx: Context<UpdateGuard>, args: GuardArgs) -> Result<()> {
-        instructions::update_guard(ctx, args)
-    }
-
     pub fn burn_guard(ctx: Context<BurnGuard>, _name: String) -> Result<()> {
         instructions::burn_guard(ctx)
     }

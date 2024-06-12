@@ -34,9 +34,8 @@ pub struct CreateMysteryBoxArgs {
     pub token_fee: u16,
     pub max_fee: u64,
     pub tresuary_account: Pubkey,
-    pub decimals: u8,
 }
 
 impl MysteryBox {
-    pub const SPACE: usize = 264;
+    pub const SPACE: usize = 8 + std::mem::size_of::<Self>();
 }

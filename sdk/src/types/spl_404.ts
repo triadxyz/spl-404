@@ -324,55 +324,6 @@ export type Spl404 = {
           }
         }
       ]
-    },
-    {
-      name: 'updateGuard'
-      discriminator: [51, 38, 175, 180, 25, 249, 39, 24]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'guard'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [103, 117, 97, 114, 100]
-              },
-              {
-                kind: 'arg'
-                path: 'args.name'
-              },
-              {
-                kind: 'account'
-                path: 'mysteryBox'
-              }
-            ]
-          }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'guardArgs'
-            }
-          }
-        }
-      ]
     }
   ]
   accounts: [
@@ -476,10 +427,6 @@ export type Spl404 = {
           {
             name: 'tresuaryAccount'
             type: 'pubkey'
-          },
-          {
-            name: 'decimals'
-            type: 'u8'
           }
         ]
       }

@@ -2,7 +2,6 @@ use crate::state::{CreateMysteryBoxArgs, MysteryBox};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::account_info::AccountInfo;
 
-
 #[derive(Accounts)]
 #[instruction(args: CreateMysteryBoxArgs)]
 pub struct CreateMysteryBox<'info> {

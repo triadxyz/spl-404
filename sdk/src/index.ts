@@ -4,7 +4,9 @@ import {
   ComputeBudgetProgram,
   Connection,
   Keypair,
-  PublicKey
+  PublicKey,
+  SystemProgram,
+  Transaction
 } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
@@ -21,6 +23,7 @@ import {
 } from './utils/helpers'
 import { TOKEN_2022_PROGRAM_ID, getAccount } from '@solana/spl-token'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
+import axios from 'axios'
 
 export default class Spl404Client {
   provider: AnchorProvider
@@ -36,29 +39,28 @@ export default class Spl404Client {
     this.program = new Program<Spl404>(IDL as Spl404, this.provider)
   }
 
-  createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
-    await this.program.methods
-      .createMysteryBox({
-        decimals: mysteryBox.decimals,
-        maxFee: new BN(mysteryBox.maxFee),
-        name: mysteryBox.name,
-        nftSymbol: mysteryBox.nftSymbol,
-        tokenFee: mysteryBox.tokenFee,
-        tokenPerNft: new BN(mysteryBox.tokenPerNft),
-        tokenSymbol: mysteryBox.tokenSymbol,
-        nftSupply: mysteryBox.nftSupply,
-        tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount)
-      })
-      .postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 30000
-        })
-      ])
-      .accounts({
-        signer: this.provider.wallet.publicKey
-      })
-      .rpc({ skipPreflight: true })
-  }
+  // createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
+  //   await this.program.methods
+  //     .createMysteryBox({
+  //       maxFee: new BN(mysteryBox.maxFee),
+  //       name: mysteryBox.name,
+  //       nftSymbol: mysteryBox.nftSymbol,
+  //       tokenFee: mysteryBox.tokenFee,
+  //       tokenPerNft: new BN(mysteryBox.tokenPerNft),
+  //       tokenSymbol: mysteryBox.tokenSymbol,
+  //       nftSupply: mysteryBox.nftSupply,
+  //       tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount)
+  //     })
+  //     .postInstructions([
+  //       ComputeBudgetProgram.setComputeUnitPrice({
+  //         microLamports: 30000
+  //       })
+  //     ])
+  //     .accounts({
+  //       signer: this.provider.wallet.publicKey
+  //     })
+  //     .rpc({ skipPreflight: true })
+  // }
 
   createGuard = async (guard: CreateGuardType) => {
     const MysteryBox = getMysteryBoxSync(
