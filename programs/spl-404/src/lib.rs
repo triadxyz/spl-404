@@ -40,4 +40,8 @@ pub mod spl_404 {
     pub fn burn_guard(ctx: Context<BurnGuard>, _name: String) -> Result<()> {
         instructions::burn_guard(ctx)
     }
+    
+    pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
+        instructions::swap(ctx, args)
+    }
 }

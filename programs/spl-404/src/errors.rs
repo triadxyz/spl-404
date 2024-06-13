@@ -28,4 +28,10 @@ pub enum CustomError {
 
     #[msg("Supply has reached the maximum limit")]
     SupplyReached,
+    
+    #[msg("Incorrect NFT amount")]
+    IncorrectNftAmount,
+
+    #[msg("Incorrect Token amount")]
+    IncorrectTokenAmount
 }

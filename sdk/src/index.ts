@@ -2,6 +2,7 @@ import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
+import { SwapType } from './utils/types'
 import {
   CreateMysteryBox,
   CreateGuard,
@@ -12,9 +13,9 @@ import {
 } from './utils/types'
 import {
   getGuardSync,
-  getMintAddressSync,
+  getPayerATASync,
   getMysteryBoxSync,
-  getPayerATASync
+  getMintAddressSync
 } from './utils/address'
 
 export default class TriadSpl404 {
@@ -201,4 +202,6 @@ export default class TriadSpl404 {
 
     return method.rpc({ skipPreflight: options?.skipPreflight })
   }
+
+  swapAsset = async (swap: SwapType) => {}
 }

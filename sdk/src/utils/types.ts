@@ -49,3 +49,8 @@ export type MintToken = {
   symbol: string
   uri: string
 }
+
+export type SwapType = {
+  mysteryBoxName: string
+  mint: PublicKey
+}
