@@ -38,3 +38,8 @@ export type MintTokenType = {
   mysteryBoxName: string
   mint: PublicKey
 }
+
+export type SwapType = {
+  mysteryBoxName: string
+  mint: PublicKey
+}

@@ -4,7 +4,9 @@ mod mint_nft;
 mod mint_token;
 mod update_guard;
 mod burn_guard;
+mod swap;
 
+pub use swap::*;
 pub use burn_guard::*;
 pub use create_mystery_box::*;
 pub use guard::*;

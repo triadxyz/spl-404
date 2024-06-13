@@ -25,4 +25,10 @@ pub enum Spl404Error {
 
     #[msg("Failed to transfer tokens")]
     TransferFailed,
+
+    #[msg("Incorrect NFT amount")]
+    IncorrectNftAmount,
+
+    #[msg("Incorrect Token amount")]
+    IncorrectTokenAmount
 }

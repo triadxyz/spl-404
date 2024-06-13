@@ -12,12 +12,15 @@ import {
   CreateMysteryBoxType,
   CreateGuardType,
   MintNftType,
-  MintTokenType
+  MintTokenType,
+  SwapType
 } from './utils/types'
 import {
   getGuardSync,
   getMintAddressSync,
-  getMysteryBoxSync
+  getMysteryBoxSync,
+  getNftMintSync,
+  getTokenMintSync
 } from './utils/helpers'
 import { TOKEN_2022_PROGRAM_ID, getAccount } from '@solana/spl-token'
 import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
@@ -178,6 +181,37 @@ export default class Spl404Client {
       .accounts({ mysteryBox: MysteryBox, mint: token.mint })
       .rpc({
         skipPreflight: true
+      })
+  }
+
+  swapAsset = async (swap: SwapType) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      swap.mysteryBoxName
+    )
+    const NftMint = getNftMintSync(
+      this.program.programId,
+      MysteryBox
+    )
+    const TokenMint = getTokenMintSync(
+      this.program.programId,
+      MysteryBox
+    )
+
+    const account = await this.program.account.mysteryBox.all()
+
+    return this.program.methods
+      .swap({
+        inToken: new PublicKey(''),
+        outToken: new PublicKey(''),
+        inTokenAmount: new BN(1),
+        nftToToken: true
+      })
+      .accounts({
+        mysteryBox: MysteryBox,
+        nftMint: NftMint,
+        tokenMint: TokenMint,
+        user: this.provider.wallet.publicKey
       })
   }
 }
