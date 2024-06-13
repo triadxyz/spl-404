@@ -25,17 +25,18 @@ pub mod spl_404 {
         instructions::mint_nft(ctx, args)
     }
 
-    pub fn initialize_guard(ctx: Context<InitializeGuard>, args: GuardArgs) -> Result<()> {
-        instructions::initialize_guard(ctx, args)
+    pub fn create_guard(ctx: Context<CreateGuard>, args: CreateGuardArgs) -> Result<()> {
+        instructions::create_guard(ctx, args)
     }
 
-    pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
-        instructions::mint_token(ctx)
+    pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
+        instructions::mint_token(ctx, args)
     }
 
-    pub fn update_guard(ctx: Context<UpdateGuard>, args: GuardArgs) -> Result<()> {
-        instructions::update_guard(ctx, args)
+    pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
+        instructions::burn_token(ctx, args)
     }
+
     pub fn burn_guard(ctx: Context<BurnGuard>, _name: String) -> Result<()> {
         instructions::burn_guard(ctx)
     }

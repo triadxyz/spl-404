@@ -1,13 +1,13 @@
 {
-  "name": "@triadxyz/spl-404",
-  "version": "0.0.8",
+  "name": "@triadxyz/tmb-404",
+  "version": "0.0.1",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "tsc",
-    "start": "rimraf dist && tsc && node ./dist/index.js"
+    "test": "rimraf dist && tsc && node ./dist/index.js"
   },
   "publishConfig": {
     "access": "public"
@@ -32,6 +32,7 @@
   "dependencies": {
     "@solana/spl-token": "0.4.6",
     "@solana/web3.js": "1.89.1",
+    "axios": "^1.7.2",
     "bs58": "^5.0.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 use crate::errors::Spl404Error;
 use crate::state::{MintNftArgs, MysteryBox};
-use crate::{Guard, MintRecord};
+use crate::Guard;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::account_info::AccountInfo;
 use anchor_lang::solana_program::program::invoke_signed;
@@ -24,7 +24,10 @@ pub struct MintNft<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = mystery_box.tresuary_account == *treasury_account.key,
+        seeds = [b"mystery_box", mystery_box.name.as_bytes()], bump)]
     pub mystery_box: Account<'info, MysteryBox>,
 
     #[account(mut)]
@@ -133,7 +136,7 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let signer: &[&[&[u8]]] = &[&[
         b"mystery_box",
         mystery_box.name.as_bytes(),
-        &[mystery_box.bump],
+        &[ctx.bumps.mystery_box],
     ]];
 
     msg!("Mint created");
@@ -191,8 +194,6 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
 
     mystery_box.nft_minteds = mystery_box.nft_minteds + 1;
     guard.minted = guard.minted + 1;
-
-    emit!(MintRecord { name: args.name });
 
     Ok(())
 }
