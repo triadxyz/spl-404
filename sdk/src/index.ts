@@ -1,32 +1,23 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import {
-  ComputeBudgetInstruction,
-  ComputeBudgetProgram,
-  Connection,
-  Keypair,
-  PublicKey,
-  SystemProgram,
-  Transaction
-} from '@solana/web3.js'
+import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
 import {
-  CreateMysteryBoxType,
-  CreateGuardType,
-  MintNftType,
-  MintTokenType,
-  BurnGuardType
+  CreateMysteryBox,
+  CreateGuard,
+  MintNft,
+  MintToken,
+  BurnGuard,
+  RpcOptions
 } from './utils/types'
 import {
   getGuardSync,
   getMintAddressSync,
-  getMysteryBoxSync
-} from './utils/helpers'
-import { TOKEN_2022_PROGRAM_ID, getAccount } from '@solana/spl-token'
-import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
-import axios from 'axios'
+  getMysteryBoxSync,
+  getPayerATASync
+} from './utils/address'
 
-export default class Spl404Client {
+export default class TriadSpl404 {
   provider: AnchorProvider
   program: Program<Spl404>
 
@@ -40,36 +31,66 @@ export default class Spl404Client {
     this.program = new Program<Spl404>(IDL as Spl404, this.provider)
   }
 
-  // createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
-  //   await this.program.methods
-  //     .createMysteryBox({
-  //       maxFee: new BN(mysteryBox.maxFee),
-  //       name: mysteryBox.name,
-  //       nftSymbol: mysteryBox.nftSymbol,
-  //       tokenFee: mysteryBox.tokenFee,
-  //       tokenPerNft: new BN(mysteryBox.tokenPerNft),
-  //       tokenSymbol: mysteryBox.tokenSymbol,
-  //       nftSupply: mysteryBox.nftSupply,
-  //       tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount)
-  //     })
-  //     .postInstructions([
-  //       ComputeBudgetProgram.setComputeUnitPrice({
-  //         microLamports: 30000
-  //       })
-  //     ])
-  //     .accounts({
-  //       signer: this.provider.wallet.publicKey
-  //     })
-  //     .rpc({ skipPreflight: true })
-  // }
+  getMysteryBox = async (mysteryBoxName: string) => {
+    const MysteryBox = getMysteryBoxSync(this.program.programId, mysteryBoxName)
 
-  createGuard = async (guard: CreateGuardType) => {
+    const data = await this.program.account.mysteryBox.fetch(MysteryBox)
+
+    return {
+      ...data,
+      address: MysteryBox,
+      initTs: data.initTs.toNumber(),
+      tokenSupply: data.tokenSupply.toNumber(),
+      tokenPerNft: data.tokenPerNft.toNumber(),
+      maxFee: data.maxFee.toNumber(),
+      tokenFee: data.tokenFee / 100
+    }
+  }
+
+  getGuards = async () => {
+    return this.program.account.guard.all()
+  }
+
+  createMysteryBox = async (
+    mysteryBox: CreateMysteryBox,
+    options?: RpcOptions
+  ) => {
+    const method = this.program.methods
+      .createMysteryBox({
+        maxFee: new BN(
+          mysteryBox.maxFee || mysteryBox.nftSupply * mysteryBox.tokenPerNft
+        ),
+        name: mysteryBox.name,
+        nftSymbol: mysteryBox.nftSymbol,
+        tokenFee: mysteryBox.tokenFee,
+        tokenPerNft: new BN(mysteryBox.tokenPerNft),
+        tokenSymbol: mysteryBox.tokenSymbol,
+        nftSupply: mysteryBox.nftSupply,
+        tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount),
+        decimals: mysteryBox.decimals
+      })
+      .accounts({
+        signer: this.provider.wallet.publicKey
+      })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
+
+  createGuard = async (guard: CreateGuard, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       guard.mysteryBoxName
     )
 
-    this.program.methods
+    const method = this.program.methods
       .createGuard({
         name: guard.name,
         id: guard.id,
@@ -78,83 +99,106 @@ export default class Spl404Client {
         initTs: new BN(guard.initTs),
         endTs: new BN(guard.endTs)
       })
-      .postInstructions([
+      .accounts({ mysteryBox: MysteryBox })
+
+    if (options?.microLamports) {
+      method.postInstructions([
         ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 60000
+          microLamports: options.microLamports
         })
       ])
-      .accounts({ mysteryBox: MysteryBox })
-      .rpc()
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  burnGuard = async (guard: BurnGuardType) => {
+  burnGuard = async (guard: BurnGuard, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       guard.mysteryBoxName
     )
 
-    await this.program.methods
+    const method = this.program.methods
       .burnGuard(guard.name)
-      .postInstructions([
+      .accounts({ mysteryBox: MysteryBox })
+
+    if (options?.microLamports) {
+      method.postInstructions([
         ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 60000
+          microLamports: options.microLamports
         })
       ])
-      .accounts({ mysteryBox: MysteryBox })
-      .rpc()
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  // mintNft = async (nft: MintNftType) => {
-  //   const MysteryBox = getMysteryBoxSync(
-  //     this.program.programId,
-  //     nft.mysteryBoxName
-  //   )
+  mintNft = async (nft: MintNft, options?: RpcOptions) => {
+    const wallet = new PublicKey(nft.userWallet)
 
-  //   const Guard = getGuardSync(
-  //     this.program.programId,
-  //     nft.guardName,
-  //     MysteryBox
-  //   )
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      nft.mysteryBoxName
+    )
+    const Guard = getGuardSync(
+      this.program.programId,
+      nft.guardName,
+      MysteryBox
+    )
+    const Mint = getMintAddressSync(this.program.programId, nft.name)
+    const PayerATA = getPayerATASync(wallet, Mint)
 
-  //   const Mint = getMintAddressSync(this.program.programId, nft.name)
-  //   const wallet = new PublicKey(nft.userWallet)
+    const method = this.program.methods
+      .mintNft({
+        name: nft.name,
+        nftUri: nft.nftUri
+      })
+      .accounts({
+        signer: wallet,
+        guard: Guard,
+        mysteryBox: MysteryBox,
+        payerAta: PayerATA,
+        treasuryAccount: nft.tresuaryAccount
+      })
 
-  //   const ATA_PROGRAM_ID = new PublicKey(
-  //     'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-  //   )
-  //   const [payerATA] = PublicKey.findProgramAddressSync(
-  //     [wallet.toBytes(), TOKEN_2022_PROGRAM_ID.toBytes(), Mint.toBytes()],
-  //     ATA_PROGRAM_ID
-  //   )
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
 
-  //   return this.program.methods
-  //     .mintNft({
-  //       name: nft.name,
-  //       nftUri: nft.nftUri
-  //     })
-  //     .accounts({
-  //       signer: wallet,
-  //       mysteryBox: MysteryBox,
-  //       guard: Guard,
-  //       payerAta: payerATA,
-  //       treasuryAccount: new PublicKey(
-  //         'Q1Du6NaLyDQHF8HLPiEjSyWMqUXUjphd3bcMhFvTgwx'
-  //       ),
-  //       tokenProgram: TOKEN_2022_PROGRAM_ID
-  //     })
-  // }
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
 
-  // mintToken = async (token: MintTokenType) => {
-  //   const MysteryBox = getMysteryBoxSync(
-  //     this.program.programId,
-  //     token.mysteryBoxName
-  //   )
+  mintToken = async (token: MintToken, options?: RpcOptions) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      token.mysteryBoxName
+    )
 
-  //   this.program.methods
-  //     .mintToken()
-  //     .accounts({ mysteryBox: MysteryBox, mint: token.mint })
-  //     .rpc({
-  //       skipPreflight: true
-  //     })
-  // }
+    const Mint = getMintAddressSync(this.program.programId, token.symbol)
+    const TokenAccount = getPayerATASync(this.provider.wallet.publicKey, Mint)
+
+    const method = this.program.methods
+      .mintToken({
+        uri: token.uri
+      })
+      .accounts({
+        mysteryBox: MysteryBox,
+        mint: Mint,
+        tokenAccount: TokenAccount
+      })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
 }

@@ -1,4 +1,4 @@
-use crate::{errors::Spl404Error, CreateGuardArgs, Guard, MysteryBox};
+use crate::{errors::CustomError, CreateGuardArgs, Guard, MysteryBox};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
@@ -24,7 +24,7 @@ pub struct CreateGuard<'info> {
 
 pub fn create_guard(ctx: Context<CreateGuard>, args: CreateGuardArgs) -> Result<()> {
     if ctx.accounts.mystery_box.authority != *ctx.accounts.signer.key {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     let guard = &mut ctx.accounts.guard;

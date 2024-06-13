@@ -1,4 +1,4 @@
-use crate::errors::Spl404Error;
+use crate::errors::CustomError;
 use crate::state::MysteryBox;
 use crate::MintTokenArgs;
 use anchor_lang::prelude::*;
@@ -25,8 +25,8 @@ pub struct MintToken<'info> {
 
     #[account(
         mut,
-        constraint = signer.key() == mystery_box.authority.key(),
-        seeds = [b"mystery_box", mystery_box.name.as_bytes()], bump)]
+        constraint = signer.key() == mystery_box.authority.key()
+    )]
     pub mystery_box: Account<'info, MysteryBox>,
 
     #[account(
@@ -46,7 +46,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
 
     if ctx.accounts.signer.key != &mystery_box.authority {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     let space = match ExtensionType::try_calculate_account_len::<Mint>(&[
@@ -54,7 +54,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
         ExtensionType::TransferFeeConfig,
     ]) {
         Ok(space) => space,
-        Err(_) => return err!(Spl404Error::TokenMintInitFailed),
+        Err(_) => return err!(CustomError::TokenMintInitFailed),
     };
 
     let meta_data_space = 250;
@@ -70,7 +70,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
     let signer: &[&[&[u8]]] = &[&[
         b"mystery_box",
         mystery_box.name.as_bytes(),
-        &[ctx.bumps.mystery_box],
+        &[mystery_box.bump],
     ]];
 
     let init_transfer_fee_config = match initialize_transfer_fee_config(
@@ -78,14 +78,14 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
         &ctx.accounts.mint.to_account_info().key(),
         Some(&mystery_box.key()),
         Some(&mystery_box.key()),
-        args.token_fee,
-        args.max_fee,
+        mystery_box.token_fee,
+        mystery_box.max_fee,
     ) {
         Ok(ix) => ix,
         Err(e) => {
             msg!("Error: {:?}", e);
 
-            return err!(Spl404Error::TokenMintInitFailed);
+            return err!(CustomError::TokenMintInitFailed);
         }
     };
 
@@ -108,7 +108,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
         Err(e) => {
             msg!("Error: {:?}", e);
 
-            return err!(Spl404Error::TokenMintInitFailed);
+            return err!(CustomError::TokenMintInitFailed);
         }
     };
 
@@ -127,7 +127,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
                 mint: ctx.accounts.mint.to_account_info(),
             },
         ),
-        args.decimals,
+        mystery_box.decimals,
         &mystery_box.key(),
         None,
     )
@@ -142,7 +142,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
         &ctx.accounts.mint.key(),
         mystery_box.to_account_info().key,
         mystery_box.name.clone(),
-        args.symbol.clone(),
+        mystery_box.token_symbol.clone(),
         args.uri.clone(),
     );
 

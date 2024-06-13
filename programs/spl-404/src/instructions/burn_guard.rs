@@ -1,4 +1,4 @@
-use crate::{errors::Spl404Error, Guard, MysteryBox};
+use crate::{errors::CustomError, Guard, MysteryBox};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
@@ -23,11 +23,11 @@ pub struct BurnGuard<'info> {
 
 pub fn burn_guard(ctx: Context<BurnGuard>) -> Result<()> {
     if ctx.accounts.guard.mystery_box != ctx.accounts.mystery_box.key() {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     if ctx.accounts.mystery_box.authority != *ctx.accounts.signer.key {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     Ok(())

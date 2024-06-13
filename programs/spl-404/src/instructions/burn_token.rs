@@ -1,4 +1,4 @@
-use crate::errors::Spl404Error;
+use crate::errors::CustomError;
 use crate::{BurnTokenArgs, MysteryBox};
 use anchor_lang::prelude::*;
 use anchor_spl::token_2022::{burn, Burn};
@@ -28,7 +28,7 @@ pub struct BurnToken<'info> {
 
 pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
     if &ctx.accounts.mystery_box.authority != &ctx.accounts.token_account.owner {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     burn(

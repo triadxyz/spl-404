@@ -198,19 +198,6 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                kind: 'account'
-                path: 'mystery_box.name'
-                account: 'mysteryBox'
-              }
-            ]
-          }
         },
         {
           name: 'guard'
@@ -246,6 +233,7 @@ export type Spl404 = {
         },
         {
           name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
         {
           name: 'associatedTokenProgram'
@@ -283,19 +271,6 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                kind: 'account'
-                path: 'mystery_box.name'
-                account: 'mysteryBox'
-              }
-            ]
-          }
         },
         {
           name: 'tokenAccount'
@@ -376,6 +351,11 @@ export type Spl404 = {
       code: 6007
       name: 'transferFailed'
       msg: 'Failed to transfer tokens'
+    },
+    {
+      code: 6008
+      name: 'supplyReached'
+      msg: 'Supply has reached the maximum limit'
     }
   ]
   types: [
@@ -447,6 +427,22 @@ export type Spl404 = {
           {
             name: 'tresuaryAccount'
             type: 'pubkey'
+          },
+          {
+            name: 'tokenSymbol'
+            type: 'string'
+          },
+          {
+            name: 'decimals'
+            type: 'u8'
+          },
+          {
+            name: 'tokenFee'
+            type: 'u16'
+          },
+          {
+            name: 'maxFee'
+            type: 'u64'
           }
         ]
       }
@@ -529,24 +525,8 @@ export type Spl404 = {
         kind: 'struct'
         fields: [
           {
-            name: 'symbol'
-            type: 'string'
-          },
-          {
             name: 'uri'
             type: 'string'
-          },
-          {
-            name: 'decimals'
-            type: 'u8'
-          },
-          {
-            name: 'maxFee'
-            type: 'u64'
-          },
-          {
-            name: 'tokenFee'
-            type: 'u16'
           }
         ]
       }

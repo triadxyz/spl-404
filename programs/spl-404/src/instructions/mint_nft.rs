@@ -1,4 +1,4 @@
-use crate::errors::Spl404Error;
+use crate::errors::CustomError;
 use crate::state::{MintNftArgs, MysteryBox};
 use crate::Guard;
 use anchor_lang::prelude::*;
@@ -10,11 +10,12 @@ use anchor_lang::solana_program::rent::{
 use anchor_lang::solana_program::system_instruction;
 use anchor_lang::system_program::{transfer, Transfer};
 use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token_2022::set_authority;
 use anchor_spl::token_2022::spl_token_2022::instruction::AuthorityType;
+use anchor_spl::token_2022::Token2022;
 use anchor_spl::token_2022::{mint_to, MintTo};
-use anchor_spl::token_2022::{set_authority, Token2022};
 use anchor_spl::token_interface::Mint as TMint;
-use anchor_spl::token_interface::{SetAuthority, TokenAccount, TokenInterface};
+use anchor_spl::token_interface::{SetAuthority, TokenAccount};
 use spl_token_metadata_interface::state::TokenMetadata;
 use spl_type_length_value::variable_len_pack::VariableLenPack;
 
@@ -27,10 +28,12 @@ pub struct MintNft<'info> {
     #[account(
         mut,
         constraint = mystery_box.tresuary_account == *treasury_account.key,
-        seeds = [b"mystery_box", mystery_box.name.as_bytes()], bump)]
+    )]
     pub mystery_box: Account<'info, MysteryBox>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = guard.minted < guard.supply && mystery_box.nft_minteds < mystery_box.nft_supply && guard.mystery_box == mystery_box.to_account_info().key())]
     pub guard: Account<'info, Guard>,
 
     #[account(
@@ -58,7 +61,7 @@ pub struct MintNft<'info> {
 
     pub rent: Sysvar<'info, Rent>,
 
-    pub token_program: Interface<'info, TokenInterface>,
+    pub token_program: Program<'info, Token2022>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
@@ -68,19 +71,19 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let guard = &mut ctx.accounts.guard;
 
     if guard.minted >= guard.supply {
-        return Err(Spl404Error::MintFailed.into());
+        return Err(CustomError::SupplyReached.into());
     }
 
     if mystery_box.tresuary_account != *ctx.accounts.treasury_account.key {
-        return Err(Spl404Error::MintFailed.into());
+        return Err(CustomError::MintFailed.into());
     }
 
     if mystery_box.nft_minteds >= mystery_box.nft_supply {
-        return Err(Spl404Error::MintFailed.into());
+        return Err(CustomError::SupplyReached.into());
     }
 
     if guard.mystery_box != mystery_box.key() {
-        return Err(Spl404Error::MintFailed.into());
+        return Err(CustomError::MintFailed.into());
     }
 
     let current_date = Clock::get()?.unix_timestamp;
@@ -88,7 +91,7 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let end_ts = guard.end_ts;
 
     if current_date < init_ts || current_date > end_ts {
-        return Err(Spl404Error::MintFailed.into());
+        return Err(CustomError::MintFailed.into());
     }
 
     let from_account = &ctx.accounts.signer;
@@ -136,7 +139,7 @@ pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
     let signer: &[&[&[u8]]] = &[&[
         b"mystery_box",
         mystery_box.name.as_bytes(),
-        &[ctx.bumps.mystery_box],
+        &[mystery_box.bump],
     ]];
 
     msg!("Mint created");

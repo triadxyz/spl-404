@@ -43,6 +43,10 @@ pub struct CreateMysteryBoxArgs {
     pub nft_symbol: String,
     pub token_per_nft: u64,
     pub tresuary_account: Pubkey,
+    pub token_symbol: String,
+    pub decimals: u8,
+    pub token_fee: u16,
+    pub max_fee: u64,
 }
 
 impl MysteryBox {

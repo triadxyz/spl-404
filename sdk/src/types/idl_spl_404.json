@@ -191,20 +191,7 @@
         },
         {
           "name": "mystery_box",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                "kind": "account",
-                "path": "mystery_box.name",
-                "account": "MysteryBox"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "guard",
@@ -239,7 +226,8 @@
           "address": "SysvarRent111111111111111111111111111111111"
         },
         {
-          "name": "token_program"
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
           "name": "associated_token_program",
@@ -276,20 +264,7 @@
         },
         {
           "name": "mystery_box",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                "kind": "account",
-                "path": "mystery_box.name",
-                "account": "MysteryBox"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "token_account",
@@ -370,6 +345,11 @@
       "code": 6007,
       "name": "TransferFailed",
       "msg": "Failed to transfer tokens"
+    },
+    {
+      "code": 6008,
+      "name": "SupplyReached",
+      "msg": "Supply has reached the maximum limit"
     }
   ],
   "types": [
@@ -441,6 +421,22 @@
           {
             "name": "tresuary_account",
             "type": "pubkey"
+          },
+          {
+            "name": "token_symbol",
+            "type": "string"
+          },
+          {
+            "name": "decimals",
+            "type": "u8"
+          },
+          {
+            "name": "token_fee",
+            "type": "u16"
+          },
+          {
+            "name": "max_fee",
+            "type": "u64"
           }
         ]
       }
@@ -523,24 +519,8 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "symbol",
-            "type": "string"
-          },
-          {
             "name": "uri",
             "type": "string"
-          },
-          {
-            "name": "decimals",
-            "type": "u8"
-          },
-          {
-            "name": "max_fee",
-            "type": "u64"
-          },
-          {
-            "name": "token_fee",
-            "type": "u16"
           }
         ]
       }

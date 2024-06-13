@@ -20,9 +20,5 @@ pub struct MintNftArgs {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct MintTokenArgs {
-    pub symbol: String,
     pub uri: String,
-    pub decimals: u8,
-    pub max_fee: u64,
-    pub token_fee: u16,
 }
