@@ -97,49 +97,8 @@ export type Spl404 = {
       ]
     },
     {
-      name: 'createMysteryBox'
-      discriminator: [79, 39, 108, 94, 236, 142, 106, 158]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                kind: 'arg'
-                path: 'args.name'
-              }
-            ]
-          }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'createMysteryBoxArgs'
-            }
-          }
-        }
-      ]
-    },
-    {
-      name: 'initializeGuard'
-      discriminator: [63, 189, 246, 157, 77, 125, 157, 142]
+      name: 'createGuard'
+      discriminator: [251, 254, 17, 198, 219, 218, 154, 99]
       accounts: [
         {
           name: 'signer'
@@ -180,7 +139,48 @@ export type Spl404 = {
           name: 'args'
           type: {
             defined: {
-              name: 'guardArgs'
+              name: 'createGuardArgs'
+            }
+          }
+        }
+      ]
+    },
+    {
+      name: 'createMysteryBox'
+      discriminator: [79, 39, 108, 94, 236, 142, 106, 158]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'arg'
+                path: 'args.name'
+              }
+            ]
+          }
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'createMysteryBoxArgs'
             }
           }
         }
@@ -392,18 +392,42 @@ export type Spl404 = {
       }
     },
     {
-      name: 'createMysteryBoxArgs'
+      name: 'createGuardArgs'
       type: {
         kind: 'struct'
         fields: [
           {
-            name: 'nftSymbol'
+            name: 'initTs'
+            type: 'i64'
+          },
+          {
+            name: 'endTs'
+            type: 'i64'
+          },
+          {
+            name: 'name'
             type: 'string'
           },
           {
-            name: 'tokenSymbol'
-            type: 'string'
+            name: 'id'
+            type: 'u16'
           },
+          {
+            name: 'supply'
+            type: 'u64'
+          },
+          {
+            name: 'price'
+            type: 'u64'
+          }
+        ]
+      }
+    },
+    {
+      name: 'createMysteryBoxArgs'
+      type: {
+        kind: 'struct'
+        fields: [
           {
             name: 'name'
             type: 'string'
@@ -413,15 +437,11 @@ export type Spl404 = {
             type: 'u32'
           },
           {
+            name: 'nftSymbol'
+            type: 'string'
+          },
+          {
             name: 'tokenPerNft'
-            type: 'u64'
-          },
-          {
-            name: 'tokenFee'
-            type: 'u16'
-          },
-          {
-            name: 'maxFee'
             type: 'u64'
           },
           {
@@ -488,38 +508,6 @@ export type Spl404 = {
       }
     },
     {
-      name: 'guardArgs'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'initTs'
-            type: 'i64'
-          },
-          {
-            name: 'endTs'
-            type: 'i64'
-          },
-          {
-            name: 'name'
-            type: 'string'
-          },
-          {
-            name: 'id'
-            type: 'u16'
-          },
-          {
-            name: 'supply'
-            type: 'u64'
-          },
-          {
-            name: 'price'
-            type: 'u64'
-          }
-        ]
-      }
-    },
-    {
       name: 'mintNftArgs'
       type: {
         kind: 'struct'
@@ -555,6 +543,10 @@ export type Spl404 = {
           {
             name: 'maxFee'
             type: 'u64'
+          },
+          {
+            name: 'tokenFee'
+            type: 'u16'
           }
         ]
       }
@@ -564,6 +556,11 @@ export type Spl404 = {
       type: {
         kind: 'struct'
         fields: [
+          {
+            name: 'initTs'
+            docs: ['timestamp of the creation of the mystery box']
+            type: 'i64'
+          },
           {
             name: 'name'
             docs: ['collection name of the mystery box']
@@ -600,14 +597,39 @@ export type Spl404 = {
             type: 'pubkey'
           },
           {
+            name: 'tokenSymbol'
+            docs: ['symbol of the token']
+            type: 'string'
+          },
+          {
+            name: 'tokenSupply'
+            docs: ['supply of the token']
+            type: 'u64'
+          },
+          {
             name: 'tokenPerNft'
             docs: ['amount to bind to one NFT']
             type: 'u64'
           },
           {
+            name: 'decimals'
+            docs: ['decimals of the token']
+            type: 'u8'
+          },
+          {
             name: 'tokenFee'
             docs: ['token fee of the mystery box']
             type: 'u16'
+          },
+          {
+            name: 'maxFee'
+            docs: ['max fee of the mystery box']
+            type: 'u64'
+          },
+          {
+            name: 'bump'
+            docs: ['bump of the mystery box']
+            type: 'u8'
           },
           {
             name: 'tresuaryAccount'

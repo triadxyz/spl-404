@@ -24,7 +24,7 @@ pub struct Guard {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct GuardArgs {
+pub struct CreateGuardArgs {
     pub init_ts: i64,
     pub end_ts: i64,
     pub name: String,

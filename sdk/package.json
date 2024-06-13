@@ -7,7 +7,7 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "tsc",
-    "start": "rimraf dist && tsc && node ./dist/index.js"
+    "test": "rimraf dist && tsc && node ./dist/index.js"
   },
   "publishConfig": {
     "access": "public"

@@ -91,49 +91,8 @@
       ]
     },
     {
-      "name": "create_mystery_box",
-      "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mystery_box",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                "kind": "arg",
-                "path": "args.name"
-              }
-            ]
-          }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": [
-        {
-          "name": "args",
-          "type": {
-            "defined": {
-              "name": "CreateMysteryBoxArgs"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "initialize_guard",
-      "discriminator": [63, 189, 246, 157, 77, 125, 157, 142],
+      "name": "create_guard",
+      "discriminator": [251, 254, 17, 198, 219, 218, 154, 99],
       "accounts": [
         {
           "name": "signer",
@@ -174,7 +133,48 @@
           "name": "args",
           "type": {
             "defined": {
-              "name": "GuardArgs"
+              "name": "CreateGuardArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_mystery_box",
+      "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "arg",
+                "path": "args.name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "CreateMysteryBoxArgs"
             }
           }
         }
@@ -386,18 +386,42 @@
       }
     },
     {
-      "name": "CreateMysteryBoxArgs",
+      "name": "CreateGuardArgs",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "nft_symbol",
+            "name": "init_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "type": "i64"
+          },
+          {
+            "name": "name",
             "type": "string"
           },
           {
-            "name": "token_symbol",
-            "type": "string"
+            "name": "id",
+            "type": "u16"
           },
+          {
+            "name": "supply",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateMysteryBoxArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
             "name": "name",
             "type": "string"
@@ -407,15 +431,11 @@
             "type": "u32"
           },
           {
+            "name": "nft_symbol",
+            "type": "string"
+          },
+          {
             "name": "token_per_nft",
-            "type": "u64"
-          },
-          {
-            "name": "token_fee",
-            "type": "u16"
-          },
-          {
-            "name": "max_fee",
             "type": "u64"
           },
           {
@@ -482,38 +502,6 @@
       }
     },
     {
-      "name": "GuardArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "init_ts",
-            "type": "i64"
-          },
-          {
-            "name": "end_ts",
-            "type": "i64"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "type": "u16"
-          },
-          {
-            "name": "supply",
-            "type": "u64"
-          },
-          {
-            "name": "price",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
       "name": "MintNftArgs",
       "type": {
         "kind": "struct",
@@ -549,6 +537,10 @@
           {
             "name": "max_fee",
             "type": "u64"
+          },
+          {
+            "name": "token_fee",
+            "type": "u16"
           }
         ]
       }
@@ -558,6 +550,11 @@
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "init_ts",
+            "docs": ["timestamp of the creation of the mystery box"],
+            "type": "i64"
+          },
           {
             "name": "name",
             "docs": ["collection name of the mystery box"],
@@ -594,14 +591,39 @@
             "type": "pubkey"
           },
           {
+            "name": "token_symbol",
+            "docs": ["symbol of the token"],
+            "type": "string"
+          },
+          {
+            "name": "token_supply",
+            "docs": ["supply of the token"],
+            "type": "u64"
+          },
+          {
             "name": "token_per_nft",
             "docs": ["amount to bind to one NFT"],
             "type": "u64"
           },
           {
+            "name": "decimals",
+            "docs": ["decimals of the token"],
+            "type": "u8"
+          },
+          {
             "name": "token_fee",
             "docs": ["token fee of the mystery box"],
             "type": "u16"
+          },
+          {
+            "name": "max_fee",
+            "docs": ["max fee of the mystery box"],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "docs": ["bump of the mystery box"],
+            "type": "u8"
           },
           {
             "name": "tresuary_account",

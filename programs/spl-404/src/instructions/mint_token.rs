@@ -78,7 +78,7 @@ pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
         &ctx.accounts.mint.to_account_info().key(),
         Some(&mystery_box.key()),
         Some(&mystery_box.key()),
-        mystery_box.token_fee,
+        args.token_fee,
         args.max_fee,
     ) {
         Ok(ix) => ix,

@@ -25,6 +25,11 @@ export type CreateGuardType = {
   mysteryBoxName: string
 }
 
+export type BurnGuardType = {
+  name: string
+  mysteryBoxName: string
+}
+
 export type MintNftType = {
   mysteryBoxName: string
   guardName: string

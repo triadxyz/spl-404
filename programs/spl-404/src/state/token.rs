@@ -24,4 +24,5 @@ pub struct MintTokenArgs {
     pub uri: String,
     pub decimals: u8,
     pub max_fee: u64,
+    pub token_fee: u16,
 }

@@ -25,8 +25,8 @@ pub mod spl_404 {
         instructions::mint_nft(ctx, args)
     }
 
-    pub fn initialize_guard(ctx: Context<InitializeGuard>, args: GuardArgs) -> Result<()> {
-        instructions::initialize_guard(ctx, args)
+    pub fn create_guard(ctx: Context<CreateGuard>, args: CreateGuardArgs) -> Result<()> {
+        instructions::create_guard(ctx, args)
     }
 
     pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {

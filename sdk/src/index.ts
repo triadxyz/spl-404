@@ -14,7 +14,8 @@ import {
   CreateMysteryBoxType,
   CreateGuardType,
   MintNftType,
-  MintTokenType
+  MintTokenType,
+  BurnGuardType
 } from './utils/types'
 import {
   getGuardSync,
@@ -69,7 +70,7 @@ export default class Spl404Client {
     )
 
     this.program.methods
-      .initializeGuard({
+      .createGuard({
         name: guard.name,
         id: guard.id,
         supply: new BN(guard.supply),
@@ -86,37 +87,13 @@ export default class Spl404Client {
       .rpc()
   }
 
-  updateGuard = async (guard: CreateGuardType) => {
+  burnGuard = async (guard: BurnGuardType) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       guard.mysteryBoxName
     )
 
-    this.program.methods
-      .initializeGuard({
-        name: guard.name,
-        id: guard.id,
-        supply: new BN(guard.supply),
-        price: new BN(guard.price),
-        initTs: new BN(guard.initTs),
-        endTs: new BN(guard.endTs)
-      })
-      .postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 60000
-        })
-      ])
-      .accounts({ mysteryBox: MysteryBox })
-      .rpc()
-  }
-
-  burnGuard = async (guard: CreateGuardType) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      guard.mysteryBoxName
-    )
-
-    this.program.methods
+    await this.program.methods
       .burnGuard(guard.name)
       .postInstructions([
         ComputeBudgetProgram.setComputeUnitPrice({
