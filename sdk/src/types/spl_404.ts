@@ -413,6 +413,16 @@ export type Spl404 = {
       code: 6008
       name: 'supplyReached'
       msg: 'Supply has reached the maximum limit'
+    },
+    {
+      code: 6009
+      name: 'incorrectNftAmount'
+      msg: 'Incorrect NFT amount'
+    },
+    {
+      code: 6010
+      name: 'incorrectTokenAmount'
+      msg: 'Incorrect Token amount'
     }
   ]
   types: [

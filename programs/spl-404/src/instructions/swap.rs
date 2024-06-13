@@ -1,4 +1,4 @@
-use crate::errors::Spl404Error;
+use crate::errors::CustomError;
 use crate::state::{MysteryBox, SwapArgs};
 use anchor_lang::prelude::*;
 use anchor_spl::token_2022::{burn, transfer_checked, Burn, TransferChecked};
@@ -39,7 +39,7 @@ pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
     if args.nft_to_token {
         require!(
             ctx.accounts.user_nft_account.amount == 1,
-            Spl404Error::IncorrectNftAmount
+            CustomError::IncorrectNftAmount
         );
 
         burn(
