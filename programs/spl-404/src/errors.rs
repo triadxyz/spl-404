@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum Spl404Error {
+pub enum CustomError {
     #[msg("The mystery box has already been created")]
     MysteryBoxInitFailed,
 
@@ -25,4 +25,13 @@ pub enum Spl404Error {
 
     #[msg("Failed to transfer tokens")]
     TransferFailed,
+
+    #[msg("Supply has reached the maximum limit")]
+    SupplyReached,
+    
+    #[msg("Incorrect NFT amount")]
+    IncorrectNftAmount,
+
+    #[msg("Incorrect Token amount")]
+    IncorrectTokenAmount
 }

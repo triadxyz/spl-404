@@ -1,14 +1,14 @@
-use crate::{errors::Spl404Error, Guard, GuardArgs, MysteryBox};
+use crate::{errors::CustomError, CreateGuardArgs, Guard, MysteryBox};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
-#[instruction(args: GuardArgs)]
-pub struct InitializeGuard<'info> {
+#[instruction(args: CreateGuardArgs)]
+pub struct CreateGuard<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
     #[account(mut, constraint = mystery_box.authority == *signer.key)]
-    pub mystery_box: Account<'info, MysteryBox>,
+    pub mystery_box: Box<Account<'info, MysteryBox>>,
 
     #[account(
         init,
@@ -22,9 +22,9 @@ pub struct InitializeGuard<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn initialize_guard(ctx: Context<InitializeGuard>, args: GuardArgs) -> Result<()> {
+pub fn create_guard(ctx: Context<CreateGuard>, args: CreateGuardArgs) -> Result<()> {
     if ctx.accounts.mystery_box.authority != *ctx.accounts.signer.key {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     let guard = &mut ctx.accounts.guard;

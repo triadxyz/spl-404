@@ -1,6 +1,11 @@
 import { PublicKey } from '@solana/web3.js'
 
-export type CreateMysteryBoxType = {
+export type RpcOptions = {
+  skipPreflight?: boolean
+  microLamports?: number
+}
+
+export type CreateMysteryBox = {
   name: string
   image: string
   decimals: number
@@ -15,7 +20,7 @@ export type CreateMysteryBoxType = {
   tresuaryAccount: string
 }
 
-export type CreateGuardType = {
+export type CreateGuard = {
   name: string
   id: number
   supply: number
@@ -25,16 +30,27 @@ export type CreateGuardType = {
   mysteryBoxName: string
 }
 
-export type MintNftType = {
+export type BurnGuard = {
+  name: string
+  mysteryBoxName: string
+}
+
+export type MintNft = {
   mysteryBoxName: string
   guardName: string
   name: string
   nftUri: string
   userWallet: string
-  tresuaryAccount: string
+  tresuaryAccount: PublicKey
 }
 
-export type MintTokenType = {
+export type MintToken = {
+  mysteryBoxName: string
+  symbol: string
+  uri: string
+}
+
+export type SwapType = {
   mysteryBoxName: string
   mint: PublicKey
 }

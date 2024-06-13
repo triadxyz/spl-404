@@ -1,8 +1,10 @@
-use crate::errors::Spl404Error;
+use crate::errors::CustomError;
 use crate::state::MysteryBox;
+use crate::MintTokenArgs;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::{invoke, invoke_signed};
 use anchor_lang::system_program::{assign, Assign};
+use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022::spl_token_2022::extension::metadata_pointer::instruction::initialize;
 use anchor_spl::token_2022::spl_token_2022::extension::transfer_fee::instruction::initialize_transfer_fee_config;
 use anchor_spl::token_2022::spl_token_2022::extension::ExtensionType;
@@ -11,9 +13,9 @@ use anchor_spl::token_2022::spl_token_2022::state::Mint;
 use anchor_spl::token_2022::{self, mint_to, set_authority, MintTo, SetAuthority};
 use anchor_spl::token_2022::{initialize_mint2, InitializeMint2};
 use anchor_spl::token_interface::{Mint as TMint, Token2022, TokenAccount};
-use std::str::FromStr;
 
 #[derive(Accounts)]
+#[instruction(args: MintTokenArgs)]
 pub struct MintToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
@@ -21,26 +23,30 @@ pub struct MintToken<'info> {
     #[account(mut)]
     pub mint: InterfaceAccount<'info, TMint>,
 
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = signer.key() == mystery_box.authority.key()
+    )]
     pub mystery_box: Account<'info, MysteryBox>,
 
     #[account(
         init,
-        token::mint = mint,
-        token::authority = signer,
+        associated_token::mint = mint,
         payer = signer,
+        associated_token::authority = mystery_box,
     )]
     pub token_account: InterfaceAccount<'info, TokenAccount>,
 
     pub token_program: Program<'info, Token2022>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
 
-pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
+pub fn mint_token(ctx: Context<MintToken>, args: MintTokenArgs) -> Result<()> {
     let mystery_box = &mut ctx.accounts.mystery_box;
 
     if ctx.accounts.signer.key != &mystery_box.authority {
-        return Err(Spl404Error::Unauthorized.into());
+        return Err(CustomError::Unauthorized.into());
     }
 
     let space = match ExtensionType::try_calculate_account_len::<Mint>(&[
@@ -48,7 +54,7 @@ pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
         ExtensionType::TransferFeeConfig,
     ]) {
         Ok(space) => space,
-        Err(_) => return err!(Spl404Error::TokenMintInitFailed),
+        Err(_) => return err!(CustomError::TokenMintInitFailed),
     };
 
     let meta_data_space = 250;
@@ -79,7 +85,7 @@ pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
         Err(e) => {
             msg!("Error: {:?}", e);
 
-            return err!(Spl404Error::TokenMintInitFailed);
+            return err!(CustomError::TokenMintInitFailed);
         }
     };
 
@@ -102,7 +108,7 @@ pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
         Err(e) => {
             msg!("Error: {:?}", e);
 
-            return err!(Spl404Error::TokenMintInitFailed);
+            return err!(CustomError::TokenMintInitFailed);
         }
     };
 
@@ -137,7 +143,7 @@ pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
         mystery_box.to_account_info().key,
         mystery_box.name.clone(),
         mystery_box.token_symbol.clone(),
-        String::from_str("").unwrap(),
+        args.uri.clone(),
     );
 
     invoke_signed(
@@ -168,7 +174,7 @@ pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
                 authority: mystery_box.to_account_info(),
             },
         ),
-        mystery_box.token_supply,
+        mystery_box.token_per_nft * mystery_box.nft_supply as u64,
     )?;
     set_authority(
         CpiContext::new(
@@ -183,6 +189,7 @@ pub fn mint_token(ctx: Context<MintToken>) -> Result<()> {
     )?;
 
     mystery_box.token_account = *ctx.accounts.token_account.to_account_info().key;
+    mystery_box.token_mint = *ctx.accounts.mint.to_account_info().key;
 
     Ok(())
 }

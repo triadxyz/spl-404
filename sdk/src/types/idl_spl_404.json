@@ -53,8 +53,8 @@
       ]
     },
     {
-      "name": "create_mystery_box",
-      "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
+      "name": "burn_token",
+      "discriminator": [185, 165, 216, 246, 144, 31, 70, 74],
       "accounts": [
         {
           "name": "signer",
@@ -63,31 +63,20 @@
         },
         {
           "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "mint",
           "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                "kind": "arg",
-                "path": "args.name"
-              }
-            ]
-          }
+          "relations": ["token_account"]
+        },
+        {
+          "name": "token_account",
+          "writable": true
         },
         {
           "name": "token_program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "associated_token_program",
-          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -95,15 +84,15 @@
           "name": "args",
           "type": {
             "defined": {
-              "name": "CreateMysteryBoxArgs"
+              "name": "BurnTokenArgs"
             }
           }
         }
       ]
     },
     {
-      "name": "initialize_guard",
-      "discriminator": [63, 189, 246, 157, 77, 125, 157, 142],
+      "name": "create_guard",
+      "discriminator": [251, 254, 17, 198, 219, 218, 154, 99],
       "accounts": [
         {
           "name": "signer",
@@ -144,7 +133,48 @@
           "name": "args",
           "type": {
             "defined": {
-              "name": "GuardArgs"
+              "name": "CreateGuardArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_mystery_box",
+      "discriminator": [79, 39, 108, 94, 236, 142, 106, 158],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "arg",
+                "path": "args.name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "CreateMysteryBoxArgs"
             }
           }
         }
@@ -196,7 +226,8 @@
           "address": "SysvarRent111111111111111111111111111111111"
         },
         {
-          "name": "token_program"
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
           "name": "associated_token_program",
@@ -237,52 +268,15 @@
         },
         {
           "name": "token_account",
-          "writable": true,
-          "signer": true
+          "writable": true
         },
         {
           "name": "token_program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
         },
         {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "update_guard",
-      "discriminator": [51, 38, 175, 180, 25, 249, 39, 24],
-      "accounts": [
-        {
-          "name": "signer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mystery_box",
-          "writable": true
-        },
-        {
-          "name": "guard",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [103, 117, 97, 114, 100]
-              },
-              {
-                "kind": "arg",
-                "path": "args.name"
-              },
-              {
-                "kind": "account",
-                "path": "mystery_box"
-              }
-            ]
-          }
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
           "name": "system_program",
@@ -294,7 +288,64 @@
           "name": "args",
           "type": {
             "defined": {
-              "name": "GuardArgs"
+              "name": "MintTokenArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "discriminator": [248, 198, 158, 145, 225, 117, 135, 200],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "user_token_account",
+          "writable": true
+        },
+        {
+          "name": "mystery_box_nft_account",
+          "writable": true
+        },
+        {
+          "name": "user_nft_account",
+          "writable": true
+        },
+        {
+          "name": "token_mint",
+          "writable": true
+        },
+        {
+          "name": "nft_mint",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "SwapArgs"
             }
           }
         }
@@ -309,12 +360,6 @@
     {
       "name": "MysteryBox",
       "discriminator": [84, 58, 85, 105, 241, 51, 143, 79]
-    }
-  ],
-  "events": [
-    {
-      "name": "MintRecord",
-      "discriminator": [60, 1, 59, 92, 122, 181, 226, 91]
     }
   ],
   "errors": [
@@ -357,22 +402,73 @@
       "code": 6007,
       "name": "TransferFailed",
       "msg": "Failed to transfer tokens"
+    },
+    {
+      "code": 6008,
+      "name": "SupplyReached",
+      "msg": "Supply has reached the maximum limit"
+    },
+    {
+      "code": 6009,
+      "name": "IncorrectNftAmount",
+      "msg": "Incorrect NFT amount"
+    },
+    {
+      "code": 6010,
+      "name": "IncorrectTokenAmount",
+      "msg": "Incorrect Token amount"
     }
   ],
   "types": [
+    {
+      "name": "BurnTokenArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateGuardArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "init_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "type": "i64"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "supply",
+            "type": "u64"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          }
+        ]
+      }
+    },
     {
       "name": "CreateMysteryBoxArgs",
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "nft_symbol",
-            "type": "string"
-          },
-          {
-            "name": "token_symbol",
-            "type": "string"
-          },
           {
             "name": "name",
             "type": "string"
@@ -382,8 +478,24 @@
             "type": "u32"
           },
           {
+            "name": "nft_symbol",
+            "type": "string"
+          },
+          {
             "name": "token_per_nft",
             "type": "u64"
+          },
+          {
+            "name": "tresuary_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_symbol",
+            "type": "string"
+          },
+          {
+            "name": "decimals",
+            "type": "u8"
           },
           {
             "name": "token_fee",
@@ -392,22 +504,6 @@
           {
             "name": "max_fee",
             "type": "u64"
-          },
-          {
-            "name": "tresuary_account",
-            "type": "pubkey"
-          },
-          {
-            "name": "decimals",
-            "type": "u8"
-          },
-          {
-            "name": "nft_uri",
-            "type": "string"
-          },
-          {
-            "name": "token_uri",
-            "type": "string"
           }
         ]
       }
@@ -469,38 +565,6 @@
       }
     },
     {
-      "name": "GuardArgs",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "init_ts",
-            "type": "i64"
-          },
-          {
-            "name": "end_ts",
-            "type": "i64"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "type": "u16"
-          },
-          {
-            "name": "supply",
-            "type": "u64"
-          },
-          {
-            "name": "price",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
       "name": "MintNftArgs",
       "type": {
         "kind": "struct",
@@ -517,12 +581,12 @@
       }
     },
     {
-      "name": "MintRecord",
+      "name": "MintTokenArgs",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "name",
+            "name": "uri",
             "type": "string"
           }
         ]
@@ -614,6 +678,30 @@
               "fee account of the mystery box to receive the minted fees"
             ],
             "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "in_token",
+            "type": "pubkey"
+          },
+          {
+            "name": "out_token",
+            "type": "pubkey"
+          },
+          {
+            "name": "in_token_amount",
+            "type": "u64"
+          },
+          {
+            "name": "nft_to_token",
+            "type": "bool"
           }
         ]
       }

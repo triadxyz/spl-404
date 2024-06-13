@@ -38,19 +38,17 @@ pub struct MysteryBox {
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct CreateMysteryBoxArgs {
-    pub nft_symbol: String,
-    pub token_symbol: String,
     pub name: String,
     pub nft_supply: u32,
+    pub nft_symbol: String,
     pub token_per_nft: u64,
+    pub tresuary_account: Pubkey,
+    pub token_symbol: String,
+    pub decimals: u8,
     pub token_fee: u16,
     pub max_fee: u64,
-    pub tresuary_account: Pubkey,
-    pub decimals: u8,
-    pub nft_uri: String,
-    pub token_uri: String,
 }
 
 impl MysteryBox {
-    pub const SPACE: usize = 16 + std::mem::size_of::<Self>();
+    pub const SPACE: usize = 8 + std::mem::size_of::<Self>();
 }

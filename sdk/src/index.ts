@@ -1,28 +1,24 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import {
-  ComputeBudgetInstruction,
-  ComputeBudgetProgram,
-  Connection,
-  Keypair,
-  PublicKey
-} from '@solana/web3.js'
+import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
+import { SwapType } from './utils/types'
 import {
-  CreateMysteryBoxType,
-  CreateGuardType,
-  MintNftType,
-  MintTokenType
+  CreateMysteryBox,
+  CreateGuard,
+  MintNft,
+  MintToken,
+  BurnGuard,
+  RpcOptions
 } from './utils/types'
 import {
   getGuardSync,
-  getMintAddressSync,
-  getMysteryBoxSync
-} from './utils/helpers'
-import { TOKEN_2022_PROGRAM_ID, getAccount } from '@solana/spl-token'
-import { convertSecretKeyToKeypair } from './utils/convertSecretKeyToKeypair'
+  getPayerATASync,
+  getMysteryBoxSync,
+  getMintAddressSync
+} from './utils/address'
 
-export default class Spl404Client {
+export default class TriadSpl404 {
   provider: AnchorProvider
   program: Program<Spl404>
 
@@ -36,40 +32,67 @@ export default class Spl404Client {
     this.program = new Program<Spl404>(IDL as Spl404, this.provider)
   }
 
-  createMysteryBox = async (mysteryBox: CreateMysteryBoxType) => {
-    await this.program.methods
+  getMysteryBox = async (mysteryBoxName: string) => {
+    const MysteryBox = getMysteryBoxSync(this.program.programId, mysteryBoxName)
+
+    const data = await this.program.account.mysteryBox.fetch(MysteryBox)
+
+    return {
+      ...data,
+      address: MysteryBox,
+      initTs: data.initTs.toNumber(),
+      tokenSupply: data.tokenSupply.toNumber(),
+      tokenPerNft: data.tokenPerNft.toNumber(),
+      maxFee: data.maxFee.toNumber(),
+      tokenFee: data.tokenFee / 100
+    }
+  }
+
+  getGuards = async () => {
+    return this.program.account.guard.all()
+  }
+
+  createMysteryBox = async (
+    mysteryBox: CreateMysteryBox,
+    options?: RpcOptions
+  ) => {
+    const method = this.program.methods
       .createMysteryBox({
-        decimals: mysteryBox.decimals,
-        maxFee: new BN(mysteryBox.maxFee),
+        maxFee: new BN(
+          mysteryBox.maxFee || mysteryBox.nftSupply * mysteryBox.tokenPerNft
+        ),
         name: mysteryBox.name,
         nftSymbol: mysteryBox.nftSymbol,
-        nftUri: mysteryBox.nftUri,
         tokenFee: mysteryBox.tokenFee,
         tokenPerNft: new BN(mysteryBox.tokenPerNft),
         tokenSymbol: mysteryBox.tokenSymbol,
-        tokenUri: mysteryBox.tokenUri,
         nftSupply: mysteryBox.nftSupply,
-        tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount)
+        tresuaryAccount: new PublicKey(mysteryBox.tresuaryAccount),
+        decimals: mysteryBox.decimals
       })
-      .postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 30000
-        })
-      ])
       .accounts({
         signer: this.provider.wallet.publicKey
       })
-      .rpc({ skipPreflight: true })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  createGuard = async (guard: CreateGuardType) => {
+  createGuard = async (guard: CreateGuard, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       guard.mysteryBoxName
     )
 
-    this.program.methods
-      .initializeGuard({
+    const method = this.program.methods
+      .createGuard({
         name: guard.name,
         id: guard.id,
         supply: new BN(guard.supply),
@@ -77,107 +100,108 @@ export default class Spl404Client {
         initTs: new BN(guard.initTs),
         endTs: new BN(guard.endTs)
       })
-      .postInstructions([
+      .accounts({ mysteryBox: MysteryBox })
+
+    if (options?.microLamports) {
+      method.postInstructions([
         ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 60000
+          microLamports: options.microLamports
         })
       ])
-      .accounts({ mysteryBox: MysteryBox })
-      .rpc()
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  updateGuard = async (guard: CreateGuardType) => {
+  burnGuard = async (guard: BurnGuard, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       guard.mysteryBoxName
     )
 
-    this.program.methods
-      .initializeGuard({
-        name: guard.name,
-        id: guard.id,
-        supply: new BN(guard.supply),
-        price: new BN(guard.price),
-        initTs: new BN(guard.initTs),
-        endTs: new BN(guard.endTs)
-      })
-      .postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 60000
-        })
-      ])
-      .accounts({ mysteryBox: MysteryBox })
-      .rpc()
-  }
-
-  burnGuard = async (guard: CreateGuardType) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      guard.mysteryBoxName
-    )
-
-    this.program.methods
+    const method = this.program.methods
       .burnGuard(guard.name)
-      .postInstructions([
+      .accounts({ mysteryBox: MysteryBox })
+
+    if (options?.microLamports) {
+      method.postInstructions([
         ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 60000
+          microLamports: options.microLamports
         })
       ])
-      .accounts({ mysteryBox: MysteryBox })
-      .rpc()
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  mintNft = async (nft: MintNftType) => {
+  mintNft = async (nft: MintNft, options?: RpcOptions) => {
+    const wallet = new PublicKey(nft.userWallet)
+
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       nft.mysteryBoxName
     )
-
     const Guard = getGuardSync(
       this.program.programId,
       nft.guardName,
       MysteryBox
     )
-
     const Mint = getMintAddressSync(this.program.programId, nft.name)
-    const wallet = new PublicKey(nft.userWallet)
+    const PayerATA = getPayerATASync(wallet, Mint)
 
-    const ATA_PROGRAM_ID = new PublicKey(
-      'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-    )
-    const [payerATA] = PublicKey.findProgramAddressSync(
-      [wallet.toBytes(), TOKEN_2022_PROGRAM_ID.toBytes(), Mint.toBytes()],
-      ATA_PROGRAM_ID
-    )
-
-    return this.program.methods
+    const method = this.program.methods
       .mintNft({
         name: nft.name,
         nftUri: nft.nftUri
       })
       .accounts({
         signer: wallet,
-        mysteryBox: MysteryBox,
         guard: Guard,
-        payerAta: payerATA,
-        treasuryAccount: new PublicKey(
-          'Q1Du6NaLyDQHF8HLPiEjSyWMqUXUjphd3bcMhFvTgwx'
-        ),
-        tokenProgram: TOKEN_2022_PROGRAM_ID
+        mysteryBox: MysteryBox,
+        payerAta: PayerATA,
+        treasuryAccount: nft.tresuaryAccount
       })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  mintToken = async (token: MintTokenType) => {
+  mintToken = async (token: MintToken, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       token.mysteryBoxName
     )
 
-    this.program.methods
-      .mintToken()
-      .accounts({ mysteryBox: MysteryBox, mint: token.mint })
-      .rpc({
-        skipPreflight: true
+    const Mint = getMintAddressSync(this.program.programId, token.symbol)
+    const TokenAccount = getPayerATASync(this.provider.wallet.publicKey, Mint)
+
+    const method = this.program.methods
+      .mintToken({
+        uri: token.uri
       })
+      .accounts({
+        mysteryBox: MysteryBox,
+        mint: Mint,
+        tokenAccount: TokenAccount
+      })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
+
+  swapAsset = async (swap: SwapType) => {}
 }
