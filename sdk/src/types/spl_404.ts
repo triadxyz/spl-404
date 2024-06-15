@@ -301,8 +301,8 @@ export type Spl404 = {
       ]
     },
     {
-      name: 'swap'
-      discriminator: [248, 198, 158, 145, 225, 117, 135, 200]
+      name: 'swapNftToToken'
+      discriminator: [243, 88, 201, 103, 57, 114, 83, 50]
       accounts: [
         {
           name: 'user'
@@ -315,10 +315,6 @@ export type Spl404 = {
         },
         {
           name: 'userTokenAccount'
-          writable: true
-        },
-        {
-          name: 'mysteryBoxNftAccount'
           writable: true
         },
         {

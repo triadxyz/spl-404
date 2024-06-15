@@ -52,5 +52,8 @@ export type MintToken = {
 
 export type SwapType = {
   mysteryBoxName: string
-  mint: PublicKey
+  mintNft: PublicKey
+  mintToken: PublicKey
+  amount: number
+  symbol: string
 }

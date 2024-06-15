@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { Connection, Keypair } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import TriadSpl404 from './index'
 import { Wallet } from '@coral-xyz/anchor'
 
@@ -89,6 +89,23 @@ export default class Test {
         mysteryBoxName: this.mysteryBoxName,
         symbol: this.tokenSymbol,
         uri: 'https://shdw-drive.genesysgo.net/9ZgbDbP9wL1oPegdNj66TH6tnazEMFcMnREJdKsKEMwx/triad.json'
+      },
+      {
+        skipPreflight: true
+      }
+    )
+
+    console.log(token)
+  }
+
+  swapNftToToken = async () => {
+    const token = await this.triadSpl404.swapNftToToken(
+      {
+        mysteryBoxName: this.mysteryBoxName,
+        symbol: this.tokenSymbol,
+        amount: 1,
+        mintNft: new PublicKey('D1DbHcAYhfbjQfaUmRuP1UVeLf3BsKydXvgnhR9cmiFP'),
+        mintToken: new PublicKey(''),
       },
       {
         skipPreflight: true

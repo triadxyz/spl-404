@@ -27,3 +27,4 @@ pub struct MintNftArgs {
 pub struct MintTokenArgs {
     pub uri: String,
 }
+

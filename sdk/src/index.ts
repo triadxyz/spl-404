@@ -15,7 +15,9 @@ import {
   getGuardSync,
   getPayerATASync,
   getMysteryBoxSync,
-  getMintAddressSync
+  getMintAddressSync,
+  getTokenMintAddressSync,
+  getUserToken2022Account
 } from './utils/address'
 
 export default class TriadSpl404 {
@@ -203,5 +205,42 @@ export default class TriadSpl404 {
     return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  swapAsset = async (swap: SwapType) => {}
+  swapNftToToken = async (swap: SwapType, options?: RpcOptions) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      swap.mysteryBoxName
+    )
+    const NftMint = getMintAddressSync(this.program.programId, swap.symbol)
+    const PayerATA = getPayerATASync(this.provider.wallet.publicKey, NftMint)
+    const TokenMint = getTokenMintAddressSync(
+      this.program.programId,
+      swap.symbol
+    )
+    const UserNftAccount = getUserToken2022Account(
+      this.provider.wallet.publicKey,
+      NftMint
+    )
+    const UserTokenAccount = getUserToken2022Account(
+      this.provider.wallet.publicKey,
+      TokenMint
+    )
+
+    const method = this.program.methods
+      .swapNftToToken({
+        inToken: new PublicKey(swap.mintNft),
+        outToken: new PublicKey(swap.mintToken),
+        inTokenAmount: new BN(swap.amount),
+        nftToToken: true
+      })
+      .accounts({
+        mysteryBox: MysteryBox,
+        nftMint: NftMint,
+        tokenMint: TokenMint,
+        user: PayerATA,
+        userNftAccount: UserNftAccount,
+        userTokenAccount: UserTokenAccount
+      })
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
 }

@@ -295,8 +295,8 @@
       ]
     },
     {
-      "name": "swap",
-      "discriminator": [248, 198, 158, 145, 225, 117, 135, 200],
+      "name": "swap_nft_to_token",
+      "discriminator": [243, 88, 201, 103, 57, 114, 83, 50],
       "accounts": [
         {
           "name": "user",
@@ -309,10 +309,6 @@
         },
         {
           "name": "user_token_account",
-          "writable": true
-        },
-        {
-          "name": "mystery_box_nft_account",
           "writable": true
         },
         {

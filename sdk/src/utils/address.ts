@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { TOKEN_2022_PROGRAM_ID } from '@solana/spl-token'
+import { TOKEN_2022_PROGRAM_ID, getAssociatedTokenAddressSync } from '@solana/spl-token'
 import { ATA_PROGRAM_ID } from './constants'
 
 export const getMysteryBoxSync = (
@@ -56,3 +56,12 @@ export const getTokenMintAddressSync = (
 
   return mint
 }
+
+export const getUserToken2022Account = (user: PublicKey, mint: PublicKey): PublicKey => {
+  return getAssociatedTokenAddressSync(
+    mint,
+    user,
+    false,
+    TOKEN_2022_PROGRAM_ID
+  );
+};
