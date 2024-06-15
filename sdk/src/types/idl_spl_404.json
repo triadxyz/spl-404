@@ -63,20 +63,39 @@
         },
         {
           "name": "mystery_box",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "arg",
+                "path": "args.mystery_box_name"
+              }
+            ]
+          }
         },
         {
           "name": "mint",
-          "writable": true,
-          "relations": ["token_account"]
+          "writable": true
         },
         {
-          "name": "token_account",
+          "name": "payer_ata",
           "writable": true
         },
         {
           "name": "token_program",
           "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
@@ -288,8 +307,8 @@
       ]
     },
     {
-      "name": "mint_token_supply",
-      "discriminator": [101, 177, 35, 65, 138, 88, 174, 85],
+      "name": "mint_token",
+      "discriminator": [172, 137, 183, 14, 207, 110, 234, 56],
       "accounts": [
         {
           "name": "signer",
@@ -298,7 +317,19 @@
         },
         {
           "name": "mystery_box",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                "kind": "arg",
+                "path": "args.mystery_box_name"
+              }
+            ]
+          }
         },
         {
           "name": "mint",
@@ -321,7 +352,16 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "_args",
+          "type": {
+            "defined": {
+              "name": "MintTokenArgs"
+            }
+          }
+        }
+      ]
     }
   ],
   "accounts": [
@@ -347,56 +387,66 @@
     },
     {
       "code": 6002,
+      "name": "TokenMintAlreadyCreated",
+      "msg": "The token Mint has already been created"
+    },
+    {
+      "code": 6003,
+      "name": "TokenAccountAlreadyCreated",
+      "msg": "The token Account has already been created"
+    },
+    {
+      "code": 6004,
       "name": "TokenAccountInitFailed",
       "msg": "The token account has already been created"
     },
     {
-      "code": 6003,
+      "code": 6005,
       "name": "InvalidMintATA",
       "msg": "Invalid Mint ATA"
     },
     {
-      "code": 6004,
+      "code": 6006,
       "name": "InvalidSupply",
       "msg": "Invalid Supply, please create the token supply first"
     },
     {
-      "code": 6005,
+      "code": 6007,
       "name": "Mint2InitFailed",
       "msg": "Failed to initialize mint2"
     },
     {
-      "code": 6006,
+      "code": 6008,
       "name": "MintFailed",
       "msg": "Failed to mint tokens"
     },
     {
-      "code": 6007,
+      "code": 6009,
       "name": "TransferFeeInitFailed",
       "msg": "Failed to initialize transfer fee config"
     },
     {
-      "code": 6008,
+      "code": 6010,
       "name": "Unauthorized",
       "msg": "Failed unuathorized action"
     },
     {
-      "code": 6009,
+      "code": 6011,
       "name": "TransferFailed",
       "msg": "Failed to transfer tokens"
     },
     {
-      "code": 6010,
+      "code": 6012,
       "name": "SupplyReached",
       "msg": "Supply has reached the maximum limit"
     },
     {
-      "code": 6011,
+      "code": 6013,
       "name": "IncorrectNftAmount",
       "msg": "Incorrect NFT amount"
     },
     {
-      "code": 6012,
+      "code": 6014,
       "name": "IncorrectTokenAmount",
       "msg": "Incorrect Token amount"
     }
@@ -410,6 +460,10 @@
           {
             "name": "amount",
             "type": "u64"
+          },
+          {
+            "name": "mystery_box_name",
+            "type": "string"
           }
         ]
       }
@@ -569,6 +623,18 @@
           },
           {
             "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintTokenArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mystery_box_name",
             "type": "string"
           }
         ]

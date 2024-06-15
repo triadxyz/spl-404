@@ -15,6 +15,7 @@ pub struct SwapArgs {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct BurnTokenArgs {
     pub amount: u64,
+    pub mystery_box_name: String,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -26,4 +27,9 @@ pub struct MintNftArgs {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct CreateTokenArgs {
     pub uri: String,
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct MintTokenArgs {
+    pub mystery_box_name: String,
 }

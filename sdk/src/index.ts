@@ -1,13 +1,8 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import {
-  ComputeBudgetProgram,
-  Connection,
-  Keypair,
-  PublicKey
-} from '@solana/web3.js'
+import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
-import { CreateToken, MintTokenSupply, SwapType } from './utils/types'
+import { BurnToken, CreateToken, MintToken, SwapType } from './utils/types'
 import {
   CreateMysteryBox,
   CreateGuard,
@@ -183,18 +178,16 @@ export default class TriadSpl404 {
       token.mysteryBoxName
     )
 
-    const mint = new Keypair()
-
     const method = this.program.methods
       .createToken({
         uri: token.uri
       })
       .accounts({
         signer: this.provider.wallet.publicKey,
-        mint: mint.publicKey,
+        mint: token.mint.publicKey,
         mysteryBox: MysteryBox
       })
-      .signers([mint])
+      .signers([token.mint])
 
     if (options?.microLamports) {
       method.postInstructions([
@@ -207,7 +200,7 @@ export default class TriadSpl404 {
     return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  mintTokenSupply = async (token: MintTokenSupply, options?: RpcOptions) => {
+  mintToken = async (token: MintToken, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
       token.mysteryBoxName
@@ -215,14 +208,44 @@ export default class TriadSpl404 {
 
     const PayerAta = getPayerATASync(MysteryBox, token.mint)
 
-    console.log(PayerAta.toString())
+    const method = this.program.methods
+      .mintToken({
+        mysteryBoxName: token.mysteryBoxName
+      })
+      .accounts({
+        signer: this.provider.wallet.publicKey,
+        mint: token.mint,
+        payerAta: PayerAta
+      })
 
-    const method = this.program.methods.mintTokenSupply().accounts({
-      signer: this.provider.wallet.publicKey,
-      mint: token.mint,
-      mysteryBox: MysteryBox,
-      payerAta: PayerAta
-    })
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
+
+  burnToken = async (token: BurnToken, options?: RpcOptions) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      token.mysteryBoxName
+    )
+
+    const PayerAta = getPayerATASync(MysteryBox, token.mint)
+
+    const method = this.program.methods
+      .burnToken({
+        amount: token.amount,
+        mysteryBoxName: token.mysteryBoxName
+      })
+      .accounts({
+        payerAta: PayerAta,
+        mint: token.mint
+      })
 
     if (options?.microLamports) {
       method.postInstructions([

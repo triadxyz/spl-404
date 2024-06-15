@@ -8,6 +8,12 @@ pub enum CustomError {
     #[msg("The token mint has already been initialized")]
     TokenMintInitFailed,
 
+    #[msg("The token Mint has already been created")]
+    TokenMintAlreadyCreated,
+
+    #[msg("The token Account has already been created")]
+    TokenAccountAlreadyCreated,
+
     #[msg("The token account has already been created")]
     TokenAccountInitFailed,
 

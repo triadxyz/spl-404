@@ -70,19 +70,38 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'arg'
+                path: 'args.mystery_box_name'
+              }
+            ]
+          }
         },
         {
           name: 'mint'
           writable: true
-          relations: ['tokenAccount']
         },
         {
-          name: 'tokenAccount'
+          name: 'payerAta'
           writable: true
         },
         {
           name: 'tokenProgram'
           address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
         }
       ]
       args: [
@@ -294,8 +313,8 @@ export type Spl404 = {
       ]
     },
     {
-      name: 'mintTokenSupply'
-      discriminator: [101, 177, 35, 65, 138, 88, 174, 85]
+      name: 'mintToken'
+      discriminator: [172, 137, 183, 14, 207, 110, 234, 56]
       accounts: [
         {
           name: 'signer'
@@ -305,6 +324,18 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'arg'
+                path: 'args.mystery_box_name'
+              }
+            ]
+          }
         },
         {
           name: 'mint'
@@ -327,7 +358,16 @@ export type Spl404 = {
           address: '11111111111111111111111111111111'
         }
       ]
-      args: []
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'mintTokenArgs'
+            }
+          }
+        }
+      ]
     }
   ]
   accounts: [
@@ -353,56 +393,66 @@ export type Spl404 = {
     },
     {
       code: 6002
+      name: 'tokenMintAlreadyCreated'
+      msg: 'The token Mint has already been created'
+    },
+    {
+      code: 6003
+      name: 'tokenAccountAlreadyCreated'
+      msg: 'The token Account has already been created'
+    },
+    {
+      code: 6004
       name: 'tokenAccountInitFailed'
       msg: 'The token account has already been created'
     },
     {
-      code: 6003
+      code: 6005
       name: 'invalidMintAta'
       msg: 'Invalid Mint ATA'
     },
     {
-      code: 6004
+      code: 6006
       name: 'invalidSupply'
       msg: 'Invalid Supply, please create the token supply first'
     },
     {
-      code: 6005
+      code: 6007
       name: 'mint2InitFailed'
       msg: 'Failed to initialize mint2'
     },
     {
-      code: 6006
+      code: 6008
       name: 'mintFailed'
       msg: 'Failed to mint tokens'
     },
     {
-      code: 6007
+      code: 6009
       name: 'transferFeeInitFailed'
       msg: 'Failed to initialize transfer fee config'
     },
     {
-      code: 6008
+      code: 6010
       name: 'unauthorized'
       msg: 'Failed unuathorized action'
     },
     {
-      code: 6009
+      code: 6011
       name: 'transferFailed'
       msg: 'Failed to transfer tokens'
     },
     {
-      code: 6010
+      code: 6012
       name: 'supplyReached'
       msg: 'Supply has reached the maximum limit'
     },
     {
-      code: 6011
+      code: 6013
       name: 'incorrectNftAmount'
       msg: 'Incorrect NFT amount'
     },
     {
-      code: 6012
+      code: 6014
       name: 'incorrectTokenAmount'
       msg: 'Incorrect Token amount'
     }
@@ -416,6 +466,10 @@ export type Spl404 = {
           {
             name: 'amount'
             type: 'u64'
+          },
+          {
+            name: 'mysteryBoxName'
+            type: 'string'
           }
         ]
       }
@@ -575,6 +629,18 @@ export type Spl404 = {
           },
           {
             name: 'uri'
+            type: 'string'
+          }
+        ]
+      }
+    },
+    {
+      name: 'mintTokenArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'mysteryBoxName'
             type: 'string'
           }
         ]

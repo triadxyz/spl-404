@@ -1,14 +1,15 @@
 import fs from 'fs'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import TriadSpl404 from './index'
-import { Wallet } from '@coral-xyz/anchor'
+import { BN, Wallet } from '@coral-xyz/anchor'
+import axios from 'axios'
 
 export default class Test {
-  file = fs.readFileSync('/Users/dannpl/.config/solana/id.json')
+  file = fs.readFileSync('/Users/dannpl/.config/solana/triad-man.json')
   Keypair = Keypair.fromSecretKey(
     new Uint8Array(JSON.parse(this.file.toString()))
   )
-  connection = new Connection('http://127.0.0.1:8899')
+  connection = new Connection('https://api.mainnet-beta.solana.com')
   wallet = new Wallet(this.Keypair)
   triadSpl404 = new TriadSpl404(this.connection, this.wallet)
   mysteryBoxName = 'Triad'
@@ -91,11 +92,19 @@ export default class Test {
   }
 
   createToken = async () => {
+    const file = fs.readFileSync(
+      '/Users/dannpl/.config/solana/t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV.json'
+    )
+    const mint = Keypair.fromSecretKey(
+      new Uint8Array(JSON.parse(file.toString()))
+    )
+
     const token = await this.triadSpl404.createToken(
       {
         mysteryBoxName: this.mysteryBoxName,
         symbol: this.tokenSymbol,
-        uri: 'https://shdw-drive.genesysgo.net/9ZgbDbP9wL1oPegdNj66TH6tnazEMFcMnREJdKsKEMwx/triad.json'
+        uri: 'https://shdw-drive.genesysgo.net/9ZgbDbP9wL1oPegdNj66TH6tnazEMFcMnREJdKsKEMwx/triad.json',
+        mint
       },
       {
         skipPreflight: true,
@@ -107,10 +116,10 @@ export default class Test {
   }
 
   mintTokenSupply = async () => {
-    const token = await this.triadSpl404.mintTokenSupply(
+    const token = await this.triadSpl404.mintToken(
       {
         mysteryBoxName: this.mysteryBoxName,
-        mint: new PublicKey('HbEhXFvZrbamPwFjaJvZE3T3LEE66GZdwTtrZgSZwYeL')
+        mint: new PublicKey('t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV')
       },
       {
         skipPreflight: true,
@@ -121,7 +130,3 @@ export default class Test {
     console.log(token)
   }
 }
-
-const test = new Test()
-
-test.mintTokenSupply()

@@ -33,6 +33,10 @@ pub fn create_token(ctx: Context<CreateToken>, args: CreateTokenArgs) -> Result<
         return Err(CustomError::Unauthorized.into());
     }
 
+    if mystery_box.token_mint != Pubkey::default() {
+        return Err(CustomError::TokenMintAlreadyCreated.into());
+    }
+
     let mystery_box = &mut ctx.accounts.mystery_box;
 
     let space = match ExtensionType::try_calculate_account_len::<Mint>(&[

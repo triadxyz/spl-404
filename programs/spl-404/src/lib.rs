@@ -41,7 +41,7 @@ pub mod spl_404 {
         instructions::burn_guard(ctx)
     }
 
-    pub fn mint_token_supply(ctx: Context<MintTokenSupply>) -> Result<()> {
-        instructions::mint_token_supply(ctx)
+    pub fn mint_token(ctx: Context<MintToken>, _args: MintTokenArgs) -> Result<()> {
+        instructions::mint_token(ctx)
     }
 }

@@ -1,4 +1,5 @@
-import { PublicKey } from '@solana/web3.js'
+import { Keypair, PublicKey } from '@solana/web3.js'
+import BN from 'bn.js'
 
 export type RpcOptions = {
   skipPreflight?: boolean
@@ -48,14 +49,21 @@ export type CreateToken = {
   mysteryBoxName: string
   symbol: string
   uri: string
+  mint: Keypair
 }
 
-export type MintTokenSupply = {
+export type MintToken = {
   mysteryBoxName: string
   mint: PublicKey
 }
 
 export type SwapType = {
   mysteryBoxName: string
+  mint: PublicKey
+}
+
+export type BurnToken = {
+  mysteryBoxName: string
+  amount: BN
   mint: PublicKey
 }
