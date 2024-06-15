@@ -19,10 +19,3 @@
 - **Deflationary Mechanism**: With Token22, it is possible to implement auto-burn fees, making the collection deflationary. 
 
 The SPL-404 standard makes NFTs more versatile and accessible, combining the best aspects of decentralized finance (DeFi) and non-fungible tokens (NFTs).
-
-## Main Concept
-
-**Simulation for the Triad collection with an amount of 3963 NFT and each NFT worth 10,000 $tTRIAD tokens**
-
-
-![Untitled](https://github.com/triadxyz/spl-404/assets/37663993/3b4cad7f-da6b-41bf-8462-4c33b1674a68)
