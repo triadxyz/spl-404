@@ -11,11 +11,7 @@ pub struct BurnToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
-    #[account(
-        mut,
-        seeds = [b"mystery_box", args.mystery_box_name.as_bytes()],
-        bump
-    )]
+    #[account(mut)]
     pub mystery_box: Box<Account<'info, MysteryBox>>,
 
     #[account(mut)]

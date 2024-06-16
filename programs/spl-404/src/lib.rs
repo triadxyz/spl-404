@@ -44,4 +44,8 @@ pub mod spl_404 {
     pub fn mint_token(ctx: Context<MintToken>, _args: MintTokenArgs) -> Result<()> {
         instructions::mint_token(ctx)
     }
+
+    pub fn transfer_token(ctx: Context<TransferToken>, args: TransferTokenArgs) -> Result<()> {
+        instructions::transfer_token(ctx, args)
+    }
 }
