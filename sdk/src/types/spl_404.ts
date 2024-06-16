@@ -70,18 +70,6 @@ export type Spl404 = {
         {
           name: 'mysteryBox'
           writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                kind: 'arg'
-                path: 'args.mystery_box_name'
-              }
-            ]
-          }
         },
         {
           name: 'mint'
@@ -368,6 +356,55 @@ export type Spl404 = {
           }
         }
       ]
+    },
+    {
+      name: 'transferToken'
+      discriminator: [219, 17, 122, 53, 237, 171, 232, 222]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'mint'
+          writable: true
+        },
+        {
+          name: 'payerAta'
+          writable: true
+        },
+        {
+          name: 'toAta'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'transferTokenArgs'
+            }
+          }
+        }
+      ]
     }
   ]
   accounts: [
@@ -466,10 +503,6 @@ export type Spl404 = {
           {
             name: 'amount'
             type: 'u64'
-          },
-          {
-            name: 'mysteryBoxName'
-            type: 'string'
           }
         ]
       }
@@ -730,6 +763,18 @@ export type Spl404 = {
             name: 'tresuaryAccount'
             docs: ['fee account of the mystery box to receive the minted fees']
             type: 'pubkey'
+          }
+        ]
+      }
+    },
+    {
+      name: 'transferTokenArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'amount'
+            type: 'u64'
           }
         ]
       }

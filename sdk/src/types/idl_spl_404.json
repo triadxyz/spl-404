@@ -63,19 +63,7 @@
         },
         {
           "name": "mystery_box",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                "kind": "arg",
-                "path": "args.mystery_box_name"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "mint",
@@ -362,6 +350,55 @@
           }
         }
       ]
+    },
+    {
+      "name": "transfer_token",
+      "discriminator": [219, 17, 122, 53, 237, 171, 232, 222],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mystery_box",
+          "writable": true
+        },
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "payer_ata",
+          "writable": true
+        },
+        {
+          "name": "to_ata",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "TransferTokenArgs"
+            }
+          }
+        }
+      ]
     }
   ],
   "accounts": [
@@ -460,10 +497,6 @@
           {
             "name": "amount",
             "type": "u64"
-          },
-          {
-            "name": "mystery_box_name",
-            "type": "string"
           }
         ]
       }
@@ -726,6 +759,18 @@
               "fee account of the mystery box to receive the minted fees"
             ],
             "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferTokenArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
           }
         ]
       }

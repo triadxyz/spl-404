@@ -4,6 +4,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022::spl_token_2022::instruction::transfer_checked;
 use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
+use solana_program::program::invoke_signed;
 
 #[derive(Accounts)]
 #[instruction(args: TransferTokenArgs)]
@@ -29,7 +30,7 @@ pub struct TransferToken<'info> {
         associated_token::mint = mint,
         associated_token::authority = signer
     )]
-    pub target_account: Box<InterfaceAccount<'info, TokenAccount>>,
+    pub to_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     pub token_program: Program<'info, Token2022>,
     pub associated_token_program: Program<'info, AssociatedToken>,
@@ -41,15 +42,33 @@ pub fn transfer_token(ctx: Context<TransferToken>, args: TransferTokenArgs) -> R
         return Err(CustomError::Unauthorized.into());
     }
 
-    transfer_checked(
+    let ix = transfer_checked(
         ctx.accounts.token_program.to_account_info().key,
         ctx.accounts.payer_ata.to_account_info().key,
         &ctx.accounts.mint.to_account_info().key,
-        &ctx.accounts.target_account.to_account_info().key,
+        &ctx.accounts.to_ata.to_account_info().key,
         &ctx.accounts.mystery_box.to_account_info().key,
         &[ctx.accounts.mystery_box.to_account_info().key],
         args.amount,
         ctx.accounts.mystery_box.decimals,
+    )?;
+
+    let signer: &[&[&[u8]]] = &[&[
+        b"mystery_box",
+        ctx.accounts.mystery_box.name.as_bytes(),
+        &[ctx.accounts.mystery_box.bump],
+    ]];
+
+    invoke_signed(
+        &ix,
+        &[
+            ctx.accounts.token_program.to_account_info(),
+            ctx.accounts.mint.to_account_info(),
+            ctx.accounts.payer_ata.to_account_info(),
+            ctx.accounts.to_ata.to_account_info(),
+            ctx.accounts.mystery_box.to_account_info(),
+        ],
+        signer,
     )?;
 
     Ok(())

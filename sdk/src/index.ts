@@ -2,7 +2,13 @@ import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
 import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
-import { BurnToken, CreateToken, MintToken, SwapType } from './utils/types'
+import {
+  BurnToken,
+  CreateToken,
+  MintToken,
+  SwapType,
+  TransferToken
+} from './utils/types'
 import {
   CreateMysteryBox,
   CreateGuard,
@@ -239,12 +245,43 @@ export default class TriadSpl404 {
 
     const method = this.program.methods
       .burnToken({
-        amount: token.amount,
-        mysteryBoxName: token.mysteryBoxName
+        amount: token.amount
       })
       .accounts({
         payerAta: PayerAta,
+        mysteryBox: MysteryBox,
         mint: token.mint
+      })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
+
+  transferToken = async (token: TransferToken, options?: RpcOptions) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      token.mysteryBoxName
+    )
+
+    const PayerAta = getPayerATASync(MysteryBox, token.mint)
+    const ToAta = getPayerATASync(token.to, token.mint)
+
+    const method = this.program.methods
+      .transferToken({
+        amount: token.amount
+      })
+      .accounts({
+        payerAta: PayerAta,
+        mint: token.mint,
+        mysteryBox: MysteryBox,
+        toAta: ToAta
       })
 
     if (options?.microLamports) {

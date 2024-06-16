@@ -8,14 +8,11 @@ export type RpcOptions = {
 
 export type CreateMysteryBox = {
   name: string
-  image: string
   decimals: number
   nftSymbol: string
-  nftUri: string
   tokenFee: number
   tokenPerNft: number
   tokenSymbol: string
-  tokenUri: string
   maxFee: number
   nftSupply: number
   tresuaryAccount: string
@@ -66,4 +63,11 @@ export type BurnToken = {
   mysteryBoxName: string
   amount: BN
   mint: PublicKey
+}
+
+export type TransferToken = {
+  mysteryBoxName: string
+  amount: BN
+  mint: PublicKey
+  to: PublicKey
 }

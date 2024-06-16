@@ -1,3 +1,4 @@
+import { TransferToken } from './utils/types'
 import fs from 'fs'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import TriadSpl404 from './index'
@@ -5,32 +6,25 @@ import { BN, Wallet } from '@coral-xyz/anchor'
 import axios from 'axios'
 
 export default class Test {
-  file = fs.readFileSync('/Users/dannpl/.config/solana/triad-man.json')
+  file = fs.readFileSync('/Users/dannpl/.config/solana/id.json')
   Keypair = Keypair.fromSecretKey(
     new Uint8Array(JSON.parse(this.file.toString()))
   )
-  connection = new Connection('https://api.mainnet-beta.solana.com')
+  connection = new Connection('http://127.0.0.1:8899')
   wallet = new Wallet(this.Keypair)
   triadSpl404 = new TriadSpl404(this.connection, this.wallet)
   mysteryBoxName = 'Triad'
   guard = 'Guard 1'
   tokenSymbol = 'tTRIAD'
 
-  constructor() {
-    this.logs()
-  }
-
-  logs = async () => {
-    // await this.logMysteryBox()
-    // this.logGuards()
-    // console.log(this.triadSpl404.program.programId.toString())
-  }
+  constructor() {}
 
   init = async () => {
     await this.createMysteryBox()
     await this.createGuard()
     await this.mintNft()
     await this.createToken()
+    await this.mintToken()
   }
 
   logMysteryBox = async () => {
@@ -48,20 +42,17 @@ export default class Test {
   createMysteryBox = async () => {
     const mystery = await this.triadSpl404.createMysteryBox({
       name: this.mysteryBoxName,
-      image: '',
       decimals: 6,
       nftSymbol: 'TRIAD',
-      nftUri: '',
       tokenFee: 200,
       tokenPerNft: 10000,
       tokenSymbol: 'tTRIAD',
-      tokenUri: '',
       maxFee: 10000 * 10 ** 6,
       nftSupply: 3964, // 3964 + 1 From Collection NFT
       tresuaryAccount: this.wallet.publicKey.toString()
     })
 
-    console.log(mystery)
+    console.log('Mystery:', mystery)
   }
 
   createGuard = async () => {
@@ -75,7 +66,7 @@ export default class Test {
       mysteryBoxName: this.mysteryBoxName
     })
 
-    console.log(guard)
+    console.log('Guard', guard)
   }
 
   mintNft = async () => {
@@ -88,7 +79,7 @@ export default class Test {
       tresuaryAccount: this.wallet.publicKey
     })
 
-    console.log(nft)
+    console.log('Mint NFT:', nft)
   }
 
   createToken = async () => {
@@ -112,10 +103,10 @@ export default class Test {
       }
     )
 
-    console.log(token)
+    console.log('Create Token:', token)
   }
 
-  mintTokenSupply = async () => {
+  mintToken = async () => {
     const token = await this.triadSpl404.mintToken(
       {
         mysteryBoxName: this.mysteryBoxName,
@@ -127,6 +118,27 @@ export default class Test {
       }
     )
 
-    console.log(token)
+    console.log('Mint Token:', token)
+  }
+
+  transferToken = async () => {
+    const transfer = await this.triadSpl404.transferToken(
+      {
+        mysteryBoxName: this.mysteryBoxName,
+        amount: new BN(20 * 10 ** 6),
+        mint: new PublicKey('t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV'),
+        to: this.triadSpl404.provider.wallet.publicKey
+      },
+      {
+        skipPreflight: true,
+        microLamports: 500000
+      }
+    )
+
+    console.log('Transfer Token:', transfer)
   }
 }
+
+const test = new Test()
+
+test.init()
