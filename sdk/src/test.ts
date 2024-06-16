@@ -1,12 +1,10 @@
-import { TransferToken } from './utils/types'
 import fs from 'fs'
 import { Connection, Keypair, PublicKey } from '@solana/web3.js'
 import TriadSpl404 from './index'
 import { BN, Wallet } from '@coral-xyz/anchor'
-import axios from 'axios'
 
 export default class Test {
-  file = fs.readFileSync('/Users/dannpl/.config/solana/id.json')
+  file = fs.readFileSync('/Users/dannpl/.config/solana/triad-man.json')
   Keypair = Keypair.fromSecretKey(
     new Uint8Array(JSON.parse(this.file.toString()))
   )
@@ -125,7 +123,7 @@ export default class Test {
     const transfer = await this.triadSpl404.transferToken(
       {
         mysteryBoxName: this.mysteryBoxName,
-        amount: new BN(20 * 10 ** 6),
+        amount: new BN(990000 * 10 ** 6),
         mint: new PublicKey('t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV'),
         to: this.triadSpl404.provider.wallet.publicKey
       },
@@ -138,7 +136,3 @@ export default class Test {
     console.log('Transfer Token:', transfer)
   }
 }
-
-const test = new Test()
-
-test.init()
