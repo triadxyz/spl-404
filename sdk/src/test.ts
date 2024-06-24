@@ -4,7 +4,7 @@ import TriadSpl404 from './index'
 import { BN, Wallet } from '@coral-xyz/anchor'
 
 export default class Test {
-  file = fs.readFileSync('/Users/dannpl/.config/solana/triad-man.json')
+  file = fs.readFileSync('/Users/dannpl/.config/solana/id.json')
   Keypair = Keypair.fromSecretKey(
     new Uint8Array(JSON.parse(this.file.toString()))
   )
@@ -14,6 +14,7 @@ export default class Test {
   mysteryBoxName = 'Triad'
   guard = 'Guard 1'
   tokenSymbol = 'tTRIAD'
+  mint = 'Cm75q4szsP474nrzXbkhSLCHYm4PtD2TMr97gu9L2W47'
 
   constructor() {}
 
@@ -81,12 +82,18 @@ export default class Test {
   }
 
   createToken = async () => {
-    const file = fs.readFileSync(
-      '/Users/dannpl/.config/solana/t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV.json'
-    )
-    const mint = Keypair.fromSecretKey(
-      new Uint8Array(JSON.parse(file.toString()))
-    )
+    // const file = fs.readFileSync(
+    //   '/Users/dannpl/.config/solana/TRDwq3BN4mP3m9KsuNUWSN6QDff93VKGSwE95Jbr9Ss.json'
+    // )
+    // const mint = Keypair.fromSecretKey(
+    //   new Uint8Array(JSON.parse(file.toString()))
+    // )
+
+    const mint = Keypair.generate()
+
+    this.mint = mint.publicKey.toString()
+
+    console.log('Mint:', mint.publicKey.toString())
 
     const token = await this.triadSpl404.createToken(
       {
@@ -108,7 +115,7 @@ export default class Test {
     const token = await this.triadSpl404.mintToken(
       {
         mysteryBoxName: this.mysteryBoxName,
-        mint: new PublicKey('t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV')
+        mint: new PublicKey(this.mint)
       },
       {
         skipPreflight: true,
@@ -124,7 +131,7 @@ export default class Test {
       {
         mysteryBoxName: this.mysteryBoxName,
         amount: new BN(990000 * 10 ** 6),
-        mint: new PublicKey('t3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV'),
+        mint: new PublicKey(this.mint),
         to: this.triadSpl404.provider.wallet.publicKey
       },
       {
@@ -136,3 +143,7 @@ export default class Test {
     console.log('Transfer Token:', transfer)
   }
 }
+
+const test = new Test()
+
+test.init()

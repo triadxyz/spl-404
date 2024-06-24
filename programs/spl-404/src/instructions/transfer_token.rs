@@ -1,10 +1,10 @@
 use crate::errors::CustomError;
 use crate::{MysteryBox, TransferTokenArgs};
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::program::invoke_signed;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022::spl_token_2022::instruction::transfer_checked;
 use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
-use solana_program::program::invoke_signed;
 
 #[derive(Accounts)]
 #[instruction(args: TransferTokenArgs)]

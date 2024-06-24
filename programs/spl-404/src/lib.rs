@@ -48,4 +48,8 @@ pub mod spl_404 {
     pub fn transfer_token(ctx: Context<TransferToken>, args: TransferTokenArgs) -> Result<()> {
         instructions::transfer_token(ctx, args)
     }
+
+    pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
+        instructions::swap(ctx, args)
+    }
 }

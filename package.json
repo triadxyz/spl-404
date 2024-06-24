@@ -6,9 +6,6 @@
     "build": "anchor build && yarn update-types",
     "deploy": "yarn build && anchor deploy"
   },
-  "dependencies": {
-    "@coral-xyz/anchor": "0.30.0"
-  },
   "devDependencies": {
     "@types/bn.js": "^5.1.0",
     "@types/chai": "^4.3.0",

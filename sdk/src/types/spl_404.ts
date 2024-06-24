@@ -358,6 +358,63 @@ export type Spl404 = {
       ]
     },
     {
+      name: 'swap'
+      discriminator: [248, 198, 158, 145, 225, 117, 135, 200]
+      accounts: [
+        {
+          name: 'user'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'userTokenAccount'
+          writable: true
+        },
+        {
+          name: 'mysteryBoxNftAccount'
+          writable: true
+        },
+        {
+          name: 'userNftAccount'
+          writable: true
+        },
+        {
+          name: 'tokenMint'
+          writable: true
+        },
+        {
+          name: 'nftMint'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        },
+        {
+          name: 'rent'
+          address: 'SysvarRent111111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'swapArgs'
+            }
+          }
+        }
+      ]
+    },
+    {
       name: 'transferToken'
       discriminator: [219, 17, 122, 53, 237, 171, 232, 222]
       accounts: [
@@ -763,6 +820,30 @@ export type Spl404 = {
             name: 'tresuaryAccount'
             docs: ['fee account of the mystery box to receive the minted fees']
             type: 'pubkey'
+          }
+        ]
+      }
+    },
+    {
+      name: 'swapArgs'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'inToken'
+            type: 'pubkey'
+          },
+          {
+            name: 'outToken'
+            type: 'pubkey'
+          },
+          {
+            name: 'inTokenAmount'
+            type: 'u64'
+          },
+          {
+            name: 'nftToToken'
+            type: 'bool'
           }
         ]
       }
