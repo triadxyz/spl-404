@@ -72,7 +72,7 @@ export default class Test {
     const nft = await this.triadSpl404.mintNft({
       mysteryBoxName: this.mysteryBoxName,
       guardName: this.guard,
-      name: 'Triad 1',
+      name: 'Triad 2',
       uri: 'https://arweave.net/bqsmiiExtC1g2RwakVPVI9blehWca39yaY8GFRscfDk',
       userWallet: this.wallet.publicKey.toString(),
       tresuaryAccount: this.wallet.publicKey
@@ -146,4 +146,4 @@ export default class Test {
 
 const test = new Test()
 
-test.init()
+test.mintNft()
