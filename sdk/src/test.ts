@@ -4,27 +4,22 @@ import TriadSpl404 from './index'
 import { BN, Wallet } from '@coral-xyz/anchor'
 
 export default class Test {
-  file = fs.readFileSync('/Users/dannpl/.config/solana/id.json')
+  file = fs.readFileSync('/Users/dannpl/.config/solana/triad-man.json')
+  rpc_file = fs.readFileSync('/Users/dannpl/.config/solana/rpc.txt')
   Keypair = Keypair.fromSecretKey(
     new Uint8Array(JSON.parse(this.file.toString()))
   )
-  connection = new Connection('http://127.0.0.1:8899')
+  connection = new Connection(this.rpc_file.toString(), 'confirmed')
   wallet = new Wallet(this.Keypair)
   triadSpl404 = new TriadSpl404(this.connection, this.wallet)
   mysteryBoxName = 'Triad'
   guard = 'Guard 1'
   tokenSymbol = 'tTRIAD'
-  mint = 'Cm75q4szsP474nrzXbkhSLCHYm4PtD2TMr97gu9L2W47'
+  mint = 't3DohmswhKk94PPbPYwA6ZKACyY3y5kbcqeQerAJjmV'
 
   constructor() {}
 
-  init = async () => {
-    await this.createMysteryBox()
-    await this.createGuard()
-    await this.mintNft()
-    await this.createToken()
-    await this.mintToken()
-  }
+  init = async () => {}
 
   logMysteryBox = async () => {
     const mystery = await this.triadSpl404.getMysteryBox(this.mysteryBoxName)
@@ -130,7 +125,7 @@ export default class Test {
     const transfer = await this.triadSpl404.transferToken(
       {
         mysteryBoxName: this.mysteryBoxName,
-        amount: new BN(990000 * 10 ** 6),
+        amount: new BN(1000000 * 10 ** 6),
         mint: new PublicKey(this.mint),
         to: this.triadSpl404.provider.wallet.publicKey
       },
@@ -146,4 +141,4 @@ export default class Test {
 
 const test = new Test()
 
-test.mintNft()
+test.logMysteryBox()

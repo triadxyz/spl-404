@@ -71,3 +71,11 @@ export type TransferToken = {
   mint: PublicKey
   to: PublicKey
 }
+
+export type Swap = {
+  wallet: PublicKey
+  mysteryBoxName: string
+  nftName: string
+  tokenMint: PublicKey
+  nftMint: PublicKey
+}

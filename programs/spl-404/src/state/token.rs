@@ -37,3 +37,8 @@ pub struct MintTokenArgs {
 pub struct TransferTokenArgs {
     pub amount: u64,
 }
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct SwapNftArgs {
+    pub nft_name: String,
+}

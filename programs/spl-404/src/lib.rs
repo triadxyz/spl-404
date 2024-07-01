@@ -3,6 +3,7 @@ use anchor_lang::prelude::*;
 use instructions::*;
 use state::*;
 
+mod constants;
 mod errors;
 mod instructions;
 mod state;
@@ -49,7 +50,11 @@ pub mod spl_404 {
         instructions::transfer_token(ctx, args)
     }
 
-    pub fn swap(ctx: Context<Swap>, args: SwapArgs) -> Result<()> {
-        instructions::swap(ctx, args)
+    pub fn swap_nft(ctx: Context<SwapNft>, args: SwapNftArgs) -> Result<()> {
+        instructions::swap_nft(ctx, args)
+    }
+
+    pub fn swap_token(ctx: Context<SwapToken>) -> Result<()> {
+        instructions::swap_token(ctx)
     }
 }

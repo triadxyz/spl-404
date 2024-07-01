@@ -358,11 +358,11 @@ export type Spl404 = {
       ]
     },
     {
-      name: 'swap'
-      discriminator: [248, 198, 158, 145, 225, 117, 135, 200]
+      name: 'swapNft'
+      discriminator: [45, 163, 248, 166, 244, 118, 192, 205]
       accounts: [
         {
-          name: 'user'
+          name: 'signer'
           writable: true
           signer: true
         },
@@ -371,19 +371,15 @@ export type Spl404 = {
           writable: true
         },
         {
-          name: 'userTokenAccount'
-          writable: true
-        },
-        {
-          name: 'mysteryBoxNftAccount'
-          writable: true
-        },
-        {
-          name: 'userNftAccount'
-          writable: true
-        },
-        {
           name: 'tokenMint'
+          writable: true
+        },
+        {
+          name: 'tokenFromAta'
+          writable: true
+        },
+        {
+          name: 'tokenToAta'
           writable: true
         },
         {
@@ -391,16 +387,24 @@ export type Spl404 = {
           writable: true
         },
         {
+          name: 'nftFromAta'
+          writable: true
+        },
+        {
+          name: 'nftToAta'
+          writable: true
+        },
+        {
           name: 'tokenProgram'
           address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
         },
         {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
         },
         {
-          name: 'rent'
-          address: 'SysvarRent111111111111111111111111111111111'
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
         }
       ]
       args: [
@@ -408,11 +412,63 @@ export type Spl404 = {
           name: 'args'
           type: {
             defined: {
-              name: 'swapArgs'
+              name: 'swapNftArgs'
             }
           }
         }
       ]
+    },
+    {
+      name: 'swapToken'
+      discriminator: [129, 185, 52, 125, 128, 42, 84, 227]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+        },
+        {
+          name: 'tokenMint'
+          writable: true
+        },
+        {
+          name: 'tokenFromAta'
+          writable: true
+        },
+        {
+          name: 'tokenToAta'
+          writable: true
+        },
+        {
+          name: 'nftMint'
+          writable: true
+        },
+        {
+          name: 'nftFromAta'
+          writable: true
+        },
+        {
+          name: 'nftToAta'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: []
     },
     {
       name: 'transferToken'
@@ -825,25 +881,13 @@ export type Spl404 = {
       }
     },
     {
-      name: 'swapArgs'
+      name: 'swapNftArgs'
       type: {
         kind: 'struct'
         fields: [
           {
-            name: 'inToken'
-            type: 'pubkey'
-          },
-          {
-            name: 'outToken'
-            type: 'pubkey'
-          },
-          {
-            name: 'inTokenAmount'
-            type: 'u64'
-          },
-          {
-            name: 'nftToToken'
-            type: 'bool'
+            name: 'nftName'
+            type: 'string'
           }
         ]
       }

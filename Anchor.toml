@@ -3,11 +3,11 @@ seeds = true
 skip-lint = false
 resolution = true
 
-[programs.localnet]
+[programs.mainnet]
 spl_404 = "tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr"
 
 [provider]
-cluster = "localnet"
+cluster = "https://mainnet.helius-rpc.com/?api-key=17c07b72-cbb1-4408-9069-8624f01ddc8f"
 wallet = "/Users/dannpl/.config/solana/id.json"
 
 [scripts]
