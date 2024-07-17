@@ -12,7 +12,8 @@ import {
   CreateGuard,
   MintNft,
   BurnGuard,
-  RpcOptions
+  RpcOptions,
+  BurnNFT
 } from './utils/types'
 import {
   getGuardSync,
@@ -250,6 +251,31 @@ export default class TriadSpl404 {
         mysteryBox: MysteryBox,
         mint: token.mint
       })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
+  }
+
+  burnNFT = async (nft: BurnNFT, options?: RpcOptions) => {
+    const MysteryBox = getMysteryBoxSync(
+      this.program.programId,
+      nft.mysteryBoxName
+    )
+
+    const PayerAta = getPayerATASync(MysteryBox, nft.mint)
+
+    const method = this.program.methods.burnNft().accounts({
+      payerAta: PayerAta,
+      mysteryBox: MysteryBox,
+      mint: nft.mint
+    })
 
     if (options?.microLamports) {
       method.postInstructions([

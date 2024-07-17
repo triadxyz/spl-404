@@ -57,4 +57,8 @@ pub mod spl_404 {
     pub fn swap_token(ctx: Context<SwapToken>) -> Result<()> {
         instructions::swap_token(ctx)
     }
+
+    pub fn burn_nft(ctx: Context<BurnNft>) -> Result<()> {
+        instructions::burn_nft(ctx)
+    }
 }

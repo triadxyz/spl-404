@@ -8,7 +8,9 @@ mod mint_token;
 mod swap_nft;
 mod transfer_token;
 mod swap_token;
+mod burn_nft;
 
+pub use burn_nft::*;
 pub use swap_token::*;
 pub use burn_guard::*;
 pub use burn_token::*;
