@@ -124,7 +124,7 @@ export default class Test {
   }
 
   transferToken = async () => {
-    const amount = 0
+    const amount = 18032.9334575
 
     const transfer = await this.triadSpl404.transferToken(
       {
@@ -135,7 +135,7 @@ export default class Test {
       },
       {
         skipPreflight: true,
-        microLamports: 50000
+        microLamports: 20000
       }
     )
 
@@ -144,7 +144,7 @@ export default class Test {
 
   burnToken = async () => {
     try {
-      const amount = 3694.7314185
+      const amount = 18032.9334575
       const transfer = await this.triadSpl404.burnToken(
         {
           mysteryBoxName: this.mysteryBoxName,
@@ -189,7 +189,7 @@ Thank you for your continued support! Together, we are making $tTRIAD stronger. 
     console.log('Swap Token:', swap)
   }
 
-  getMints = async () => {
+  getAmountToLocked = async () => {
     const allAccounts = await this.connection.getProgramAccounts(
       TOKEN_2022_PROGRAM_ID,
       {
@@ -256,3 +256,7 @@ Thank you for your continued support! Together, we are making TRIAD stronger. ðŸ
     }
   }
 }
+
+const test = new Test()
+
+test.burnNft()

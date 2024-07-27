@@ -319,43 +319,6 @@ export default class TriadSpl404 {
     return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
-  swapNft = async (swap: Swap, options?: RpcOptions) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      swap.mysteryBoxName
-    )
-
-    const TokenToATA = getPayerATASync(swap.wallet, swap.tokenMint)
-    const TokenFromATA = getPayerATASync(MysteryBox, swap.tokenMint)
-    const NftToATA = getPayerATASync(MysteryBox, swap.nftMint)
-    const NftFromATA = getPayerATASync(swap.wallet, swap.nftMint)
-
-    const method = this.program.methods
-      .swapNft({
-        nftName: swap.nftName
-      })
-      .accounts({
-        mysteryBox: MysteryBox,
-        tokenFromAta: TokenFromATA,
-        tokenMint: swap.tokenMint,
-        tokenToAta: TokenToATA,
-        nftFromAta: NftFromATA,
-        nftMint: swap.nftMint,
-        nftToAta: NftToATA,
-        signer: swap.wallet
-      })
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
   swapToken = async (swap: Swap, options?: RpcOptions) => {
     const MysteryBox = getMysteryBoxSync(
       this.program.programId,
