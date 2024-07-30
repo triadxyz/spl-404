@@ -2423,9 +2423,9 @@ dependencies = [
 
 [[package]]
 name = "triad-protocol"
-version = "0.1.2"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "edc19eb293891f41b4ebff59b6f56d2120143b12fe56124aec3a0614dbd54405"
+checksum = "4f1944157194eb246287686b81c3b1d360dc9b103981c779114611518920f868"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
