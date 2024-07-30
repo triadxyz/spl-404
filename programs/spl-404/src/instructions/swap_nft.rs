@@ -14,12 +14,16 @@ use anchor_spl::token_interface::{
 };
 use spl_token_metadata_interface::state::TokenMetadata;
 use anchor_spl::token_2022::spl_token_2022::{ extension::PodStateWithExtensions, pod::PodMint };
+use triad_protocol::{ cpi::{ accounts::Swap404, swap_404 }, program::TriadProtocol, state::User };
 
 #[derive(Accounts)]
 #[instruction(args: SwapNftArgs)]
 pub struct SwapNft<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
+
+    #[account(mut)]
+    pub user: Account<'info, User>,
 
     #[account(mut)]
     pub mystery_box: Box<Account<'info, MysteryBox>>,
@@ -55,10 +59,21 @@ pub struct SwapNft<'info> {
 
     pub token_program: Program<'info, Token2022>,
     pub associated_token_program: Program<'info, AssociatedToken>,
+    pub triad_protocol_program: Program<'info, TriadProtocol>,
     pub system_program: Program<'info, System>,
 }
 
 pub fn swap_nft(ctx: Context<SwapNft>, args: SwapNftArgs) -> Result<()> {
+    let triad_protocol_program = ctx.accounts.triad_protocol_program.to_account_info();
+
+    swap_404(
+        CpiContext::new(triad_protocol_program, Swap404 {
+            signer: ctx.accounts.signer.to_account_info(),
+            user: ctx.accounts.user.to_account_info(),
+            system_program: ctx.accounts.system_program.to_account_info(),
+        })
+    )?;
+
     let (mint_seed, _bump) = Pubkey::find_program_address(
         &[b"mint", args.nft_name.as_bytes()],
         &Pubkey::from_str(PROGRAM_ID).unwrap()
