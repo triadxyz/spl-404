@@ -2,8 +2,8 @@ use crate::errors::CustomError;
 use crate::MysteryBox;
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_2022::{burn, close_account, Burn, CloseAccount};
-use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
+use anchor_spl::token_2022::{ burn, close_account, Burn, CloseAccount };
+use anchor_spl::token_interface::{ Mint, Token2022, TokenAccount };
 
 #[derive(Accounts)]
 pub struct BurnNft<'info> {
@@ -32,11 +32,13 @@ pub fn burn_nft(ctx: Context<BurnNft>) -> Result<()> {
         return Err(CustomError::Unauthorized.into());
     }
 
-    let signer: &[&[&[u8]]] = &[&[
-        b"mystery_box",
-        ctx.accounts.mystery_box.name.as_bytes(),
-        &[ctx.accounts.mystery_box.bump],
-    ]];
+    let signer: &[&[&[u8]]] = &[
+        &[
+            b"mystery_box",
+            ctx.accounts.mystery_box.name.as_bytes(),
+            &[ctx.accounts.mystery_box.bump],
+        ],
+    ];
 
     burn(
         CpiContext::new_with_signer(
@@ -46,20 +48,22 @@ pub fn burn_nft(ctx: Context<BurnNft>) -> Result<()> {
                 from: ctx.accounts.payer_ata.to_account_info(),
                 authority: ctx.accounts.mystery_box.to_account_info(),
             },
-            signer,
+            signer
         ),
-        1,
+        1
     )?;
 
-    close_account(CpiContext::new_with_signer(
-        ctx.accounts.token_program.to_account_info(),
-        CloseAccount {
-            account: ctx.accounts.payer_ata.to_account_info(),
-            destination: ctx.accounts.signer.to_account_info(),
-            authority: ctx.accounts.mystery_box.to_account_info(),
-        },
-        signer,
-    ))?;
+    close_account(
+        CpiContext::new_with_signer(
+            ctx.accounts.token_program.to_account_info(),
+            CloseAccount {
+                account: ctx.accounts.payer_ata.to_account_info(),
+                destination: ctx.accounts.signer.to_account_info(),
+                authority: ctx.accounts.mystery_box.to_account_info(),
+            },
+            signer
+        )
+    )?;
 
     Ok(())
 }

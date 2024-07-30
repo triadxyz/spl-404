@@ -1,4 +1,4 @@
-use crate::{errors::CustomError, CreateGuardArgs, Guard, MysteryBox};
+use crate::{ errors::CustomError, CreateGuardArgs, Guard, MysteryBox };
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]

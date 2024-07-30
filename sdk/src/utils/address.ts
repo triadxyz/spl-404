@@ -14,6 +14,15 @@ export const getMysteryBoxSync = (
   return mysteryBox
 }
 
+export const getTriadUserSync = (programId: PublicKey, wallet: PublicKey) => {
+  const [mysteryBox] = PublicKey.findProgramAddressSync(
+    [Buffer.from('user'), wallet.toBytes()],
+    programId
+  )
+
+  return mysteryBox
+}
+
 export const getPayerATASync = (address: PublicKey, Mint: PublicKey) => {
   const [payerATA] = PublicKey.findProgramAddressSync(
     [address.toBytes(), TOKEN_2022_PROGRAM_ID.toBytes(), Mint.toBytes()],

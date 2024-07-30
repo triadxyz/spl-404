@@ -303,6 +303,92 @@ export type Spl404 = {
         {
           name: 'payerAta'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'account'
+                path: 'signer'
+              },
+              {
+                kind: 'const'
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mint'
+              }
+            ]
+            program: {
+              kind: 'const'
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: 'treasuryAccount'
@@ -368,6 +454,92 @@ export type Spl404 = {
         {
           name: 'payerAta'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'account'
+                path: 'mysteryBox'
+              },
+              {
+                kind: 'const'
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mint'
+              }
+            ]
+            program: {
+              kind: 'const'
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: 'tokenProgram'
@@ -403,6 +575,10 @@ export type Spl404 = {
           signer: true
         },
         {
+          name: 'user'
+          writable: true
+        },
+        {
           name: 'mysteryBox'
           writable: true
         },
@@ -429,6 +605,92 @@ export type Spl404 = {
         {
           name: 'nftToAta'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'account'
+                path: 'mysteryBox'
+              },
+              {
+                kind: 'const'
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'nftMint'
+              }
+            ]
+            program: {
+              kind: 'const'
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: 'tokenProgram'
@@ -437,6 +699,10 @@ export type Spl404 = {
         {
           name: 'associatedTokenProgram'
           address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+        },
+        {
+          name: 'triadProtocolProgram'
+          address: 'TRDwq3BN4mP3m9KsuNUWSN6QDff93VKGSwE95Jbr9Ss'
         },
         {
           name: 'systemProgram'
@@ -490,6 +756,92 @@ export type Spl404 = {
         {
           name: 'nftToAta'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'account'
+                path: 'signer'
+              },
+              {
+                kind: 'const'
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'nftMint'
+              }
+            ]
+            program: {
+              kind: 'const'
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: 'tokenProgram'
@@ -530,6 +882,92 @@ export type Spl404 = {
         {
           name: 'toAta'
           writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'account'
+                path: 'signer'
+              },
+              {
+                kind: 'const'
+                value: [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                kind: 'account'
+                path: 'mint'
+              }
+            ]
+            program: {
+              kind: 'const'
+              value: [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
         },
         {
           name: 'tokenProgram'
@@ -564,6 +1002,10 @@ export type Spl404 = {
     {
       name: 'mysteryBox'
       discriminator: [84, 58, 85, 105, 241, 51, 143, 79]
+    },
+    {
+      name: 'user'
+      discriminator: [159, 117, 95, 227, 239, 151, 58, 236]
     }
   ]
   errors: [
@@ -936,6 +1378,60 @@ export type Spl404 = {
           {
             name: 'amount'
             type: 'u64'
+          }
+        ]
+      }
+    },
+    {
+      name: 'user'
+      type: {
+        kind: 'struct'
+        fields: [
+          {
+            name: 'ts'
+            type: 'i64'
+          },
+          {
+            name: 'authority'
+            type: 'pubkey'
+          },
+          {
+            name: 'bump'
+            type: 'u8'
+          },
+          {
+            name: 'referral'
+            type: 'pubkey'
+          },
+          {
+            name: 'referred'
+            type: 'i64'
+          },
+          {
+            name: 'name'
+            type: 'string'
+          },
+          {
+            name: 'swaps'
+            type: 'i16'
+          },
+          {
+            name: 'swapsMade'
+            type: 'i16'
+          },
+          {
+            name: 'staked'
+            type: 'u64'
+          },
+          {
+            name: 'firstSwap'
+            type: 'i64'
+          },
+          {
+            name: 'padding'
+            type: {
+              array: ['u8', 40]
+            }
           }
         ]
       }

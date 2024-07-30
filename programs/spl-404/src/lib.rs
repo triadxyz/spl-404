@@ -12,12 +12,11 @@ declare_id!("tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr");
 
 #[program]
 pub mod spl_404 {
-
     use super::*;
 
     pub fn create_mystery_box(
         ctx: Context<CreateMysteryBox>,
-        args: CreateMysteryBoxArgs,
+        args: CreateMysteryBoxArgs
     ) -> Result<()> {
         instructions::create_mystery_box(ctx, args)
     }

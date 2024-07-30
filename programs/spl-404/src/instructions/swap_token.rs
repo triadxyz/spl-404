@@ -2,7 +2,11 @@ use crate::MysteryBox;
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_interface::{
-    transfer_checked, Mint, Token2022, TokenAccount, TransferChecked,
+    transfer_checked,
+    Mint,
+    Token2022,
+    TokenAccount,
+    TransferChecked,
 };
 
 #[derive(Accounts)]
@@ -35,10 +39,10 @@ pub struct SwapToken<'info> {
     pub nft_from_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
     #[account(
-       init_if_needed,
-       payer = signer,
-       associated_token::mint = nft_mint,
-       associated_token::authority = signer,
+        init_if_needed,
+        payer = signer,
+        associated_token::mint = nft_mint,
+        associated_token::authority = signer
     )]
     pub nft_to_ata: Box<InterfaceAccount<'info, TokenAccount>>,
 
@@ -51,38 +55,40 @@ pub fn swap_token(ctx: Context<SwapToken>) -> Result<()> {
     let cpi_program = ctx.accounts.token_program.to_account_info();
 
     // Transfer the specified amount of tokens from the user to the mystery box
-    let cpi_token_accounts = TransferChecked {
-        from: ctx.accounts.token_from_ata.to_account_info(),
-        mint: ctx.accounts.token_mint.to_account_info(),
-        to: ctx.accounts.token_to_ata.to_account_info(),
-        authority: ctx.accounts.signer.to_account_info(),
-    };
-
     transfer_checked(
-        CpiContext::new(cpi_program.clone(), cpi_token_accounts),
-        (ctx.accounts.mystery_box.token_per_nft + 400)
-            * 10u64.pow(ctx.accounts.mystery_box.decimals as u32),
-        ctx.accounts.token_mint.decimals,
+        CpiContext::new(cpi_program.clone(), TransferChecked {
+            from: ctx.accounts.token_from_ata.to_account_info(),
+            mint: ctx.accounts.token_mint.to_account_info(),
+            to: ctx.accounts.token_to_ata.to_account_info(),
+            authority: ctx.accounts.signer.to_account_info(),
+        }),
+        (ctx.accounts.mystery_box.token_per_nft + 400) *
+            (10u64).pow(ctx.accounts.mystery_box.decimals as u32),
+        ctx.accounts.token_mint.decimals
     )?;
 
     // Transfer one random NFT from the mystery box to the user
-    let cpi_nft_accounts = TransferChecked {
-        from: ctx.accounts.nft_from_ata.to_account_info(),
-        mint: ctx.accounts.nft_mint.to_account_info(),
-        to: ctx.accounts.nft_to_ata.to_account_info(),
-        authority: ctx.accounts.mystery_box.to_account_info(),
-    };
-
-    let signer: &[&[&[u8]]] = &[&[
-        b"mystery_box",
-        ctx.accounts.mystery_box.name.as_bytes(),
-        &[ctx.accounts.mystery_box.bump],
-    ]];
+    let signer: &[&[&[u8]]] = &[
+        &[
+            b"mystery_box",
+            ctx.accounts.mystery_box.name.as_bytes(),
+            &[ctx.accounts.mystery_box.bump],
+        ],
+    ];
 
     transfer_checked(
-        CpiContext::new_with_signer(cpi_program.clone(), cpi_nft_accounts, signer),
+        CpiContext::new_with_signer(
+            cpi_program.clone(),
+            TransferChecked {
+                from: ctx.accounts.nft_from_ata.to_account_info(),
+                mint: ctx.accounts.nft_mint.to_account_info(),
+                to: ctx.accounts.nft_to_ata.to_account_info(),
+                authority: ctx.accounts.mystery_box.to_account_info(),
+            },
+            signer
+        ),
         1,
-        ctx.accounts.nft_mint.decimals,
+        ctx.accounts.nft_mint.decimals
     )?;
 
     Ok(())
