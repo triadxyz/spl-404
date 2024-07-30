@@ -1,9 +1,9 @@
 use crate::errors::CustomError;
-use crate::{BurnTokenArgs, MysteryBox};
+use crate::{ BurnTokenArgs, MysteryBox };
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
-use anchor_spl::token_2022::{burn, Burn};
-use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
+use anchor_spl::token_2022::{ burn, Burn };
+use anchor_spl::token_interface::{ Mint, Token2022, TokenAccount };
 
 #[derive(Accounts)]
 #[instruction(args: BurnTokenArgs)]
@@ -33,11 +33,13 @@ pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
         return Err(CustomError::Unauthorized.into());
     }
 
-    let signer: &[&[&[u8]]] = &[&[
-        b"mystery_box",
-        ctx.accounts.mystery_box.name.as_bytes(),
-        &[ctx.accounts.mystery_box.bump],
-    ]];
+    let signer: &[&[&[u8]]] = &[
+        &[
+            b"mystery_box",
+            ctx.accounts.mystery_box.name.as_bytes(),
+            &[ctx.accounts.mystery_box.bump],
+        ],
+    ];
 
     burn(
         CpiContext::new_with_signer(
@@ -47,9 +49,9 @@ pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
                 from: ctx.accounts.payer_ata.to_account_info(),
                 authority: ctx.accounts.mystery_box.to_account_info(),
             },
-            signer,
+            signer
         ),
-        args.amount,
+        args.amount
     )?;
 
     Ok(())

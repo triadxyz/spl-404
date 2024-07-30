@@ -397,6 +397,11 @@
           "signer": true
         },
         {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
           "name": "mystery_box",
           "writable": true
         },
@@ -454,6 +459,11 @@
       "accounts": [
         {
           "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin",
           "writable": true,
           "signer": true
         },

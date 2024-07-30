@@ -403,6 +403,11 @@ export type Spl404 = {
           signer: true
         },
         {
+          name: 'admin'
+          writable: true
+          signer: true
+        },
+        {
           name: 'mysteryBox'
           writable: true
         },
@@ -460,6 +465,11 @@ export type Spl404 = {
       accounts: [
         {
           name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'admin'
           writable: true
           signer: true
         },

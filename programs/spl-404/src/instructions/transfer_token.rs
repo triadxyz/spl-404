@@ -1,10 +1,10 @@
 use crate::errors::CustomError;
-use crate::{MysteryBox, TransferTokenArgs};
+use crate::{ MysteryBox, TransferTokenArgs };
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program::invoke_signed;
 use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token_2022::spl_token_2022::instruction::transfer_checked;
-use anchor_spl::token_interface::{Mint, Token2022, TokenAccount};
+use anchor_spl::token_interface::{ Mint, Token2022, TokenAccount };
 
 #[derive(Accounts)]
 #[instruction(args: TransferTokenArgs)]
@@ -50,14 +50,16 @@ pub fn transfer_token(ctx: Context<TransferToken>, args: TransferTokenArgs) -> R
         &ctx.accounts.mystery_box.to_account_info().key,
         &[ctx.accounts.mystery_box.to_account_info().key],
         args.amount,
-        ctx.accounts.mystery_box.decimals,
+        ctx.accounts.mystery_box.decimals
     )?;
 
-    let signer: &[&[&[u8]]] = &[&[
-        b"mystery_box",
-        ctx.accounts.mystery_box.name.as_bytes(),
-        &[ctx.accounts.mystery_box.bump],
-    ]];
+    let signer: &[&[&[u8]]] = &[
+        &[
+            b"mystery_box",
+            ctx.accounts.mystery_box.name.as_bytes(),
+            &[ctx.accounts.mystery_box.bump],
+        ],
+    ];
 
     invoke_signed(
         &ix,
@@ -68,7 +70,7 @@ pub fn transfer_token(ctx: Context<TransferToken>, args: TransferTokenArgs) -> R
             ctx.accounts.to_ata.to_account_info(),
             ctx.accounts.mystery_box.to_account_info(),
         ],
-        signer,
+        signer
     )?;
 
     Ok(())
