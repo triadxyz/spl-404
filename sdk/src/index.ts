@@ -19,7 +19,8 @@ import {
   getGuardSync,
   getPayerATASync,
   getMysteryBoxSync,
-  getTriadUserSync
+  getTriadUserSync,
+  getMintAddressSync
 } from './utils/address'
 
 export default class TriadSpl404 {
@@ -319,6 +320,7 @@ export default class TriadSpl404 {
       new PublicKey('TRDwq3BN4mP3m9KsuNUWSN6QDff93VKGSwE95Jbr9Ss'),
       swap.wallet
     )
+    const NftToATA = getPayerATASync(MysteryBox, swap.nftMint)
 
     const method = this.program.methods
       .swapNft({
@@ -332,7 +334,8 @@ export default class TriadSpl404 {
         nftFromAta: NftFromATA,
         nftMint: swap.nftMint,
         signer: swap.wallet,
-        user: UserATA
+        user: UserATA,
+        nftToAta: NftToATA
       })
 
     if (options?.microLamports) {
@@ -355,6 +358,7 @@ export default class TriadSpl404 {
     const TokenToATA = getPayerATASync(MysteryBox, swap.tokenMint)
     const TokenFromATA = getPayerATASync(swap.wallet, swap.tokenMint)
     const NftFromATA = getPayerATASync(MysteryBox, swap.nftMint)
+    const NftToATA = getPayerATASync(swap.wallet, swap.nftMint)
 
     const method = this.program.methods.swapToken().accounts({
       mysteryBox: MysteryBox,
@@ -363,7 +367,8 @@ export default class TriadSpl404 {
       tokenToAta: TokenToATA,
       nftFromAta: NftFromATA,
       nftMint: swap.nftMint,
-      signer: swap.wallet
+      signer: swap.wallet,
+      nftToAta: NftToATA
     })
 
     if (options?.microLamports) {
