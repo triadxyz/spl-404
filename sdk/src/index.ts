@@ -1,5 +1,12 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
+import {
+  ComputeBudgetProgram,
+  Connection,
+  PublicKey,
+  TransactionInstruction,
+  TransactionMessage,
+  VersionedTransaction
+} from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
 import {
@@ -19,7 +26,8 @@ import {
   getGuardSync,
   getPayerATASync,
   getMysteryBoxSync,
-  getTriadUserSync
+  getTriadUserSync,
+  getMintAddressSync
 } from './utils/address'
 
 export default class TriadSpl404 {
@@ -258,23 +266,47 @@ export default class TriadSpl404 {
       nft.mysteryBoxName
     )
 
-    const PayerAta = getPayerATASync(MysteryBox, nft.mint)
+    let ixs: TransactionInstruction[] = []
 
-    const method = this.program.methods.burnNft().accounts({
-      payerAta: PayerAta,
-      mysteryBox: MysteryBox,
-      mint: nft.mint
-    })
+    for (let i = 0; i < nft.mints.length; i++) {
+      let mint = nft.mints[i]
+
+      const PayerAta = getPayerATASync(MysteryBox, mint)
+
+      ixs.push(
+        await this.program.methods
+          .burnNft()
+          .accounts({
+            payerAta: PayerAta,
+            mysteryBox: MysteryBox,
+            mint: mint
+          })
+          .instruction()
+      )
+    }
 
     if (options?.microLamports) {
-      method.postInstructions([
+      ixs.push(
         ComputeBudgetProgram.setComputeUnitPrice({
           microLamports: options.microLamports
         })
-      ])
+      )
     }
 
-    return method.rpc({ skipPreflight: options?.skipPreflight })
+    const { blockhash } = await this.provider.connection.getLatestBlockhash()
+
+    const messageV0 = new TransactionMessage({
+      instructions: ixs,
+      recentBlockhash: blockhash,
+      payerKey: this.provider.wallet.publicKey
+    }).compileToV0Message()
+
+    const tx = new VersionedTransaction(messageV0)
+
+    return this.provider.sendAndConfirm(tx, [], {
+      skipPreflight: options?.skipPreflight,
+      commitment: 'confirmed'
+    })
   }
 
   transferToken = async (token: TransferToken, options?: RpcOptions) => {
@@ -319,6 +351,7 @@ export default class TriadSpl404 {
       new PublicKey('TRDwq3BN4mP3m9KsuNUWSN6QDff93VKGSwE95Jbr9Ss'),
       swap.wallet
     )
+    const NftToATA = getPayerATASync(MysteryBox, swap.nftMint)
 
     const method = this.program.methods
       .swapNft({
@@ -332,7 +365,8 @@ export default class TriadSpl404 {
         nftFromAta: NftFromATA,
         nftMint: swap.nftMint,
         signer: swap.wallet,
-        user: UserATA
+        user: UserATA,
+        nftToAta: NftToATA
       })
 
     if (options?.microLamports) {
@@ -355,6 +389,7 @@ export default class TriadSpl404 {
     const TokenToATA = getPayerATASync(MysteryBox, swap.tokenMint)
     const TokenFromATA = getPayerATASync(swap.wallet, swap.tokenMint)
     const NftFromATA = getPayerATASync(MysteryBox, swap.nftMint)
+    const NftToATA = getPayerATASync(swap.wallet, swap.nftMint)
 
     const method = this.program.methods.swapToken().accounts({
       mysteryBox: MysteryBox,
@@ -363,7 +398,8 @@ export default class TriadSpl404 {
       tokenToAta: TokenToATA,
       nftFromAta: NftFromATA,
       nftMint: swap.nftMint,
-      signer: swap.wallet
+      signer: swap.wallet,
+      nftToAta: NftToATA
     })
 
     if (options?.microLamports) {
