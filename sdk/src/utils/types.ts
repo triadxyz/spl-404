@@ -67,7 +67,7 @@ export type BurnToken = {
 
 export type BurnNFT = {
   mysteryBoxName: string
-  mint: PublicKey
+  mints: PublicKey[]
 }
 
 export type TransferToken = {

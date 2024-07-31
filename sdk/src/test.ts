@@ -226,13 +226,13 @@ Thank you for your continued support! Together, we are making $tTRIAD stronger. 
   }
 
   burnNft = async () => {
-    const nftName = ''
+    let list: string[] = []
 
     try {
       const burnNFT = await this.triadSpl404.burnNFT(
         {
           mysteryBoxName: this.mysteryBoxName,
-          mint: new PublicKey('')
+          mints: list.map((mint) => new PublicKey(mint))
         },
         {
           skipPreflight: true,
@@ -243,8 +243,8 @@ Thank you for your continued support! Together, we are making $tTRIAD stronger. 
       axios.post(
         'https://discord.com/api/webhooks/1250055492420763678/swD1lxfSRmkJhsuomH4ftv7FbCX1iuco4zJKgVhTfBYeacHZJfcOuCImuUYy7BgG1Q4l',
         {
-          content: `🔥 **NFT ${nftName} Burned!** 🔥\n
-We're excited to announce that NFT ${nftName} have been successfully burned! 🚀🔥\n
+          content: `🔥 **${list.length} NFT Burned!** 🔥\n
+We're excited to announce ${list.length} NFT have been successfully burned! 🚀🔥\n
 [View the transaction on Solscan](https://solscan.io/tx/${burnNFT})\n
 Thank you for your continued support! Together, we are making TRIAD stronger. 💪`
         }

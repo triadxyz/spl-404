@@ -1,5 +1,12 @@
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import { ComputeBudgetProgram, Connection, PublicKey } from '@solana/web3.js'
+import {
+  ComputeBudgetProgram,
+  Connection,
+  PublicKey,
+  TransactionInstruction,
+  TransactionMessage,
+  VersionedTransaction
+} from '@solana/web3.js'
 import { Spl404 } from './types/spl_404'
 import IDL from './types/idl_spl_404.json'
 import {
@@ -259,23 +266,47 @@ export default class TriadSpl404 {
       nft.mysteryBoxName
     )
 
-    const PayerAta = getPayerATASync(MysteryBox, nft.mint)
+    let ixs: TransactionInstruction[] = []
 
-    const method = this.program.methods.burnNft().accounts({
-      payerAta: PayerAta,
-      mysteryBox: MysteryBox,
-      mint: nft.mint
-    })
+    for (let i = 0; i < nft.mints.length; i++) {
+      let mint = nft.mints[i]
+
+      const PayerAta = getPayerATASync(MysteryBox, mint)
+
+      ixs.push(
+        await this.program.methods
+          .burnNft()
+          .accounts({
+            payerAta: PayerAta,
+            mysteryBox: MysteryBox,
+            mint: mint
+          })
+          .instruction()
+      )
+    }
 
     if (options?.microLamports) {
-      method.postInstructions([
+      ixs.push(
         ComputeBudgetProgram.setComputeUnitPrice({
           microLamports: options.microLamports
         })
-      ])
+      )
     }
 
-    return method.rpc({ skipPreflight: options?.skipPreflight })
+    const { blockhash } = await this.provider.connection.getLatestBlockhash()
+
+    const messageV0 = new TransactionMessage({
+      instructions: ixs,
+      recentBlockhash: blockhash,
+      payerKey: this.provider.wallet.publicKey
+    }).compileToV0Message()
+
+    const tx = new VersionedTransaction(messageV0)
+
+    return this.provider.sendAndConfirm(tx, [], {
+      skipPreflight: options?.skipPreflight,
+      commitment: 'confirmed'
+    })
   }
 
   transferToken = async (token: TransferToken, options?: RpcOptions) => {
