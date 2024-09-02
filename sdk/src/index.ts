@@ -60,10 +60,6 @@ export default class TriadSpl404 {
     }
   }
 
-  getGuards = async () => {
-    return this.program.account.guard.all()
-  }
-
   createMysteryBox = async (
     mysteryBox: CreateMysteryBox,
     options?: RpcOptions
@@ -84,169 +80,6 @@ export default class TriadSpl404 {
       })
       .accounts({
         signer: this.provider.wallet.publicKey
-      })
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
-  createGuard = async (guard: CreateGuard, options?: RpcOptions) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      guard.mysteryBoxName
-    )
-
-    const method = this.program.methods
-      .createGuard({
-        name: guard.name,
-        id: guard.id,
-        supply: new BN(guard.supply),
-        price: new BN(guard.price),
-        initTs: new BN(guard.initTs),
-        endTs: new BN(guard.endTs)
-      })
-      .accounts({ mysteryBox: MysteryBox })
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
-  burnGuard = async (guard: BurnGuard, options?: RpcOptions) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      guard.mysteryBoxName
-    )
-
-    const method = this.program.methods
-      .burnGuard(guard.name)
-      .accounts({ mysteryBox: MysteryBox })
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
-  mintNft = async (nft: MintNft, options?: RpcOptions) => {
-    const wallet = new PublicKey(nft.userWallet)
-
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      nft.mysteryBoxName
-    )
-    const Guard = getGuardSync(
-      this.program.programId,
-      nft.guardName,
-      MysteryBox
-    )
-
-    const method = this.program.methods
-      .mintNft({
-        name: nft.name,
-        uri: nft.uri
-      })
-      .accounts({
-        signer: wallet,
-        guard: Guard,
-        mysteryBox: MysteryBox,
-        treasuryAccount: nft.tresuaryAccount
-      })
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
-  createToken = async (token: CreateToken, options?: RpcOptions) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      token.mysteryBoxName
-    )
-
-    const method = this.program.methods
-      .createToken({
-        uri: token.uri
-      })
-      .accounts({
-        signer: this.provider.wallet.publicKey,
-        mint: token.mint.publicKey,
-        mysteryBox: MysteryBox
-      })
-      .signers([token.mint])
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
-  mintToken = async (token: MintToken, options?: RpcOptions) => {
-    const method = this.program.methods
-      .mintToken({
-        mysteryBoxName: token.mysteryBoxName
-      })
-      .accounts({
-        signer: this.provider.wallet.publicKey,
-        mint: token.mint
-      })
-
-    if (options?.microLamports) {
-      method.postInstructions([
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: options.microLamports
-        })
-      ])
-    }
-
-    return method.rpc({ skipPreflight: options?.skipPreflight })
-  }
-
-  burnToken = async (token: BurnToken, options?: RpcOptions) => {
-    const MysteryBox = getMysteryBoxSync(
-      this.program.programId,
-      token.mysteryBoxName
-    )
-
-    const PayerAta = getPayerATASync(MysteryBox, token.mint)
-
-    const method = this.program.methods
-      .burnToken({
-        amount: token.amount
-      })
-      .accounts({
-        payerAta: PayerAta,
-        mysteryBox: MysteryBox,
-        mint: token.mint
       })
 
     if (options?.microLamports) {
@@ -307,6 +140,26 @@ export default class TriadSpl404 {
       skipPreflight: options?.skipPreflight,
       commitment: 'confirmed'
     })
+  }
+
+  updateToken = async (mint: PublicKey, options?: RpcOptions) => {
+    const method = this.program.methods
+      .updateToken({
+        mysteryBoxName: 'Triad'
+      })
+      .accounts({
+        mint
+      })
+
+    if (options?.microLamports) {
+      method.postInstructions([
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: options.microLamports
+        })
+      ])
+    }
+
+    return method.rpc({ skipPreflight: options?.skipPreflight })
   }
 
   transferToken = async (token: TransferToken, options?: RpcOptions) => {

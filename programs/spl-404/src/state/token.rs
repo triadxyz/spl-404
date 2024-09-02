@@ -18,17 +18,6 @@ pub struct BurnTokenArgs {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct MintNftArgs {
-    pub name: String,
-    pub uri: String,
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct CreateTokenArgs {
-    pub uri: String,
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct MintTokenArgs {
     pub mystery_box_name: String,
 }

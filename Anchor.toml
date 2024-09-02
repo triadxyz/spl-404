@@ -7,7 +7,7 @@ resolution = true
 spl_404 = "tMBvM2ioL9UuKM3HZAPimrkf2WYRuRZGFqgvyg74wAr"
 
 [provider]
-cluster = "https://mainnet.helius-rpc.com/?api-key=17c07b72-cbb1-4408-9069-8624f01ddc8f"
+cluster = "https://serene-few-tent.solana-mainnet.quiknode.pro/4ca22aff62d23b5e3b21ae38eab7f8a7f91c86d9/"
 wallet = "/Users/dannpl/.config/solana/id.json"
 
 [scripts]

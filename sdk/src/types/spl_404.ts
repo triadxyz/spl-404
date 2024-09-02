@@ -14,51 +14,6 @@ export type Spl404 = {
   }
   instructions: [
     {
-      name: 'burnGuard'
-      discriminator: [22, 231, 242, 214, 54, 90, 40, 217]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'guard'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [103, 117, 97, 114, 100]
-              },
-              {
-                kind: 'arg'
-                path: 'name'
-              },
-              {
-                kind: 'account'
-                path: 'mysteryBox'
-              }
-            ]
-          }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'name'
-          type: 'string'
-        }
-      ]
-    },
-    {
       name: 'burnNft'
       discriminator: [119, 13, 183, 17, 194, 243, 38, 31]
       accounts: [
@@ -93,100 +48,6 @@ export type Spl404 = {
         }
       ]
       args: []
-    },
-    {
-      name: 'burnToken'
-      discriminator: [185, 165, 216, 246, 144, 31, 70, 74]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'mint'
-          writable: true
-        },
-        {
-          name: 'payerAta'
-          writable: true
-        },
-        {
-          name: 'tokenProgram'
-          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'burnTokenArgs'
-            }
-          }
-        }
-      ]
-    },
-    {
-      name: 'createGuard'
-      discriminator: [251, 254, 17, 198, 219, 218, 154, 99]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'guard'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [103, 117, 97, 114, 100]
-              },
-              {
-                kind: 'arg'
-                path: 'args.name'
-              },
-              {
-                kind: 'account'
-                path: 'mysteryBox'
-              }
-            ]
-          }
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'createGuardArgs'
-            }
-          }
-        }
-      ]
     },
     {
       name: 'createMysteryBox'
@@ -224,342 +85,6 @@ export type Spl404 = {
           type: {
             defined: {
               name: 'createMysteryBoxArgs'
-            }
-          }
-        }
-      ]
-    },
-    {
-      name: 'createToken'
-      discriminator: [84, 52, 204, 228, 24, 140, 234, 75]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'mint'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'tokenProgram'
-          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'createTokenArgs'
-            }
-          }
-        }
-      ]
-    },
-    {
-      name: 'mintNft'
-      discriminator: [211, 57, 6, 167, 15, 219, 35, 251]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-        },
-        {
-          name: 'guard'
-          writable: true
-        },
-        {
-          name: 'mint'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [109, 105, 110, 116]
-              },
-              {
-                kind: 'arg'
-                path: 'args.name'
-              }
-            ]
-          }
-        },
-        {
-          name: 'payerAta'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'account'
-                path: 'signer'
-              },
-              {
-                kind: 'const'
-                value: [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
-              },
-              {
-                kind: 'account'
-                path: 'mint'
-              }
-            ]
-            program: {
-              kind: 'const'
-              value: [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
-        },
-        {
-          name: 'treasuryAccount'
-          writable: true
-        },
-        {
-          name: 'rent'
-          address: 'SysvarRent111111111111111111111111111111111'
-        },
-        {
-          name: 'tokenProgram'
-          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'mintNftArgs'
-            }
-          }
-        }
-      ]
-    },
-    {
-      name: 'mintToken'
-      discriminator: [172, 137, 183, 14, 207, 110, 234, 56]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mysteryBox'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
-              },
-              {
-                kind: 'arg'
-                path: 'args.mystery_box_name'
-              }
-            ]
-          }
-        },
-        {
-          name: 'mint'
-          writable: true
-        },
-        {
-          name: 'payerAta'
-          writable: true
-          pda: {
-            seeds: [
-              {
-                kind: 'account'
-                path: 'mysteryBox'
-              },
-              {
-                kind: 'const'
-                value: [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
-              },
-              {
-                kind: 'account'
-                path: 'mint'
-              }
-            ]
-            program: {
-              kind: 'const'
-              value: [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
-        },
-        {
-          name: 'tokenProgram'
-          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        }
-      ]
-      args: [
-        {
-          name: 'args'
-          type: {
-            defined: {
-              name: 'mintTokenArgs'
             }
           }
         }
@@ -820,13 +345,62 @@ export type Spl404 = {
           }
         }
       ]
+    },
+    {
+      name: 'updateToken'
+      discriminator: [92, 200, 25, 239, 138, 254, 58, 102]
+      accounts: [
+        {
+          name: 'signer'
+          writable: true
+          signer: true
+        },
+        {
+          name: 'mysteryBox'
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: 'const'
+                value: [109, 121, 115, 116, 101, 114, 121, 95, 98, 111, 120]
+              },
+              {
+                kind: 'arg'
+                path: 'args.mystery_box_name'
+              }
+            ]
+          }
+        },
+        {
+          name: 'mint'
+          writable: true
+        },
+        {
+          name: 'tokenProgram'
+          address: 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'
+        },
+        {
+          name: 'associatedTokenProgram'
+          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
+        },
+        {
+          name: 'systemProgram'
+          address: '11111111111111111111111111111111'
+        }
+      ]
+      args: [
+        {
+          name: 'args'
+          type: {
+            defined: {
+              name: 'mintTokenArgs'
+            }
+          }
+        }
+      ]
     }
   ]
   accounts: [
-    {
-      name: 'guard'
-      discriminator: [54, 187, 84, 137, 192, 15, 74, 248]
-    },
     {
       name: 'mysteryBox'
       discriminator: [84, 58, 85, 105, 241, 51, 143, 79]
@@ -915,50 +489,6 @@ export type Spl404 = {
   ]
   types: [
     {
-      name: 'burnTokenArgs'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'amount'
-            type: 'u64'
-          }
-        ]
-      }
-    },
-    {
-      name: 'createGuardArgs'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'initTs'
-            type: 'i64'
-          },
-          {
-            name: 'endTs'
-            type: 'i64'
-          },
-          {
-            name: 'name'
-            type: 'string'
-          },
-          {
-            name: 'id'
-            type: 'u16'
-          },
-          {
-            name: 'supply'
-            type: 'u64'
-          },
-          {
-            name: 'price'
-            type: 'u64'
-          }
-        ]
-      }
-    },
-    {
       name: 'createMysteryBoxArgs'
       type: {
         kind: 'struct'
@@ -998,90 +528,6 @@ export type Spl404 = {
           {
             name: 'maxFee'
             type: 'u64'
-          }
-        ]
-      }
-    },
-    {
-      name: 'createTokenArgs'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'uri'
-            type: 'string'
-          }
-        ]
-      }
-    },
-    {
-      name: 'guard'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'initTs'
-            docs: ['timestamp of the initialization']
-            type: 'i64'
-          },
-          {
-            name: 'endTs'
-            docs: ['timestamp of the end of the guard']
-            type: 'i64'
-          },
-          {
-            name: 'name'
-            docs: ['Guard allocation Name']
-            type: 'string'
-          },
-          {
-            name: 'id'
-            docs: ['Guard allocation id']
-            type: 'u16'
-          },
-          {
-            name: 'supply'
-            docs: ['Supply of the guard allocation']
-            type: 'u64'
-          },
-          {
-            name: 'minted'
-            docs: [
-              'Amount of the guard allocation minted',
-              'This is used to track the amount of the guard allocation minted'
-            ]
-            type: 'u64'
-          },
-          {
-            name: 'price'
-            docs: ['Price of the NFT']
-            type: 'u64'
-          },
-          {
-            name: 'mysteryBox'
-            docs: ['Mystery box account']
-            type: 'pubkey'
-          },
-          {
-            name: 'walletStorage'
-            docs: ['Wallets authorized to mint from the guard allocation']
-            type: 'pubkey'
-          }
-        ]
-      }
-    },
-    {
-      name: 'mintNftArgs'
-      type: {
-        kind: 'struct'
-        fields: [
-          {
-            name: 'name'
-            type: 'string'
-          },
-          {
-            name: 'uri'
-            type: 'string'
           }
         ]
       }
@@ -1258,7 +704,7 @@ export type Spl404 = {
           {
             name: 'padding'
             type: {
-              array: ['u8', 40]
+              array: ['u8', 32]
             }
           }
         ]

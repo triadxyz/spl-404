@@ -21,30 +21,6 @@ pub mod spl_404 {
         instructions::create_mystery_box(ctx, args)
     }
 
-    pub fn mint_nft(ctx: Context<MintNft>, args: MintNftArgs) -> Result<()> {
-        instructions::mint_nft(ctx, args)
-    }
-
-    pub fn create_guard(ctx: Context<CreateGuard>, args: CreateGuardArgs) -> Result<()> {
-        instructions::create_guard(ctx, args)
-    }
-
-    pub fn create_token(ctx: Context<CreateToken>, args: CreateTokenArgs) -> Result<()> {
-        instructions::create_token(ctx, args)
-    }
-
-    pub fn burn_token(ctx: Context<BurnToken>, args: BurnTokenArgs) -> Result<()> {
-        instructions::burn_token(ctx, args)
-    }
-
-    pub fn burn_guard(ctx: Context<BurnGuard>, _name: String) -> Result<()> {
-        instructions::burn_guard(ctx)
-    }
-
-    pub fn mint_token(ctx: Context<MintToken>, _args: MintTokenArgs) -> Result<()> {
-        instructions::mint_token(ctx)
-    }
-
     pub fn transfer_token(ctx: Context<TransferToken>, args: TransferTokenArgs) -> Result<()> {
         instructions::transfer_token(ctx, args)
     }
@@ -59,5 +35,9 @@ pub mod spl_404 {
 
     pub fn burn_nft(ctx: Context<BurnNft>) -> Result<()> {
         instructions::burn_nft(ctx)
+    }
+
+    pub fn update_token(ctx: Context<UpdateToken>, _args: MintTokenArgs) -> Result<()> {
+        instructions::update_token(ctx)
     }
 }

@@ -29,12 +29,6 @@ export default class Test {
     console.log(mystery)
   }
 
-  logGuards = async () => {
-    const guards = await this.triadSpl404.getGuards()
-
-    console.log(guards)
-  }
-
   createMysteryBox = async () => {
     const mystery = await this.triadSpl404.createMysteryBox({
       name: this.mysteryBoxName,
@@ -49,78 +43,6 @@ export default class Test {
     })
 
     console.log('Mystery:', mystery)
-  }
-
-  createGuard = async () => {
-    const guard = await this.triadSpl404.createGuard({
-      name: this.guard,
-      id: 1,
-      supply: 3963,
-      price: 1000,
-      initTs: 1718266580,
-      endTs: 1719724775,
-      mysteryBoxName: this.mysteryBoxName
-    })
-
-    console.log('Guard', guard)
-  }
-
-  mintNft = async () => {
-    const nft = await this.triadSpl404.mintNft({
-      mysteryBoxName: this.mysteryBoxName,
-      guardName: this.guard,
-      name: 'Triad 2',
-      uri: 'https://arweave.net/bqsmiiExtC1g2RwakVPVI9blehWca39yaY8GFRscfDk',
-      userWallet: this.wallet.publicKey.toString(),
-      tresuaryAccount: this.wallet.publicKey
-    })
-
-    console.log('Mint NFT:', nft)
-  }
-
-  createToken = async () => {
-    // const file = fs.readFileSync(
-    //   '/Users/dannpl/.config/solana/TRDwq3BN4mP3m9KsuNUWSN6QDff93VKGSwE95Jbr9Ss.json'
-    // )
-    // const mint = Keypair.fromSecretKey(
-    //   new Uint8Array(JSON.parse(file.toString()))
-    // )
-
-    const mint = Keypair.generate()
-
-    this.mint = mint.publicKey.toString()
-
-    console.log('Mint:', mint.publicKey.toString())
-
-    const token = await this.triadSpl404.createToken(
-      {
-        mysteryBoxName: this.mysteryBoxName,
-        symbol: this.tokenSymbol,
-        uri: 'https://shdw-drive.genesysgo.net/9ZgbDbP9wL1oPegdNj66TH6tnazEMFcMnREJdKsKEMwx/triad.json',
-        mint
-      },
-      {
-        skipPreflight: true,
-        microLamports: 50000
-      }
-    )
-
-    console.log('Create Token:', token)
-  }
-
-  mintToken = async () => {
-    const token = await this.triadSpl404.mintToken(
-      {
-        mysteryBoxName: this.mysteryBoxName,
-        mint: new PublicKey(this.mint)
-      },
-      {
-        skipPreflight: true,
-        microLamports: 50000
-      }
-    )
-
-    console.log('Mint Token:', token)
   }
 
   transferToken = async () => {
@@ -140,35 +62,6 @@ export default class Test {
     )
 
     console.log('Transfer Token:', transfer)
-  }
-
-  burnToken = async () => {
-    try {
-      const amount = 0
-      const transfer = await this.triadSpl404.burnToken(
-        {
-          mysteryBoxName: this.mysteryBoxName,
-          amount: new BN(amount * 10 ** 6),
-          mint: new PublicKey(this.mint)
-        },
-        {
-          skipPreflight: true,
-          microLamports: 20000
-        }
-      )
-
-      axios.post(
-        'https://discord.com/api/webhooks/1250055492420763678/swD1lxfSRmkJhsuomH4ftv7FbCX1iuco4zJKgVhTfBYeacHZJfcOuCImuUYy7BgG1Q4l',
-        {
-          content: `🔥 **${amount.toLocaleString()} $tTRIAD Tokens Burned!** 🔥\n
-We're excited to announce that ${amount.toLocaleString()} $tTRIAD tokens have been successfully burned! 🚀🔥\n
-[View the transaction on Solscan](https://solscan.io/tx/${transfer})\n
-Thank you for your continued support! Together, we are making $tTRIAD stronger. 💪`
-        }
-      )
-
-      console.log('Burn Token:', transfer)
-    } catch {}
   }
 
   swapToken = async () => {
@@ -237,16 +130,6 @@ Thank you for your continued support! Together, we are making $tTRIAD stronger. 
         {
           skipPreflight: true,
           microLamports: 25000
-        }
-      )
-
-      axios.post(
-        'https://discord.com/api/webhooks/1250055492420763678/swD1lxfSRmkJhsuomH4ftv7FbCX1iuco4zJKgVhTfBYeacHZJfcOuCImuUYy7BgG1Q4l',
-        {
-          content: `🔥 **${list.length} NFT Burned!** 🔥\n
-We're excited to announce ${list.length} NFT have been successfully burned! 🚀🔥\n
-[View the transaction on Solscan](https://solscan.io/tx/${burnNFT})\n
-Thank you for your continued support! Together, we are making TRIAD stronger. 💪`
         }
       )
 
